@@ -109,7 +109,6 @@ export default function RoomNameScreen({
           } else {
             setIsInvalidRoom(true);
           }
-          setIsLoading(false);
         })
         .catch(e => {
           setIsInvalidRoom(true);
