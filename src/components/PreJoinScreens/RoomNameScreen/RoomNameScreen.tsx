@@ -105,11 +105,11 @@ export default function RoomNameScreen({
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
-            setIsLoading(false);
             setIsInvalidRoom(false);
           } else {
             setIsInvalidRoom(true);
           }
+          setIsLoading(false);
         })
         .catch(e => {
           setIsInvalidRoom(true);
@@ -120,7 +120,7 @@ export default function RoomNameScreen({
 
   return (
     <>
-      {!isInvalidRoom && !isLoading ?
+      {!isInvalidRoom ?
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             {!localStorage.getItem('token') ? 'Join' : isCreated ? 'Join' : 'Create'} a Room

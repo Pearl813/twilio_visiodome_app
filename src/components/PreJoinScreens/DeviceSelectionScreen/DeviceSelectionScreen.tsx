@@ -99,12 +99,12 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
       .then(res => {
-        setIsLoading(false);
         if (res.data.message === 'success') {
           setIsInvalidRoom(false);
         } else {
           setIsInvalidRoom(true);
         }
+        setIsLoading(false);
       })
       .catch(e => {
         setIsInvalidRoom(true);
