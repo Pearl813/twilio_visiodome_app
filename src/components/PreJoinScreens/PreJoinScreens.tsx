@@ -71,10 +71,13 @@ export default function PreJoinScreens() {
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
+            setisLoading(false);
             getToken(name, roomName).then(({ token }) => {
               videoConnect(token);
               process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
             });
+          } else {
+            setIsInvalidRoom(true);
           }
         })
         .catch(e => console.log(e));

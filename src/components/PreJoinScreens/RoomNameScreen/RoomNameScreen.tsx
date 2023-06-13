@@ -79,7 +79,6 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   useEffect(() => {
-    console.log('------------', name, '-----', roomName);
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
       const headers = {
@@ -105,8 +104,8 @@ export default function RoomNameScreen({
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
-          setIsLoading(false);
           if (res.data.message === 'success') {
+            setIsLoading(false);
             setIsInvalidRoom(false);
           } else {
             setIsInvalidRoom(true);
@@ -182,7 +181,9 @@ export default function RoomNameScreen({
             </Grid>
           </form>
         </>
-        : isLoading ? <CircularProgress variant="indeterminate" /> : <Typography variant="h6" align="center">
+        : isLoading ? <Typography variant="h6" align="center">
+          Loading...<CircularProgress variant="indeterminate" />
+        </Typography> : <Typography variant="h6" align="center">
           This room donesn't exist!
         </Typography>
       }

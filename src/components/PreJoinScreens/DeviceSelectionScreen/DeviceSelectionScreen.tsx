@@ -119,8 +119,8 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
           <CircularProgress variant="indeterminate" />
         </div>
         <div>
-          <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }}>
-            Joining Meeting
+          <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+            Joining Meeting... <CircularProgress variant="indeterminate" />
           </Typography>
         </div>
       </Grid>
@@ -229,7 +229,9 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
             </Grid>
           </Grid>
         </Grid>
-      </> : isLoading ? <CircularProgress variant="indeterminate" /> : <Typography variant="h6" align="center">
+      </> : isLoading ? <Typography variant="h6" align="center">
+        Loading...<CircularProgress variant="indeterminate" />
+      </Typography> : <Typography variant="h6" align="center">
         This room donesn't exist!
       </Typography>
     }</>
