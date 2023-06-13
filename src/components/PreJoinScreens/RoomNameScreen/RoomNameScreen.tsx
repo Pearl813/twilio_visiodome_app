@@ -100,6 +100,7 @@ export default function RoomNameScreen({
         })
         .catch(e => console.log(e));
     } else {
+      setIsInvalidRoom(true);
       setIsLoading(true);
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
