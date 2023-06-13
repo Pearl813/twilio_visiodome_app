@@ -117,10 +117,9 @@ export default function LoginPage() {
       })
       .catch(error => {
         // Handle error.
-        if (error.response.status === 500) {
-          setIsOpen(true);
-          setMessageContent('Email or password is incorrect.');
-        }
+        setIsOpen(true);
+        setMessageContent('Email or password is incorrect.');
+
         console.log('An error occurred:', error.response.data.error.name);
       });
   };
