@@ -79,6 +79,7 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   useEffect(() => {
+    console.log('------------', name, '-----', roomName);
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
       const headers = {
