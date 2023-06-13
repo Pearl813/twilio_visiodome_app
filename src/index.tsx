@@ -38,7 +38,7 @@ export const ReactApp = () => (
   <MuiThemeProvider theme={theme}>
     <CssBaseline />
     <UnsupportedBrowserWarning>
-      <Router BaseName="/React">
+      <Router basename="/React">
         <AppStateProvider>
           <Switch>
             {/* <PrivateRoute exact path="/">
