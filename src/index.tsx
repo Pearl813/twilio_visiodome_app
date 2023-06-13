@@ -44,12 +44,12 @@ export const ReactApp = () => (
             {/* <PrivateRoute exact path="/">
               <VideoApp />
             </PrivateRoute> */}
-            <PrivateRoute exact path="/room/:URLRoomName">
+            <Route path="/room/:URLRoomName">
               <VideoApp />
-            </PrivateRoute>
-            <PrivateRoute exact path="/room/:URLRoomName/:visiodomeapp">
+            </Route>
+            <Route path="/room/:URLRoomName/:visiodomeapp">
               <VideoApp />
-            </PrivateRoute>
+            </Route>
             {/* <PrivateRoute exact path="/u/:userName">
               <VideoApp />
             </PrivateRoute> */}
