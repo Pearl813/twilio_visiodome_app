@@ -19,9 +19,8 @@ export const createRoom: RequestHandler = (req, res) => {
       if (roomDetail?.data?.streamURL !== null) {
         // res.status(403).send({ message: 'Already Exist.' });
         client.video.v1.rooms
-          .create({ uniqueName: roomDetail.data.streamURL })
+          .create({ uniqueName: roomDetail.data.streamURL, emptyRoomTimeout: 2 })
           .then((room: any) => {
-            console.log(room.sid);
             if (room.sid) {
               res.status(200).send({
                 message: 'room created',
@@ -66,7 +65,6 @@ export const createRoom: RequestHandler = (req, res) => {
       }
     })
     .catch((error: any) => {
-      console.log(error);
       res.status(500).send(error);
     });
 };
