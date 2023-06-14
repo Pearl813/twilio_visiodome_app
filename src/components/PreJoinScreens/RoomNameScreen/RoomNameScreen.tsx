@@ -222,7 +222,7 @@ export default function RoomNameScreen({
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <Typography variant="h6" align="center">
-              This room donesn't exist!
+              This room doesn't exist!
             </Typography>
           </div>
         </Grid>

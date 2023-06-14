@@ -245,7 +245,7 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
         </Typography>
       ) : (
         <Typography variant="h6" align="center">
-          This room donesn't exist!
+          This room doesn't exist!
         </Typography>
       )}
     </>
