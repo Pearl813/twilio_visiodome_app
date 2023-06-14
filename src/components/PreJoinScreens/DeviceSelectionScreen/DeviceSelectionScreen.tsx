@@ -94,26 +94,25 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
     });
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-      .then(res => {
-        if (res.data.message === 'success') {
-          setIsInvalidRoom(false);
-        } else {
-          setIsInvalidRoom(true);
-        }
-        setIsLoading(false);
-      })
-      .catch(e => {
-        setIsInvalidRoom(true);
-        console.log(e);
-      });
-  }, []);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   axios
+  //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+  //     .then(res => {
+  //       if (res.data.message === 'success') {
+  //         setIsInvalidRoom(false);
+  //       } else {
+  //         setIsInvalidRoom(true);
+  //       }
+  //       setIsLoading(false);
+  //     })
+  //     .catch(e => {
+  //       setIsInvalidRoom(true);
+  //       console.log(e);
+  //     });
+  // }, []);
 
   if (isFetching || isConnecting) {
-    setIsLoading(false);
     return (
       <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
         <div>
@@ -121,7 +120,7 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
         </div>
         <div>
           <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-            Joining Meeting... <CircularProgress variant="indeterminate" />
+            Joining Meeting...
           </Typography>
         </div>
       </Grid>

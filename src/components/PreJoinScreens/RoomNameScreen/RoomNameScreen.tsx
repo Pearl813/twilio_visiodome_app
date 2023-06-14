@@ -104,43 +104,43 @@ export default function RoomNameScreen({
         })
         .catch(e => console.log(e));
     } else {
-      if (history.location.pathname === '/room/visiodome') {
-        setIsLoading(true);
+      // if (history.location.pathname === '/room/visiodome') {
+      //   setIsLoading(true);
 
-        axios
-          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-          .then(res => {
-            if (res.data.message === 'success') {
-              setIsLoading(false);
-              getToken(name, roomName).then(({ token }) => {
-                videoConnect(token);
-                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              });
-            } else {
-              setIsLoading(false);
-              setIsInvalidRoom(true);
-            }
-          })
-          .catch(e => console.log(e));
-      } else {
-        setIsLoading(false);
-        setIsInvalidRoom(true);
-        axios
-          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-          .then(res => {
-            if (res.data.message === 'success') {
-              setIsInvalidRoom(false);
-            } else {
-              setIsInvalidRoom(true);
-            }
-          })
-          .catch(e => {
+      //   axios
+      //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+      //     .then(res => {
+      //       if (res.data.message === 'success') {
+      //         setIsLoading(false);
+      //         getToken(name, roomName).then(({ token }) => {
+      //           videoConnect(token);
+      //           process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      //         });
+      //       } else {
+      //         setIsLoading(false);
+      //         setIsInvalidRoom(true);
+      //       }
+      //     })
+      //     .catch(e => console.log(e));
+      // } else {
+      setIsLoading(false);
+      setIsInvalidRoom(true);
+      axios
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+        .then(res => {
+          if (res.data.message === 'success') {
+            setIsInvalidRoom(false);
+          } else {
             setIsInvalidRoom(true);
-            console.log(e);
-          });
-      }
+          }
+        })
+        .catch(e => {
+          setIsInvalidRoom(true);
+          console.log(e);
+        });
+      // }
     }
-  }, []);
+  }, [roomName]);
 
   return (
     <>
