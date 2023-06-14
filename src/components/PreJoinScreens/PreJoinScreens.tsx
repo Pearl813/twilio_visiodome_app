@@ -62,6 +62,7 @@ export default function PreJoinScreens() {
       setRoomName(URLRoomName);
     }
     if (visiodomeapp === 'visiodomeapp') {
+      setIsLoading(true);
       setIsVisiodome(true);
       let name: string = 'visiodomeapp';
       let roomName: string = URLRoomName!;
