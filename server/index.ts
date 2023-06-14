@@ -3,7 +3,7 @@ import { createExpressHandler } from './createExpressHandler';
 import { completeRoom } from './completeRoom';
 import { createRoom } from './createRoom';
 import { checkValidRoom } from './checkValidRoom';
-import { checkIsOrganizer } from './checkIsOrganizer';
+import { checkIsOrganizer, checkIsValidUser } from './checkIsOrganizer';
 import express, { RequestHandler } from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
@@ -37,6 +37,7 @@ app.all('/rooms/start', authMiddleware, createRoom);
 app.all('/rooms/end', authMiddleware, completeRoom);
 app.all('/checkValidRoom', authMiddleware, checkValidRoom);
 app.all('/checkIsOrganizer', authMiddleware, checkIsOrganizer);
+app.all('/checkIsValidUser', authMiddleware, checkIsValidUser);
 
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.

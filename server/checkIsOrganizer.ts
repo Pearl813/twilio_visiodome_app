@@ -20,3 +20,25 @@ export const checkIsOrganizer: RequestHandler = (req, res) => {
       res.status(500).send(error);
     });
 };
+
+export const checkIsValidUser: RequestHandler = (req, res) => {
+  const accessToken = req.headers.authorization;
+
+  const headers = {
+    Authorization: `${accessToken}`,
+  };
+  axios
+    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
+    .then(roomDetail => {
+      if (roomDetail.data.username) {
+        res
+          .status(200)
+          .send({ message: 'success', username: roomDetail.data.username, roomname: roomDetail.data.streamURL });
+      } else {
+        res.status(200).send({ message: 'No exist' });
+      }
+    })
+    .catch((error: any) => {
+      res.status(500).send({ error });
+    });
+};

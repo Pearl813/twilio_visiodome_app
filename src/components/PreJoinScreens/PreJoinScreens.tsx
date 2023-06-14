@@ -61,6 +61,45 @@ export default function PreJoinScreens() {
     if (URLRoomName) {
       setRoomName(URLRoomName);
     }
+
+    if (visiodomeapp === 'presenter') {
+      setIsLoading(true);
+      let urlString: string = window.location.href;
+      // Create a URL object
+      const url = new URL(urlString);
+      // Get the value of the `token` parameter
+      // const token: string = (window.location.search.includes('token') && url.searchParams.get('token'))!;
+
+      if (window.location.search.includes('token')) {
+        let token: string = url.searchParams.get('token')!;
+
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        console.log(headers);
+        axios
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsValidUser`, {}, { headers })
+          .then(res => {
+            if (res.data.message === 'success') {
+              setIsLoading(false);
+              setIsInvalidRoom(false);
+              setName(res.data.username);
+              setRoomName(res.data.roomName);
+              localStorage.setItem('token', token);
+            } else {
+              setIsLoading(false);
+              setIsInvalidRoom(false);
+            }
+          })
+          .catch((e: any) => {
+            setIsLoading(false);
+            setIsInvalidRoom(false);
+          });
+      } else {
+        setIsLoading(false);
+        setIsInvalidRoom(true);
+      }
+    }
     if (visiodomeapp === 'visiodomeapp') {
       setIsLoading(true);
       setIsVisiodome(true);

@@ -83,64 +83,67 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   useEffect(() => {
-    setIsLoading(true);
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      axios
-        .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
-        .then(response => {
-          if (response.data) {
-            setIsLoading(false);
-            if (response.data.streamURL !== null) {
-              setIsCreated(true);
-              setName(response.data.username);
-              setRoomName(response.data.streamURL);
-            } else {
-              setIsCreated(false);
-              setName(response.data.username);
+    if (roomName) {
+      setIsLoading(true);
+      console.log('soefijsoeifjsofe', roomName);
+      if (localStorage.getItem('token')) {
+        const token = localStorage.getItem('token');
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        axios
+          .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
+          .then(response => {
+            if (response.data) {
+              setIsLoading(false);
+              if (response.data.streamURL !== null) {
+                setIsCreated(true);
+                setName(response.data.username);
+                setRoomName(response.data.streamURL);
+              } else {
+                setIsCreated(false);
+                setName(response.data.username);
+              }
             }
-          }
-        })
-        .catch(e => console.log(e));
-    } else {
-      // if (history.location.pathname === '/room/visiodome') {
-      //   setIsLoading(true);
+          })
+          .catch(e => console.log(e));
+      } else {
+        // if (history.location.pathname === '/room/visiodome') {
+        //   setIsLoading(true);
 
-      //   axios
-      //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-      //     .then(res => {
-      //       if (res.data.message === 'success') {
-      //         setIsLoading(false);
-      //         getToken(name, roomName).then(({ token }) => {
-      //           videoConnect(token);
-      //           process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-      //         });
-      //       } else {
-      //         setIsLoading(false);
-      //         setIsInvalidRoom(true);
-      //       }
-      //     })
-      //     .catch(e => console.log(e));
-      // } else {
-      axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-        .then(res => {
-          if (res.data.message === 'success') {
-            setIsInvalidRoom(false);
-          } else {
+        //   axios
+        //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+        //     .then(res => {
+        //       if (res.data.message === 'success') {
+        //         setIsLoading(false);
+        //         getToken(name, roomName).then(({ token }) => {
+        //           videoConnect(token);
+        //           process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+        //         });
+        //       } else {
+        //         setIsLoading(false);
+        //         setIsInvalidRoom(true);
+        //       }
+        //     })
+        //     .catch(e => console.log(e));
+        // } else {
+        axios
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+          .then(res => {
+            if (res.data.message === 'success') {
+              setIsInvalidRoom(false);
+            } else {
+              setIsInvalidRoom(true);
+            }
+            setIsLoading(false);
+          })
+          .catch(e => {
             setIsInvalidRoom(true);
-          }
-          setIsLoading(false);
-        })
-        .catch(e => {
-          setIsInvalidRoom(true);
-          setIsLoading(false);
-          console.log(e);
-        });
-      // }
+            setIsLoading(false);
+            console.log(e);
+          });
+        // }
+      }
     }
   }, [roomName]);
 
