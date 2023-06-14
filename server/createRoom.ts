@@ -13,7 +13,6 @@ export const createRoom: RequestHandler = (req, res) => {
   const headers = {
     Authorization: `${accessToken}`,
   };
-
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(roomDetail => {
@@ -22,6 +21,8 @@ export const createRoom: RequestHandler = (req, res) => {
         client.video.v1.rooms
           .create({ uniqueName: roomDetail.data.streamURL, emptyRoomTimeout: 2 })
           .then((room: any) => {
+            console.log('seofijsefoij');
+            console.log(room.sid);
             if (room.sid) {
               res.status(200).send({
                 message: 'room created',

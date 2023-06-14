@@ -44,7 +44,7 @@ export default function PreJoinScreens() {
   const [isCreated, setIsCreated] = useState(false);
   const [mediaError, setMediaError] = useState<Error>();
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [roomLinks, setRoomLinks] = useState<streamURLs>({
     presenter: '',
     customer: '',
@@ -99,9 +99,9 @@ export default function PreJoinScreens() {
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     // @ts-ignore
 
-    if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
-      window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
-    }
+    // if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
+    //   window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
+    // }
 
     if (localStorage.getItem('token')) {
       const headers = {
@@ -110,7 +110,7 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
-          console.log(res.data.message)
+          console.log(res.data.message);
           if (res.data.message === 'success') {
             setIsOpen(true);
             setMessageHeader('Success!');
@@ -120,8 +120,8 @@ export default function PreJoinScreens() {
               ...roomLinks,
               presenter: res.data.streamURLs.presenter,
               customer: res.data.streamURLs.customer,
-              visiodome: res.data.streamURLs.visiodome
-            })
+              visiodome: res.data.streamURLs.visiodome,
+            });
             setStep(Steps.linkGenerateStep);
           } else {
             axios
@@ -136,8 +136,8 @@ export default function PreJoinScreens() {
                     ...roomLinks,
                     presenter: response.data.streamURLs.presenter,
                     customer: response.data.streamURLs.customer,
-                    visiodome: response.data.streamURLs.visiodome
-                  })
+                    visiodome: response.data.streamURLs.visiodome,
+                  });
                   setStep(Steps.linkGenerateStep);
                 }
               })
@@ -148,11 +148,11 @@ export default function PreJoinScreens() {
         })
         .catch(e => {
           console.log(e);
-        })
+        });
     } else {
       setStep(Steps.deviceSelectionStep);
-    };
-  }
+    }
+  };
 
   const handleGenerateLink = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

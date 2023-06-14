@@ -3,10 +3,11 @@ import { useHistory } from 'react-router-dom';
 
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 import { useAppState } from '../../../state';
+import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import axios from 'axios';
 import Snackbar from '../../Snackbar/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -61,8 +62,11 @@ export default function RoomNameScreen({
   handleSubmit,
 }: RoomNameScreenProps) {
   const classes = useStyles();
+  const { getToken } = useAppState();
   const { user } = useAppState();
   const history = useHistory();
+  const { connect: chatConnect } = useChatContext();
+  const { getAudioAndVideoTracks, connect: videoConnect } = useVideoContext();
 
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
@@ -101,15 +105,13 @@ export default function RoomNameScreen({
         .catch(e => console.log(e));
     } else {
       if (history.location.pathname === '/room/visiodome') {
-        setisLoading(true);
-        let name: string = 'visiodomeapp';
-        let roomName: string = URLRoomName!;
+        setIsLoading(true);
 
         axios
           .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
           .then(res => {
             if (res.data.message === 'success') {
-              setisLoading(false);
+              setIsLoading(false);
               getToken(name, roomName).then(({ token }) => {
                 videoConnect(token);
                 process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
@@ -141,7 +143,7 @@ export default function RoomNameScreen({
 
   return (
     <>
-      {!isInvalidRoom ?
+      {!isInvalidRoom ? (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             {!localStorage.getItem('token') ? 'Join' : isCreated ? 'Join' : 'Create'} a Room
@@ -151,8 +153,8 @@ export default function RoomNameScreen({
             {!localStorage.getItem('token')
               ? 'Enter the your name.'
               : isCreated
-                ? 'The Room is already created, you can join the room.'
-                : "Enter your name and the name of a room you'd like to create"}
+              ? 'The Room is already created, you can join the room.'
+              : "Enter your name and the name of a room you'd like to create"}
           </Typography>
           <form onSubmit={handleSubmit}>
             <div className={classes.inputContainer}>
@@ -202,12 +204,16 @@ export default function RoomNameScreen({
             </Grid>
           </form>
         </>
-        : isLoading ? <Typography variant="h6" align="center">
-          Loading...<CircularProgress variant="indeterminate" />
-        </Typography> : <Typography variant="h6" align="center">
+      ) : isLoading ? (
+        <Typography variant="h6" align="center">
+          Loading...
+          <CircularProgress variant="indeterminate" />
+        </Typography>
+      ) : (
+        <Typography variant="h6" align="center">
           This room donesn't exist!
         </Typography>
-      }
+      )}
     </>
   );
 }
