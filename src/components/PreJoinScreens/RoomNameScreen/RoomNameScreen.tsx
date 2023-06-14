@@ -117,13 +117,14 @@ export default function RoomNameScreen({
                 process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
               });
             } else {
+              setIsLoading(false);
               setIsInvalidRoom(true);
             }
           })
           .catch(e => console.log(e));
       } else {
+        setIsLoading(false);
         setIsInvalidRoom(true);
-        setIsLoading(true);
         axios
           .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
           .then(res => {
