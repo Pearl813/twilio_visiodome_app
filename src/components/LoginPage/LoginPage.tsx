@@ -149,7 +149,7 @@ export default function LoginPage() {
           </div>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              signing...
+              sign in...
             </Typography>
           </div>
         </Grid>
