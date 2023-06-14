@@ -83,6 +83,7 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   useEffect(() => {
+    setIsLoading(true);
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
       const headers = {
@@ -92,6 +93,7 @@ export default function RoomNameScreen({
         .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
         .then(response => {
           if (response.data) {
+            setIsLoading(false);
             if (response.data.streamURL !== null) {
               setIsCreated(true);
               setName(response.data.username);
@@ -124,7 +126,6 @@ export default function RoomNameScreen({
       //     .catch(e => console.log(e));
       // } else {
       setIsLoading(false);
-      setIsInvalidRoom(true);
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
@@ -144,7 +145,7 @@ export default function RoomNameScreen({
 
   return (
     <>
-      {!isInvalidRoom ? (
+      {!isInvalidRoom && !isLoading ? (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             {!localStorage.getItem('token') ? 'Join' : isCreated ? 'Join' : 'Create'} a Room
@@ -206,14 +207,24 @@ export default function RoomNameScreen({
           </form>
         </>
       ) : isLoading ? (
-        <Typography variant="h6" align="center">
-          Loading...
-          <CircularProgress variant="indeterminate" />
-        </Typography>
+        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+          <div>
+            <CircularProgress variant="indeterminate" />
+          </div>
+          <div>
+            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+              loading...
+            </Typography>
+          </div>
+        </Grid>
       ) : (
-        <Typography variant="h6" align="center">
-          This room donesn't exist!
-        </Typography>
+        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+          <div>
+            <Typography variant="h6" align="center">
+              This room donesn't exist!
+            </Typography>
+          </div>
+        </Grid>
       )}
     </>
   );

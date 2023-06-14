@@ -63,7 +63,6 @@ export default function PreJoinScreens() {
     }
     if (visiodomeapp === 'visiodomeapp') {
       setIsVisiodome(true);
-      setIsLoading(true);
       let name: string = 'visiodomeapp';
       let roomName: string = URLRoomName!;
 
@@ -103,7 +102,7 @@ export default function PreJoinScreens() {
     if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
       window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
     }
-
+    setIsLoading(true);
     if (localStorage.getItem('token')) {
       const headers = {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -123,6 +122,7 @@ export default function PreJoinScreens() {
               customer: res.data.streamURLs.customer,
               visiodome: res.data.streamURLs.visiodome,
             });
+            setIsLoading(false);
             setStep(Steps.linkGenerateStep);
           } else {
             axios
@@ -139,6 +139,7 @@ export default function PreJoinScreens() {
                     customer: response.data.streamURLs.customer,
                     visiodome: response.data.streamURLs.visiodome,
                   });
+                  setIsLoading(false);
                   setStep(Steps.linkGenerateStep);
                 }
               })
@@ -151,6 +152,7 @@ export default function PreJoinScreens() {
           console.log(e);
         });
     } else {
+      setIsLoading(false);
       setStep(Steps.deviceSelectionStep);
     }
   };
@@ -164,14 +166,14 @@ export default function PreJoinScreens() {
 
   return (
     <IntroContainer>
-      {isLoading || isVisiodome ? (
+      {isLoading && isVisiodome ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <CircularProgress variant="indeterminate" />
           </div>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              Joining Meeting...
+              {isVisiodome ? `Joining Meeting... ` : ` Loading...`}
             </Typography>
           </div>
         </Grid>
