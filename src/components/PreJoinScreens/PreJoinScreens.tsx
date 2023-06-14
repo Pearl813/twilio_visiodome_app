@@ -53,16 +53,39 @@ export default function PreJoinScreens() {
 
   const history = useHistory();
 
+  // useEffect(() => {
+  //   if (userName) {
+  //     setName(userName);
+  //   }
+  //   if (URLRoomName) {
+  //     setRoomName(URLRoomName);
+  //     console.log(URLRoomName);
+  //   }
+  //   if (visiodomeapp === 'visiodomeapp') {
+  //     console.log(visiodomeapp)
+  //   setisLoading(true);
+  //   let name: string = 'visiodomeapp';
+  //   let roomName: string = URLRoomName!;
+
+  //   axios
+  //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+  //     .then(res => {
+  //       if (res.data.message === 'success') {
+  //         setisLoading(false);
+  //         getToken(name, roomName).then(({ token }) => {
+  //           videoConnect(token);
+  //           process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+  //         });
+  //       } else {
+  //         setIsInvalidRoom(true);
+  //       }
+  //     })
+  //     .catch(e => console.log(e));
+  // }
+  // }, [user, URLRoomName, visiodomeapp]);
+
   useEffect(() => {
-    if (userName) {
-      setName(userName);
-    }
-    if (URLRoomName) {
-      setRoomName(URLRoomName);
-      console.log(URLRoomName);
-    }
-    if (visiodomeapp === 'visiodomeapp') {
-      console.log(visiodomeapp)
+    if (history.location.pathname === '/room/visiodome') {
       setisLoading(true);
       let name: string = 'visiodomeapp';
       let roomName: string = URLRoomName!;
@@ -82,124 +105,124 @@ export default function PreJoinScreens() {
         })
         .catch(e => console.log(e));
     }
-  }, [user, URLRoomName, visiodomeapp]);
+  }}, [])
 
-  useEffect(() => {
-    if (step === Steps.deviceSelectionStep && !mediaError) {
-      getAudioAndVideoTracks().catch(error => {
-        console.log('Error acquiring local media:');
-        console.dir(error);
-        setMediaError(error);
-      });
-    }
-  }, [getAudioAndVideoTracks, step, mediaError]);
+useEffect(() => {
+  if (step === Steps.deviceSelectionStep && !mediaError) {
+    getAudioAndVideoTracks().catch(error => {
+      console.log('Error acquiring local media:');
+      console.dir(error);
+      setMediaError(error);
+    });
+  }
+}, [getAudioAndVideoTracks, step, mediaError]);
 
-  const handleRoomName = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
-    // @ts-ignore
+const handleRoomName = async (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
+  // @ts-ignore
 
-    if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
-      window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
-    }
-
-    if (localStorage.getItem('token')) {
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-        .then(res => {
-          console.log(res.data.message)
-          if (res.data.message === 'success') {
-            setIsOpen(true);
-            setMessageHeader('Success!');
-            setMessageContent('The Room is already created.');
-            setMessageType('info');
-            setRoomLinks({
-              ...roomLinks,
-              presenter: res.data.streamURLs.presenter,
-              customer: res.data.streamURLs.customer,
-              visiodome: res.data.streamURLs.visiodome
-            })
-            setStep(Steps.linkGenerateStep);
-          } else {
-            axios
-              .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/start`, { roomName }, { headers })
-              .then(response => {
-                if (response.status === 200) {
-                  setIsOpen(true);
-                  setMessageHeader('Success!');
-                  setMessageContent('Created Successfully.');
-                  setMessageType('info');
-                  setRoomLinks({
-                    ...roomLinks,
-                    presenter: response.data.streamURLs.presenter,
-                    customer: response.data.streamURLs.customer,
-                    visiodome: response.data.streamURLs.visiodome
-                  })
-                  setStep(Steps.linkGenerateStep);
-                }
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        })
-    } else {
-      setStep(Steps.deviceSelectionStep);
-    };
+  if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
+    window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
   }
 
-  const handleGenerateLink = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  if (localStorage.getItem('token')) {
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    };
+    axios
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+      .then(res => {
+        console.log(res.data.message)
+        if (res.data.message === 'success') {
+          setIsOpen(true);
+          setMessageHeader('Success!');
+          setMessageContent('The Room is already created.');
+          setMessageType('info');
+          setRoomLinks({
+            ...roomLinks,
+            presenter: res.data.streamURLs.presenter,
+            customer: res.data.streamURLs.customer,
+            visiodome: res.data.streamURLs.visiodome
+          })
+          setStep(Steps.linkGenerateStep);
+        } else {
+          axios
+            .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/start`, { roomName }, { headers })
+            .then(response => {
+              if (response.status === 200) {
+                setIsOpen(true);
+                setMessageHeader('Success!');
+                setMessageContent('Created Successfully.');
+                setMessageType('info');
+                setRoomLinks({
+                  ...roomLinks,
+                  presenter: response.data.streamURLs.presenter,
+                  customer: response.data.streamURLs.customer,
+                  visiodome: response.data.streamURLs.visiodome
+                })
+                setStep(Steps.linkGenerateStep);
+              }
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  } else {
     setStep(Steps.deviceSelectionStep);
   };
+}
 
-  const isSnackbarOpen = isOpen;
+const handleGenerateLink = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  setStep(Steps.deviceSelectionStep);
+};
 
-  return (
-    <IntroContainer>
-      <>
-        <Snackbar
-          headline={messageHeader}
-          message={messageContent}
-          variant={messageType}
-          open={isSnackbarOpen}
-          handleClose={() => {
-            setIsOpen(false);
-          }}
+const isSnackbarOpen = isOpen;
+
+return (
+  <IntroContainer>
+    <>
+      <Snackbar
+        headline={messageHeader}
+        message={messageContent}
+        variant={messageType}
+        open={isSnackbarOpen}
+        handleClose={() => {
+          setIsOpen(false);
+        }}
+      />
+      <MediaErrorSnackbar error={mediaError} />
+      {step === Steps.roomNameStep && (
+        <RoomNameScreen
+          name={name}
+          roomName={roomName}
+          isCreated={isCreated}
+          setName={setName}
+          setRoomName={setRoomName}
+          setIsCreated={setIsCreated}
+          handleSubmit={handleRoomName}
         />
-        <MediaErrorSnackbar error={mediaError} />
-        {step === Steps.roomNameStep && (
-          <RoomNameScreen
-            name={name}
-            roomName={roomName}
-            isCreated={isCreated}
-            setName={setName}
-            setRoomName={setRoomName}
-            setIsCreated={setIsCreated}
-            handleSubmit={handleRoomName}
-          />
-        )}
+      )}
 
-        {step === Steps.linkGenerateStep && (
-          <GenerateRoomLinkScreen
-            name={name}
-            roomName={roomName}
-            setStep={setStep}
-            roomLinks={roomLinks}
-            handleSubmit={handleGenerateLink}
-          />
-        )}
+      {step === Steps.linkGenerateStep && (
+        <GenerateRoomLinkScreen
+          name={name}
+          roomName={roomName}
+          setStep={setStep}
+          roomLinks={roomLinks}
+          handleSubmit={handleGenerateLink}
+        />
+      )}
 
-        {step === Steps.deviceSelectionStep && (
-          <DeviceSelectionScreen name={name} roomName={roomName} isCreated={isCreated} setStep={setStep} />
-        )}
-      </>
-    </IntroContainer>
-  );
+      {step === Steps.deviceSelectionStep && (
+        <DeviceSelectionScreen name={name} roomName={roomName} isCreated={isCreated} setStep={setStep} />
+      )}
+    </>
+  </IntroContainer>
+);
 }

@@ -109,7 +109,7 @@ export default function LoginPage() {
         if (authResponse.data.user.PackageType === 'Mobile') {
           setIsOpen(false);
           localStorage.setItem('token', authResponse.data.jwt);
-          history.replace(`/room/${authResponse.data.user.streamURL}`);
+          history.replace(`/room`);
         } else {
           setIsOpen(true);
           setMessageContent('Permission Error.');
