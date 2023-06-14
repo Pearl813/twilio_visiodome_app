@@ -83,31 +83,32 @@ export default function RoomNameScreen({
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   useEffect(() => {
-    if (roomName) {
-      setIsLoading(true);
-      console.log('soefijsoeifjsofe', roomName);
-      if (localStorage.getItem('token')) {
-        const token = localStorage.getItem('token');
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-        axios
-          .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
-          .then(response => {
-            if (response.data) {
-              setIsLoading(false);
-              if (response.data.streamURL !== null) {
-                setIsCreated(true);
-                setName(response.data.username);
-                setRoomName(response.data.streamURL);
-              } else {
-                setIsCreated(false);
-                setName(response.data.username);
-              }
+    setIsLoading(true);
+
+    console.log('soefijsoeifjsofe', roomName);
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      axios
+        .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
+        .then(response => {
+          if (response.data) {
+            setIsLoading(false);
+            if (response.data.streamURL !== null) {
+              setIsCreated(true);
+              setName(response.data.username);
+              setRoomName(response.data.streamURL);
+            } else {
+              setIsCreated(false);
+              setName(response.data.username);
             }
-          })
-          .catch(e => console.log(e));
-      } else {
+          }
+        })
+        .catch(e => console.log(e));
+    } else {
+      if (roomName) {
         // if (history.location.pathname === '/room/visiodome') {
         //   setIsLoading(true);
 
