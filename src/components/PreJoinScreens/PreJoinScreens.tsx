@@ -167,7 +167,7 @@ export default function PreJoinScreens() {
 
   return (
     <IntroContainer>
-      {isLoading ? (
+      {isLoading || isVisiodome ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <CircularProgress variant="indeterminate" />
