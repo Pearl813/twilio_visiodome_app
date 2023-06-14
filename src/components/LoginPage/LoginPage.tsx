@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Grid from '@material-ui/core/Grid';
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
-import { InputLabel, Theme } from '@material-ui/core';
+import { InputLabel, Theme, CircularProgress } from '@material-ui/core';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -80,7 +80,7 @@ export default function LoginPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +98,7 @@ export default function LoginPage() {
   const login = () => {
     setAuthError(null);
     setIsSnackbarDismissed(false);
-
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_STRAPI_URL}/api/auth/local`, {
         identifier: email,
@@ -114,10 +114,12 @@ export default function LoginPage() {
           setIsOpen(true);
           setMessageContent('Permission Error.');
         }
+        setIsLoading(false);
       })
       .catch(error => {
         // Handle error.
         setIsOpen(true);
+        setIsLoading(false);
         setMessageContent('Email or password is incorrect.');
 
         console.log('An error occurred:', error.response.data.error.name);
@@ -140,55 +142,68 @@ export default function LoginPage() {
         open={isSnackbarOpen}
         handleClose={() => setIsSnackbarDismissed(true)}
       />
-      <>
-        <Typography variant="h5" className={classes.gutterBottom}>
-          Sign in
-        </Typography>
-        <Typography variant="body1">{'Enter your email and password.'}</Typography>
-        <form onSubmit={handleSubmit}>
-          <div className={classes.inputContainer}>
-            <div>
-              <InputLabel shrink htmlFor="input-email">
-                Your Email
-              </InputLabel>
-              <TextField
-                id="input-email"
-                variant="outlined"
-                fullWidth
-                size="small"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
-            <div>
-              <InputLabel shrink htmlFor="input-password">
-                Password
-              </InputLabel>
-              <TextField
-                type="password"
-                autoCapitalize="false"
-                id="input-password"
-                variant="outlined"
-                fullWidth
-                size="small"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </div>
+      {isLoading ? (
+        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+          <div>
+            <CircularProgress variant="indeterminate" />
           </div>
-          <Grid container justifyContent="flex-end">
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              disabled={!email || !password}
-              className={classes.submitButton}
-            >
-              Sign in
-            </Button>
-          </Grid>
-        </form>
-      </>
+          <div>
+            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+              signing...
+            </Typography>
+          </div>
+        </Grid>
+      ) : (
+        <>
+          <Typography variant="h5" className={classes.gutterBottom}>
+            Sign in
+          </Typography>
+          <Typography variant="body1">{'Enter your email and password.'}</Typography>
+          <form onSubmit={handleSubmit}>
+            <div className={classes.inputContainer}>
+              <div>
+                <InputLabel shrink htmlFor="input-email">
+                  Your Email
+                </InputLabel>
+                <TextField
+                  id="input-email"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+              </div>
+              <div>
+                <InputLabel shrink htmlFor="input-password">
+                  Password
+                </InputLabel>
+                <TextField
+                  type="password"
+                  autoCapitalize="false"
+                  id="input-password"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </div>
+            </div>
+            <Grid container justifyContent="flex-end">
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                disabled={!email || !password}
+                className={classes.submitButton}
+              >
+                Sign in
+              </Button>
+            </Grid>
+          </form>
+        </>
+      )}
     </IntroContainer>
   );
 }
