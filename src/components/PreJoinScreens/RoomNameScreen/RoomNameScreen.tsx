@@ -84,8 +84,6 @@ export default function RoomNameScreen({
 
   useEffect(() => {
     setIsLoading(true);
-
-    console.log('soefijsoeifjsofe', roomName);
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
       const headers = {
@@ -97,6 +95,7 @@ export default function RoomNameScreen({
           if (response.data) {
             setIsLoading(false);
             if (response.data.streamURL !== null) {
+              history.replace(`/room/${response.data.streamURL}`);
               setIsCreated(true);
               setName(response.data.username);
               setRoomName(response.data.streamURL);
