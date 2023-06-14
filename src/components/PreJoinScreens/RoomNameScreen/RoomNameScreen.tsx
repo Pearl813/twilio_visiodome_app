@@ -201,7 +201,14 @@ export default function RoomNameScreen({
             </div>
             <Grid container justifyContent="flex-end">
               <div className={classes.continueButtons}>
-                <Button variant="outlined" color="primary" onClick={() => history.replace('/')}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    history.replace('/');
+                    localStorage.clear();
+                  }}
+                >
                   Cancel
                 </Button>
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
