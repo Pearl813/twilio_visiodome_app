@@ -19,9 +19,8 @@ export const createRoom: RequestHandler = (req, res) => {
       if (roomDetail?.data?.streamURL !== null) {
         // res.status(403).send({ message: 'Already Exist.' });
         client.video.v1.rooms
-          .create({ uniqueName: roomDetail.data.streamURL, emptyRoomTimeout: 2 })
+          .create({ uniqueName: roomDetail.data.streamURL })
           .then((room: any) => {
-            console.log('seofijsefoij');
             console.log(room.sid);
             if (room.sid) {
               res.status(200).send({
@@ -34,6 +33,9 @@ export const createRoom: RequestHandler = (req, res) => {
                 },
               });
             }
+          })
+          .catch((e: any) => {
+            console.log(e);
           });
       } else {
         let userId = roomDetail.data.id;
@@ -64,6 +66,7 @@ export const createRoom: RequestHandler = (req, res) => {
       }
     })
     .catch((error: any) => {
+      console.log(error);
       res.status(500).send(error);
     });
 };
