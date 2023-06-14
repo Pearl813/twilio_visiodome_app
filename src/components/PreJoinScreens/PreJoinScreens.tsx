@@ -74,7 +74,6 @@ export default function PreJoinScreens() {
             getToken(name, roomName).then(({ token }) => {
               videoConnect(token);
               process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              setIsLoading(false);
             });
           } else {
             setIsLoading(false);
@@ -167,7 +166,7 @@ export default function PreJoinScreens() {
 
   return (
     <IntroContainer>
-      {isLoading || isVisiodome ? (
+      {isLoading && isVisiodome ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <CircularProgress variant="indeterminate" />
