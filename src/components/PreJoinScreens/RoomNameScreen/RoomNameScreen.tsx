@@ -100,23 +100,44 @@ export default function RoomNameScreen({
         })
         .catch(e => console.log(e));
     } else {
-      setIsInvalidRoom(true);
-      setIsLoading(true);
-      axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-        .then(res => {
-          if (res.data.message === 'success') {
-            setIsInvalidRoom(false);
-          } else {
+      if (history.location.pathname === '/room/visiodome') {
+        setisLoading(true);
+        let name: string = 'visiodomeapp';
+        let roomName: string = URLRoomName!;
+
+        axios
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+          .then(res => {
+            if (res.data.message === 'success') {
+              setisLoading(false);
+              getToken(name, roomName).then(({ token }) => {
+                videoConnect(token);
+                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+              });
+            } else {
+              setIsInvalidRoom(true);
+            }
+          })
+          .catch(e => console.log(e));
+      } else {
+        setIsInvalidRoom(true);
+        setIsLoading(true);
+        axios
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+          .then(res => {
+            if (res.data.message === 'success') {
+              setIsInvalidRoom(false);
+            } else {
+              setIsInvalidRoom(true);
+            }
+          })
+          .catch(e => {
             setIsInvalidRoom(true);
-          }
-        })
-        .catch(e => {
-          setIsInvalidRoom(true);
-          console.log(e);
-        });
+            console.log(e);
+          });
+      }
     }
-  }, [roomName]);
+  }, []);
 
   return (
     <>
