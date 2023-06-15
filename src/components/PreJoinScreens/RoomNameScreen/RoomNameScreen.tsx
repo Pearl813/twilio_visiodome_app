@@ -93,12 +93,12 @@ export default function RoomNameScreen({
         .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
         .then(response => {
           if (response.data) {
-            setIsLoading(false);
             if (response.data.streamURL !== null) {
               history.replace(`/room/${response.data.streamURL}`);
               setIsCreated(true);
               setName(response.data.username);
               setRoomName(response.data.streamURL);
+              setIsLoading(false);
             } else {
               setIsCreated(false);
               setName(response.data.username);
@@ -224,7 +224,7 @@ export default function RoomNameScreen({
           </div>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              loading...
+              Loading...
             </Typography>
           </div>
         </Grid>

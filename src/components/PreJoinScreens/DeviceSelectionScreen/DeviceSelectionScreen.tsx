@@ -74,10 +74,17 @@ interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
   isCreated: boolean;
+  isGetLink: boolean;
   setStep: (step: Steps) => void;
 }
 
-export default function DeviceSelectionScreen({ name, roomName, isCreated, setStep }: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({
+  name,
+  roomName,
+  isCreated,
+  isGetLink,
+  setStep,
+}: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
@@ -213,25 +220,40 @@ export default function DeviceSelectionScreen({ name, roomName, isCreated, setSt
 
                 <Grid item md={5} sm={12} xs={12}>
                   <div className={classes.joinButtons}>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        if (isCreated) setStep(Steps.linkGenerateStep);
-                        else setStep(Steps.roomNameStep);
-                      }}
-                    >
-                      {isCreated ? `Show link` : `Cancel`}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      data-cy-join-now
-                      onClick={handleJoin}
-                      disabled={disableButtons}
-                    >
-                      Join Now
-                    </Button>
+                    {isGetLink ? (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        data-cy-join-now
+                        onClick={handleJoin}
+                        disabled={disableButtons}
+                      >
+                        Join Now
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            if (isCreated) setStep(Steps.linkGenerateStep);
+                            else setStep(Steps.roomNameStep);
+                          }}
+                        >
+                          {isCreated ? `Show link` : `Cancel`}
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          data-cy-join-now
+                          onClick={handleJoin}
+                          disabled={disableButtons}
+                        >
+                          Join Now
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </Grid>
               </Grid>

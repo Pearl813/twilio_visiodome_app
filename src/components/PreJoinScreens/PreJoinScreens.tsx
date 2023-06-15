@@ -46,6 +46,7 @@ export default function PreJoinScreens() {
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
+  const [isGetLink, setIsGetLink] = useState(false);
   const [roomLinks, setRoomLinks] = useState<streamURLs>({
     presenter: '',
     customer: '',
@@ -86,6 +87,8 @@ export default function PreJoinScreens() {
               setName(res.data.username);
               setRoomName(res.data.roomName);
               localStorage.setItem('token', token);
+              setIsGetLink(true);
+              setStep(Steps.deviceSelectionStep);
             } else {
               setIsLoading(false);
               setIsInvalidRoom(false);
@@ -251,7 +254,13 @@ export default function PreJoinScreens() {
           )}
 
           {step === Steps.deviceSelectionStep && (
-            <DeviceSelectionScreen name={name} roomName={roomName} isCreated={isCreated} setStep={setStep} />
+            <DeviceSelectionScreen
+              name={name}
+              roomName={roomName}
+              isCreated={isCreated}
+              isGetLink={isGetLink}
+              setStep={setStep}
+            />
           )}
         </>
       )}
