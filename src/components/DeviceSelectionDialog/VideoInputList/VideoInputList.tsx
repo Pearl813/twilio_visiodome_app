@@ -52,7 +52,7 @@ export default function VideoInputList() {
       {videoInputDevices.length > 1 ? (
         <FormControl fullWidth>
           <Typography variant="subtitle2" gutterBottom>
-            Video Input
+            Video Input {localVideoInputDeviceId}
           </Typography>
           <Select
             onChange={e => replaceTrack(e.target.value as string)}

@@ -229,7 +229,7 @@ export default function ParticipantInfo({
             <Typography variant="body1" className={classes.typography} component="span">
               {participant.identity}
               {isLocalParticipant && ' (You)'}
-              {isOrganizer && ' presenter'}
+              <p style={{ color: 'red' }}>{isOrganizer && ' Presenter'}</p>
             </Typography>
           </span>
         </div>
