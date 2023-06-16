@@ -117,19 +117,19 @@ export default function Room() {
   useEffect(() => {
     console.log(videoInputDevices);
     console.log(audioInputDevices);
-    if (room?.localParticipant.identity === 'visiodomeapp') {
-      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-      if (device) {
-        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-        if (audioDevice) {
-          replaceTrack(device.deviceId);
-        } else {
-          console.log('audio device not found');
-        }
+    // if (room?.localParticipant.identity === 'visiodomeapp') {
+    const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+    if (device) {
+      const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+      if (audioDevice) {
+        replaceTrack(device.deviceId);
       } else {
-        console.log('video device not found');
+        console.log('audio device not found');
       }
+    } else {
+      console.log('video device not found');
     }
+    // }
   }, [videoInputDevices, audioInputDevices]);
 
   return (
