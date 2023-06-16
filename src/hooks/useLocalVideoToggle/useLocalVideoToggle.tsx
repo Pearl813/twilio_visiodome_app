@@ -1,5 +1,5 @@
 import { LocalVideoTrack } from 'twilio-video';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 export default function useLocalVideoToggle() {
@@ -9,6 +9,10 @@ export default function useLocalVideoToggle() {
     track => !track.name.includes('screen') && track.kind === 'video'
   ) as LocalVideoTrack;
   const [isPublishing, setIspublishing] = useState(false);
+
+  useEffect(() => {
+    if (room?.localParticipant.identity === 'visiodomeapp') setIspublishing(true);
+  }, []);
 
   const toggleVideoEnabled = useCallback(() => {
     if (!isPublishing) {
