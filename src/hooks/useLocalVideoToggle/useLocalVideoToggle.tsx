@@ -10,17 +10,17 @@ export default function useLocalVideoToggle() {
   ) as LocalVideoTrack;
   const [isPublishing, setIspublishing] = useState(false);
 
-  useEffect(() => {
-    if (room?.localParticipant.identity === 'visiodomeapp') {
-      setIspublishing(true);
-      getLocalVideoTrack()
-        .then((track: LocalVideoTrack) => localParticipant?.publishTrack(track, { priority: 'low' }))
-        .catch(onError)
-        .finally(() => {
-          setIspublishing(false);
-        });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (room?.localParticipant.identity === 'visiodomeapp') {
+  //     setIspublishing(true);
+  //     getLocalVideoTrack()
+  //       .then((track: LocalVideoTrack) => localParticipant?.publishTrack(track, { priority: 'low' }))
+  //       .catch(onError)
+  //       .finally(() => {
+  //         setIspublishing(false);
+  //       });
+  //   }
+  // }, []);
 
   const toggleVideoEnabled = useCallback(() => {
     if (!isPublishing) {
