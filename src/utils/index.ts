@@ -25,6 +25,7 @@ export function removeUndefineds<T>(obj: T): T {
 
 export async function getDeviceInfo() {
   const devices = await navigator.mediaDevices.enumerateDevices();
+  console.log(devices);
 
   return {
     audioInputDevices: devices.filter(device => device.kind === 'audioinput'),
