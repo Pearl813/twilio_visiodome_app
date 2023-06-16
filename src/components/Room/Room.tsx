@@ -97,16 +97,13 @@ export default function Room() {
   const localAudioInputDeviceId =
     srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
 
-  function replaceAudioTrack(newDeviceId: string) {
-    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newDeviceId);
-    localAudioTrack?.restart({ deviceId: { exact: newDeviceId } });
-  }
-
   function replaceTrack(newDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
     setStoredLocalVideoDeviceId(newDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newDeviceId);
+    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newDeviceId);
+    localAudioTrack?.restart({ deviceId: { exact: newDeviceId } });
     localVideoTrack?.restart({
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newDeviceId },
@@ -123,15 +120,14 @@ export default function Room() {
     if (room?.localParticipant.identity === 'visiodomeapp') {
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
       if (device) {
-        replaceTrack(device.deviceId);
+        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+        if (audioDevice) {
+          replaceTrack(device.deviceId);
+        } else {
+          console.log('audio device not found');
+        }
       } else {
-        console.log('Device not found');
-      }
-      const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-      if (audioDevice) {
-        replaceAudioTrack(audioDevice.deviceId);
-      } else {
-        console.log('Device not found');
+        console.log('video device not found');
       }
     }
   }, [videoInputDevices, audioInputDevices]);
