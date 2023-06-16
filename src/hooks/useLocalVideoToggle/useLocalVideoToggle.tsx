@@ -11,11 +11,16 @@ export default function useLocalVideoToggle() {
   const [isPublishing, setIspublishing] = useState(false);
 
   useEffect(() => {
-    if (room?.localParticipant.identity === 'visiodomeapp') setIspublishing(true);
+    if (room?.localParticipant.identity === 'visiodomeapp') {
+      console.log('coijoijoijoijoijoi');
+      setIspublishing(true);
+      console.log(isPublishing);
+    }
   }, []);
 
   const toggleVideoEnabled = useCallback(() => {
     if (!isPublishing) {
+      console.log('oooooooooooooooooooooo');
       if (videoTrack) {
         const localTrackPublication = localParticipant?.unpublishTrack(videoTrack);
         // TODO: remove when SDK implements this event. See: https://issues.corp.twilio.com/browse/JSDK-2592
