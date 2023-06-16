@@ -6,15 +6,16 @@ import { GalleryView } from '../GalleryView/GalleryView';
 import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
 import MainParticipant from '../MainParticipant/MainParticipant';
 import { makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core';
-import { Participant, Room as IRoom } from 'twilio-video';
+import { Participant, Room as IRoom, LocalVideoTrack } from 'twilio-video';
 import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
 import ParticipantList from '../ParticipantList/ParticipantList';
 import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useDevices from '../../hooks/useDevices/useDevices';
-import { DEFAULT_VIDEO_CONSTRAINTS } from '../../constants';
+import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -75,20 +76,26 @@ export function useSetSpeakerViewOnScreenShare(
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { isBackgroundSelectionOpen, room } = useVideoContext();
+  const { isBackgroundSelectionOpen, room, localTracks } = useVideoContext();
   const { videoInputDevices } = useDevices();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const screenShareParticipant = useScreenShareParticipant();
 
-  const { localTracks } = useVideoContext();
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
+    window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
+  );
 
-  const localVideoTrack = localTracks.find(track => track.kind === 'video');
+  const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
 
   function replaceTrack(newDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
+    setStoredLocalVideoDeviceId(newDeviceId);
+    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newDeviceId);
     localVideoTrack?.restart({
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newDeviceId },
@@ -101,9 +108,7 @@ export default function Room() {
 
   useEffect(() => {
     const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-
     if (device) {
-      console.log(device.deviceId);
       replaceTrack(device.deviceId);
     } else {
       console.log('Device not found');
