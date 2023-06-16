@@ -22,13 +22,20 @@ const useStyles = makeStyles({
 export default function VideoInputList() {
   const classes = useStyles();
   const { videoInputDevices } = useDevices();
-  const { localTracks } = useVideoContext();
+  const { localTracks, room } = useVideoContext();
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
   const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
   );
+  const [isVisiodome, setIsVisiodome] = useState(false);
+
+  if (room?.localParticipant.identity === 'visiodomeapp') {
+    console.log('this is visiodome app');
+    setIsVisiodome(true);
+  }
+
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
 
   function replaceTrack(newDeviceId: string) {
@@ -42,6 +49,18 @@ export default function VideoInputList() {
     });
   }
 
+  const getDeviceID_NDI_1 = (devices: any) => {
+    const device = devices.find((d: any) => d.label === 'NDI Webcam Video 1');
+
+    if (device) {
+      console.log(device.deviceId);
+      return device.deviceId;
+    } else {
+      console.log('Device not found');
+      return 'Device not found';
+    }
+  };
+
   return (
     <div>
       {localVideoTrack && (
@@ -54,17 +73,27 @@ export default function VideoInputList() {
           <Typography variant="subtitle2" gutterBottom>
             Video Input {localVideoInputDeviceId}
           </Typography>
-          <Select
-            onChange={e => replaceTrack(e.target.value as string)}
-            value={localVideoInputDeviceId || ''}
-            variant="outlined"
-          >
-            {videoInputDevices.map(device => (
-              <MenuItem value={device.deviceId} key={device.deviceId}>
-                {device.label}
-              </MenuItem>
-            ))}
-          </Select>
+          {isVisiodome ? (
+            <Select disabled={true} value={getDeviceID_NDI_1(videoInputDevices) || ''} variant="outlined">
+              {/* {videoInputDevices.map(device => (
+                <MenuItem value={device.deviceId} key={device.deviceId}>
+                  {device.label}
+                </MenuItem>
+              ))} */}
+            </Select>
+          ) : (
+            <Select
+              onChange={e => replaceTrack(e.target.value as string)}
+              value={localVideoInputDeviceId || ''}
+              variant="outlined"
+            >
+              {videoInputDevices.map(device => (
+                <MenuItem value={device.deviceId} key={device.deviceId}>
+                  {device.label}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
         </FormControl>
       ) : (
         <>
