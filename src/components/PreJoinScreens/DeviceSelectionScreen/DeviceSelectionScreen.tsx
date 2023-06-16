@@ -96,28 +96,21 @@ export default function DeviceSelectionScreen({
 
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
+      console.log(token);
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
   };
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   axios
-  //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
-  //     .then(res => {
-  //       if (res.data.message === 'success') {
-  //         setIsInvalidRoom(false);
-  //       } else {
-  //         setIsInvalidRoom(true);
-  //       }
-  //       setIsLoading(false);
-  //     })
-  //     .catch(e => {
-  //       setIsInvalidRoom(true);
-  //       console.log(e);
-  //     });
-  // }, []);
+  useEffect(() => {
+    if (name === 'visiodomeapp') {
+      setIsLoading(true);
+      getToken(name, roomName).then(({ token }) => {
+        videoConnect(token);
+        process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      });
+    }
+  }, []);
 
   if (isFetching || isConnecting) {
     return (
@@ -136,7 +129,7 @@ export default function DeviceSelectionScreen({
 
   return (
     <>
-      {!isInvalidRoom ? (
+      {!isInvalidRoom && !isLoading ? (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
             Join {roomName}

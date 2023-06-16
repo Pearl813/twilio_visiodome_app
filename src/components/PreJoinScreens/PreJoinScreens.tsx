@@ -31,6 +31,7 @@ export default function PreJoinScreens() {
   const { getAudioAndVideoTracks, connect: videoConnect } = useVideoContext();
   const { getToken } = useAppState();
   const { connect: chatConnect } = useChatContext();
+
   const { URLRoomName, visiodomeapp } = useParams<{ URLRoomName?: string; visiodomeapp?: string }>();
   const [step, setStep] = useState(Steps.roomNameStep);
   const { userName } = useParams<{ userName?: string }>();
@@ -113,6 +114,8 @@ export default function PreJoinScreens() {
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
+            setName(name);
+            setRoomName(roomName);
             setStep(Steps.deviceSelectionStep);
             setIsLoading(false);
             // getToken(name, roomName).then(({ token }) => {
