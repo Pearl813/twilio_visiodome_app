@@ -49,18 +49,18 @@ export default function VideoInputList() {
     });
   }
 
-  const getDeviceID_NDI_1 = (devices: any) => {
-    console.log(devices);
-    const device = devices.find((d: any) => d.label === 'NDI Webcam Video 1');
+  // const getDeviceID_NDI_1 = (devices: any) => {
+  //   console.log(devices);
+  //   const device = devices.find((d: any) => d.label === 'NDI Webcam Video 1');
 
-    if (device) {
-      console.log(device.deviceId);
-      return device.deviceId;
-    } else {
-      console.log('Device not found');
-      return 'Device not found';
-    }
-  };
+  //   if (device) {
+  //     console.log(device.deviceId);
+  //     return device.deviceId;
+  //   } else {
+  //     console.log('Device not found');
+  //     return 'Device not found';
+  //   }
+  // };
 
   return (
     <div>
@@ -75,13 +75,12 @@ export default function VideoInputList() {
             Video Input {localVideoInputDeviceId}
           </Typography>
           {isVisiodome ? (
-            'sdfspdkfpsdofkpsdfok'
+            <Select disabled={true} value={'sefsefsef'} variant="outlined">
+              <MenuItem value={'sefsefsef'} key={'sefsefsef'}>
+                {'NDI Webcam Video 1'}
+              </MenuItem>
+            </Select>
           ) : (
-            // <Select disabled={true} value={getDeviceID_NDI_1(videoInputDevices) || ''} variant="outlined">
-            //   <MenuItem value={getDeviceID_NDI_1(videoInputDevices)} key={getDeviceID_NDI_1(videoInputDevices)}>
-            //     {'NDI Webcam Video 1'}
-            //   </MenuItem>
-            // </Select>
             <Select
               onChange={e => replaceTrack(e.target.value as string)}
               value={localVideoInputDeviceId || ''}
