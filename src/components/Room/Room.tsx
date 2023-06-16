@@ -134,7 +134,7 @@ export default function Room() {
         console.log('Device not found');
       }
     }
-  }, [videoInputDevices]);
+  }, [videoInputDevices, audioInputDevices]);
 
   return (
     <div
