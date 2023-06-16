@@ -6,7 +6,7 @@ import { GalleryView } from '../GalleryView/GalleryView';
 import { MobileGalleryView } from '../MobileGalleryView/MobileGalleryView';
 import MainParticipant from '../MainParticipant/MainParticipant';
 import { makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core';
-import { Participant, Room as IRoom, LocalVideoTrack } from 'twilio-video';
+import { Participant, Room as IRoom, LocalVideoTrack, LocalAudioTrack } from 'twilio-video';
 import { ParticipantAudioTracks } from '../ParticipantAudioTracks/ParticipantAudioTracks';
 import ParticipantList from '../ParticipantList/ParticipantList';
 import { useAppState } from '../../state';
@@ -15,7 +15,7 @@ import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/use
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useDevices from '../../hooks/useDevices/useDevices';
-import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY } from '../../constants';
+import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY, SELECTED_AUDIO_INPUT_KEY } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -77,7 +77,7 @@ export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room, localTracks } = useVideoContext();
-  const { videoInputDevices } = useDevices();
+  const { videoInputDevices, audioInputDevices } = useDevices();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -90,6 +90,16 @@ export default function Room() {
   );
 
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
+
+  const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
+  const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
+  const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
+  const localAudioInputDeviceId =
+    srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
+  function replaceAudioTrack(newDeviceId: string) {
+    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newDeviceId);
+    localAudioTrack?.restart({ deviceId: { exact: newDeviceId } });
+  }
 
   function replaceTrack(newDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
@@ -110,9 +120,16 @@ export default function Room() {
     if (room?.localParticipant.identity === 'visiodomeapp') {
       console.log('visiodome');
       console.log(videoInputDevices);
+      console.log(audioInputDevices);
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
       if (device) {
         replaceTrack(device.deviceId);
+      } else {
+        console.log('Device not found');
+      }
+      const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+      if (audioDevice) {
+        replaceAudioTrack(audioDevice.deviceId);
       } else {
         console.log('Device not found');
       }
