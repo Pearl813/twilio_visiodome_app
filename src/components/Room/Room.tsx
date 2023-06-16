@@ -108,6 +108,8 @@ export default function Room() {
 
   useEffect(() => {
     if (room?.localParticipant.identity === 'visiodomeapp') {
+      console.log('visiodome');
+      console.log(videoInputDevices);
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
       if (device) {
         replaceTrack(device.deviceId);
