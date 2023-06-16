@@ -97,16 +97,16 @@ export default function Room() {
   const localAudioInputDeviceId =
     srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
 
-  function replaceTrack(newDeviceId: string) {
+  function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
-    setStoredLocalVideoDeviceId(newDeviceId);
-    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newDeviceId);
-    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newDeviceId);
-    localAudioTrack?.restart({ deviceId: { exact: newDeviceId } });
+    setStoredLocalVideoDeviceId(newVideoDeviceId);
+    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
+    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
+    localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
     localVideoTrack?.restart({
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-      deviceId: { exact: newDeviceId },
+      deviceId: { exact: newVideoDeviceId },
     });
   }
 
@@ -116,20 +116,24 @@ export default function Room() {
 
   useEffect(() => {
     console.log(videoInputDevices);
-    console.log(audioInputDevices);
-    // if (room?.localParticipant.identity === 'visiodomeapp') {
-    const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-    if (device) {
-      const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-      if (audioDevice) {
-        replaceTrack(device.deviceId);
+    console.log(localAudioTrack);
+    if (
+      room?.localParticipant.identity === 'visiodomeapp' &&
+      videoInputDevices.length >= 1 &&
+      audioInputDevices.length >= 1
+    ) {
+      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+      if (device) {
+        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+        if (audioDevice) {
+          replaceTrack(device.deviceId, audioDevice.deviceId);
+        } else {
+          console.log('audio device not found');
+        }
       } else {
-        console.log('audio device not found');
+        console.log('video device not found');
       }
-    } else {
-      console.log('video device not found');
     }
-    // }
   }, [videoInputDevices, audioInputDevices]);
 
   return (
