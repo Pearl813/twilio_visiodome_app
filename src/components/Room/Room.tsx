@@ -107,11 +107,13 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
-    const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-    if (device) {
-      replaceTrack(device.deviceId);
-    } else {
-      console.log('Device not found');
+    if (room?.localParticipant.identity === 'visiodomeapp') {
+      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+      if (device) {
+        replaceTrack(device.deviceId);
+      } else {
+        console.log('Device not found');
+      }
     }
   }, [videoInputDevices]);
 
