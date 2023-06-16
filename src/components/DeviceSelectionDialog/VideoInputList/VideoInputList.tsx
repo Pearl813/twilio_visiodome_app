@@ -50,6 +50,7 @@ export default function VideoInputList() {
   }
 
   const getDeviceID_NDI_1 = (devices: any) => {
+    console.log(devices);
     const device = devices.find((d: any) => d.label === 'NDI Webcam Video 1');
 
     if (device) {
@@ -75,11 +76,9 @@ export default function VideoInputList() {
           </Typography>
           {isVisiodome ? (
             <Select disabled={true} value={getDeviceID_NDI_1(videoInputDevices) || ''} variant="outlined">
-              {/* {videoInputDevices.map(device => (
-                <MenuItem value={device.deviceId} key={device.deviceId}>
-                  {device.label}
-                </MenuItem>
-              ))} */}
+              <MenuItem value={getDeviceID_NDI_1(videoInputDevices)} key={getDeviceID_NDI_1(videoInputDevices)}>
+                {'NDI Webcam Video 1'}
+              </MenuItem>
             </Select>
           ) : (
             <Select
