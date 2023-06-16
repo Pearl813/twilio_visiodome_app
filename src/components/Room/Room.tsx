@@ -116,7 +116,7 @@ export default function Room() {
 
   useEffect(() => {
     console.log(videoInputDevices);
-    console.log(localAudioTrack);
+    console.log(localTracks);
     if (
       room?.localParticipant.identity === 'visiodomeapp' &&
       videoInputDevices.length >= 1 &&
