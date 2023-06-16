@@ -115,8 +115,6 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
-    console.log(videoInputDevices);
-    console.log(audioInputDevices);
     if (
       room?.localParticipant.identity === 'visiodomeapp' &&
       videoInputDevices.length >= 1 &&

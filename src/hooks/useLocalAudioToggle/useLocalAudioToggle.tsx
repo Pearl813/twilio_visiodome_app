@@ -14,7 +14,7 @@ export default function useLocalAudioToggle() {
         audioTrack.enable();
       }
     }
-  }, []);
+  }, [audioTrack]);
 
   const toggleAudioEnabled = useCallback(() => {
     if (audioTrack) {
