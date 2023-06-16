@@ -100,10 +100,10 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
-    console.log(videoInputDevices);
     const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
 
     if (device) {
+      console.log(device.deviceId);
       replaceTrack(device.deviceId);
     } else {
       console.log('Device not found');
