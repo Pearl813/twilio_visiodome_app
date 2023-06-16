@@ -11,7 +11,8 @@ export default function useLocalAudioToggle() {
   useEffect(() => {
     if (room?.localParticipant.identity === 'visiodomeapp') {
       if (audioTrack) {
-        audioTrack.isEnabled ? audioTrack.disable() : audioTrack.enable();
+        console.log(audioTrack);
+        audioTrack.enable();
       }
     }
   }, [audioTrack]);
