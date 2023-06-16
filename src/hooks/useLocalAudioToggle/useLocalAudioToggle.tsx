@@ -1,23 +1,16 @@
 import { LocalAudioTrack } from 'twilio-video';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import useIsTrackEnabled from '../useIsTrackEnabled/useIsTrackEnabled';
 import useVideoContext from '../useVideoContext/useVideoContext';
 
 export default function useLocalAudioToggle() {
-  const { room, localTracks } = useVideoContext();
+  const { localTracks } = useVideoContext();
   const audioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
   const isEnabled = useIsTrackEnabled(audioTrack);
 
-  // useEffect(() => {
-  //   if (room?.localParticipant.identity === 'visiodomeapp') {
-  //     if (audioTrack) {
-  //       audioTrack.enable();
-  //     }
-  //   }
-  // }, []);
-
   const toggleAudioEnabled = useCallback(() => {
     if (audioTrack) {
+      console.log(audioTrack.isEnabled);
       audioTrack.isEnabled ? audioTrack.disable() : audioTrack.enable();
     }
   }, [audioTrack]);
