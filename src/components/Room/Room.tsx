@@ -96,6 +96,7 @@ export default function Room() {
   const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
   const localAudioInputDeviceId =
     srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
+
   function replaceAudioTrack(newDeviceId: string) {
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newDeviceId);
     localAudioTrack?.restart({ deviceId: { exact: newDeviceId } });
@@ -117,10 +118,9 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
+    console.log(videoInputDevices);
+    console.log(audioInputDevices);
     if (room?.localParticipant.identity === 'visiodomeapp') {
-      console.log('visiodome');
-      console.log(videoInputDevices);
-      console.log(audioInputDevices);
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
       if (device) {
         replaceTrack(device.deviceId);
