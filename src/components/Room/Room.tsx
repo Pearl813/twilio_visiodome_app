@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
 import ChatWindow from '../ChatWindow/ChatWindow';
 import clsx from 'clsx';
@@ -13,6 +13,8 @@ import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useDevices from '../../hooks/useDevices/useDevices';
+import { DEFAULT_VIDEO_CONSTRAINTS } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -74,14 +76,39 @@ export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
+  const { videoInputDevices } = useDevices();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const screenShareParticipant = useScreenShareParticipant();
 
+  const { localTracks } = useVideoContext();
+
+  const localVideoTrack = localTracks.find(track => track.kind === 'video');
+
+  function replaceTrack(newDeviceId: string) {
+    // Here we store the device ID in the component state. This is so we can re-render this component display
+    // to display the name of the selected device when it is changed while the users camera is off.
+    localVideoTrack?.restart({
+      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      deviceId: { exact: newDeviceId },
+    });
+  }
+
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
+
+  useEffect(() => {
+    console.log(videoInputDevices);
+    const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+
+    if (device) {
+      replaceTrack(device.deviceId);
+    } else {
+      console.log('Device not found');
+    }
+  }, [videoInputDevices]);
 
   return (
     <div
