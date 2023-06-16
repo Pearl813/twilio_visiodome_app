@@ -75,12 +75,13 @@ export default function VideoInputList() {
             Video Input {localVideoInputDeviceId}
           </Typography>
           {isVisiodome ? (
-            <Select disabled={true} value={getDeviceID_NDI_1(videoInputDevices) || ''} variant="outlined">
-              <MenuItem value={getDeviceID_NDI_1(videoInputDevices)} key={getDeviceID_NDI_1(videoInputDevices)}>
-                {'NDI Webcam Video 1'}
-              </MenuItem>
-            </Select>
+            'sdfspdkfpsdofkpsdfok'
           ) : (
+            // <Select disabled={true} value={getDeviceID_NDI_1(videoInputDevices) || ''} variant="outlined">
+            //   <MenuItem value={getDeviceID_NDI_1(videoInputDevices)} key={getDeviceID_NDI_1(videoInputDevices)}>
+            //     {'NDI Webcam Video 1'}
+            //   </MenuItem>
+            // </Select>
             <Select
               onChange={e => replaceTrack(e.target.value as string)}
               value={localVideoInputDeviceId || ''}
