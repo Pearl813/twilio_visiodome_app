@@ -114,26 +114,27 @@ export default function Room() {
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
-  // useEffect(() => {
-  //   if (
-  //     room?.localParticipant.identity === 'visiodomeapp' &&
-  //     videoInputDevices.length >= 1 &&
-  //     audioInputDevices.length >= 1
-  //   ) {
-  //     const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-  //     if (device) {
-  //       const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-  //       if (audioDevice) {
-  //         console.log(device.deviceId, audioDevice.deviceId)
-  //         replaceTrack(device.deviceId, audioDevice.deviceId);
-  //       } else {
-  //         console.log('audio device not found');
-  //       }
-  //     } else {
-  //       console.log('video device not found');
-  //     }
-  //   }
-  // }, [videoInputDevices, audioInputDevices, localTracks]);
+  useEffect(() => {
+    console.log(videoInputDevices, audioInputDevices, localTracks);
+    // if (
+    //   room?.localParticipant.identity === 'visiodomeapp' &&
+    //   videoInputDevices.length >= 1 &&
+    //   audioInputDevices.length >= 1
+    // ) {
+    //   const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+    //   if (device) {
+    //     const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+    //     if (audioDevice) {
+    //       console.log(device.deviceId, audioDevice.deviceId)
+    //       replaceTrack(device.deviceId, audioDevice.deviceId);
+    //     } else {
+    //       console.log('audio device not found');
+    //     }
+    //   } else {
+    //     console.log('video device not found');
+    //   }
+    // }
+  }, [videoInputDevices, audioInputDevices, localTracks]);
 
   return (
     <div
