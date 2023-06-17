@@ -7,9 +7,8 @@ export default function useIsTrackEnabled(track: TrackType) {
   const [isEnabled, setIsEnabled] = useState(track ? track.isEnabled : false);
 
   useEffect(() => {
-    console.log(track, isEnabled);
     setIsEnabled(track ? track.isEnabled : false);
-
+    console.log(isEnabled);
     if (track) {
       const setEnabled = () => setIsEnabled(true);
       const setDisabled = () => setIsEnabled(false);
