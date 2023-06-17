@@ -111,7 +111,7 @@ function AudioLevelIndicator({ audioTrack, color = 'white' }: { audioTrack?: Aud
 
   // Each instance of this component will need a unique HTML ID
   const clipPathId = `audio-level-clip-${getUniqueClipId()}`;
-
+  console.log(isTrackEnabled);
   return isTrackEnabled ? (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" data-test-audio-indicator>
       <defs>
