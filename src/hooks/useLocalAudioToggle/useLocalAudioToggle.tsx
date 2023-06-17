@@ -10,6 +10,7 @@ export default function useLocalAudioToggle() {
 
   const toggleAudioEnabled = useCallback(() => {
     if (audioTrack) {
+      const isEnabled = useIsTrackEnabled(audioTrack);
       console.log(audioTrack.isEnabled, isEnabled);
       audioTrack.isEnabled ? audioTrack.disable() : audioTrack.enable();
     }

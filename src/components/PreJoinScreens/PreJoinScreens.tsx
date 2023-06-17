@@ -78,7 +78,6 @@ export default function PreJoinScreens() {
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-        console.log(headers);
         axios
           .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsValidUser`, {}, { headers })
           .then(res => {
@@ -157,7 +156,6 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
         .then(res => {
-          console.log(res.data.message);
           if (res.data.message === 'success') {
             setIsOpen(true);
             setMessageHeader('Success!');
