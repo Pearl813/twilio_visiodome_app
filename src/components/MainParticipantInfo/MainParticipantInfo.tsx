@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
@@ -138,6 +138,10 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   const isParticipantReconnecting = useParticipantIsReconnecting(participant);
 
   const isRecording = useIsRecording();
+
+  useEffect(() => {
+    console.log(audioTrack, '____this is mainparticipandinfo');
+  }, [audioTrack]);
 
   return (
     <div
