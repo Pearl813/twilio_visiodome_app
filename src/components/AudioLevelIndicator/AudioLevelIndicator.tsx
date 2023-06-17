@@ -40,6 +40,7 @@ function AudioLevelIndicator({ audioTrack, color = 'white' }: { audioTrack?: Aud
   const mediaStreamTrack = useMediaStreamTrack(audioTrack);
 
   useEffect(() => {
+    console.log(isTrackEnabled, '_________audiolevelindicator');
     if (audioTrack && mediaStreamTrack && isTrackEnabled) {
       // Here we create a new MediaStream from a clone of the mediaStreamTrack.
       // A clone is created to allow multiple instances of this component for a single

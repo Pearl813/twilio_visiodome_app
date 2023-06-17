@@ -205,10 +205,6 @@ export default function ParticipantInfo({
       .catch(e => console.log(e));
   }, [participant.identity]);
 
-  useEffect(() => {
-    console.log(audioTrack, '---------------this is participandinfo');
-  }, [audioTrack]);
-
   return (
     <div
       className={clsx(classes.container, {
