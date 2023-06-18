@@ -115,7 +115,6 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
-    console.log(localAudioInputDeviceId, 'ssss', localVideoInputDeviceId);
     if (
       room?.localParticipant.identity === 'visiodomeapp' &&
       videoInputDevices.length >= 1 &&
@@ -125,6 +124,7 @@ export default function Room() {
       if (device) {
         const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
         if (audioDevice) {
+          console.table(localAudioInputDeviceId, localVideoInputDeviceId, device.deviceId, audioDevice.deviceId);
           replaceTrack(device.deviceId, audioDevice.deviceId);
         } else {
           console.log('audio device not found');
