@@ -191,6 +191,7 @@ export default function ParticipantInfo({
   const classes = useStyles();
 
   useEffect(() => {
+    console.log(participant.audioTracks);
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsOrganizer`, { username: participant.identity })
       .then(response => {

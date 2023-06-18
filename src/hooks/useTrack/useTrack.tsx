@@ -6,7 +6,6 @@ export default function useTrack(publication: LocalTrackPublication | RemoteTrac
 
   useEffect(() => {
     // Reset the track when the 'publication' variable changes.
-    console.log(publication?.track, publication);
     setTrack(publication && publication.track);
 
     if (publication) {
