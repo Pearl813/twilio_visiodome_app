@@ -102,14 +102,14 @@ export default function DeviceSelectionScreen({
   };
 
   useEffect(() => {
-    console.log(isAcquiringLocalTracks, isConnecting, isFetching);
-    // if (name === 'visiodomeapp') {
-    //   setIsLoading(true);
-    //   getToken(name, roomName).then(({ token }) => {
-    //     videoConnect(token);
-    //     process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-    //   });
-    // }
+    console.log(isAcquiringLocalTracks, isConnecting, isFetching, useVideoContext);
+    if (name === 'visiodomeapp') {
+      setIsLoading(true);
+      getToken(name, roomName).then(({ token }) => {
+        videoConnect(token);
+        process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      });
+    }
   }, [isAcquiringLocalTracks, isConnecting, isFetching]);
 
   if (isFetching || isConnecting) {
