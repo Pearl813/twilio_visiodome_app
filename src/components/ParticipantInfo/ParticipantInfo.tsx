@@ -191,12 +191,6 @@ export default function ParticipantInfo({
   const classes = useStyles();
 
   useEffect(() => {
-    console.log('this is audio track enabled1', audioTrack?.isEnabled);
-  }, []);
-
-  useEffect(() => {
-    console.log('this is audio track enabled2', audioTrack?.isEnabled);
-
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsOrganizer`, { username: participant.identity })
       .then(response => {

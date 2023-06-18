@@ -100,8 +100,9 @@ export default function Room() {
   function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
+    console.log('localAudioTrack------', localAudioTrack);
+    console.log('localTracks------', localTracks);
     setStoredLocalVideoDeviceId(newVideoDeviceId);
-    window.localStorage.setItem('log', 'log');
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
     localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
