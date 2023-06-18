@@ -110,7 +110,7 @@ export default function DeviceSelectionScreen({
     //     process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     //   });
     // }
-  }, []);
+  }, [isAcquiringLocalTracks, isConnecting, isFetching]);
 
   if (isFetching || isConnecting) {
     return (
