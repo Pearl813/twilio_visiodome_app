@@ -101,15 +101,15 @@ export default function DeviceSelectionScreen({
     });
   };
 
-  useEffect(() => {
-    if (name === 'visiodomeapp') {
-      setIsLoading(true);
-      getToken(name, roomName).then(({ token }) => {
-        videoConnect(token);
-        process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (name === 'visiodomeapp') {
+  //     setIsLoading(true);
+  //     getToken(name, roomName).then(({ token }) => {
+  //       videoConnect(token);
+  //       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+  //     });
+  //   }
+  // }, []);
 
   if (isFetching || isConnecting) {
     return (

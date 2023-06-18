@@ -139,10 +139,6 @@ export default function MainParticipantInfo({ participant, children }: MainParti
 
   const isRecording = useIsRecording();
 
-  useEffect(() => {
-    console.log(audioTrack, audioPublication, '____this is mainparticipandinfo');
-  }, []);
-
   return (
     <div
       data-cy-main-participant

@@ -100,8 +100,6 @@ export default function Room() {
   function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
-    console.log('localAudioTrack------', localAudioTrack);
-    console.log('localTracks------', localTracks);
     setStoredLocalVideoDeviceId(newVideoDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
@@ -117,6 +115,7 @@ export default function Room() {
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
   useEffect(() => {
+    console.log(localAudioInputDeviceId, 'ssss', localVideoInputDeviceId);
     if (
       room?.localParticipant.identity === 'visiodomeapp' &&
       videoInputDevices.length >= 1 &&
@@ -134,7 +133,7 @@ export default function Room() {
         console.log('video device not found');
       }
     }
-  }, [videoInputDevices, audioInputDevices]);
+  }, [videoInputDevices, audioInputDevices, localTracks]);
 
   return (
     <div
