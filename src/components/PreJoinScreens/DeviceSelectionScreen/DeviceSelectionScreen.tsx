@@ -88,7 +88,7 @@ export default function DeviceSelectionScreen({
   const classes = useStyles();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
-  const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
+  const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();
   const { toggleKrisp } = useKrispToggle();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +102,6 @@ export default function DeviceSelectionScreen({
   };
 
   useEffect(() => {
-    console.log(isAcquiringLocalTracks, isConnecting, isFetching, useVideoContext);
     if (name === 'visiodomeapp') {
       setIsLoading(true);
       getToken(name, roomName).then(({ token }) => {
@@ -110,7 +109,11 @@ export default function DeviceSelectionScreen({
         process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
       });
     }
-  }, [isAcquiringLocalTracks, isConnecting, isFetching]);
+  }, []);
+
+  useEffect(() => {
+    console.log(isAcquiringLocalTracks, isConnecting, isFetching, localTracks);
+  }, [isAcquiringLocalTracks, isConnecting, isFetching, localTracks]);
 
   if (isFetching || isConnecting) {
     return (
