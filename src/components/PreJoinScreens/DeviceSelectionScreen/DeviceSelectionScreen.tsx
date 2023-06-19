@@ -103,6 +103,7 @@ export default function DeviceSelectionScreen({
   const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
   );
+  const [isDisableButtonCalled, setIsDisableButtonCalled] = useState(false);
 
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
 
@@ -132,16 +133,6 @@ export default function DeviceSelectionScreen({
     });
   };
 
-  // useEffect(() => {
-  //   if (name === 'visiodomeapp') {
-  //     setIsLoading(true);
-  //     getToken(name, roomName).then(({ token }) => {
-  //       videoConnect(token);
-  //       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-  //     });
-  //   }
-  // }, []);
-
   useEffect(() => {
     setIsLoading(true);
     if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
@@ -150,17 +141,25 @@ export default function DeviceSelectionScreen({
       if (device?.deviceId) {
         const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
         if (audioDevice?.deviceId) {
-          console.log(device.deviceId, audioDevice.deviceId);
-          replaceTrack(device.deviceId, audioDevice.deviceId);
-          getToken(name, roomName).then(({ token }) => {
-            videoConnect(token);
-            process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-          });
+          if (isDisableButtonCalled) {
+            console.log(device.deviceId, audioDevice.deviceId);
+            replaceTrack(device.deviceId, audioDevice.deviceId);
+            getToken(name, roomName).then(({ token }) => {
+              videoConnect(token);
+              process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+            });
+          } else {
+            setIsDisableButtonCalled(true);
+          }
         } else {
           console.log('audio device not found');
+          setIsLoading(false);
+          setIsInvalidRoom(true);
         }
       } else {
         console.log('video device not found');
+        setIsLoading(false);
+        setIsInvalidRoom(true);
       }
     }
   }, [disableButtons]);
