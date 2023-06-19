@@ -83,56 +83,56 @@ export default function Room() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const screenShareParticipant = useScreenShareParticipant();
 
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
-    window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
-  );
+  // const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  // const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  // const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
+  //   window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
+  // );
 
-  const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
+  // const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
 
-  const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
-  const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
-  const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
-  const localAudioInputDeviceId =
-    srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
+  // const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
+  // const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
+  // const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
+  // const localAudioInputDeviceId =
+  //   srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
 
-  function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
-    // Here we store the device ID in the component state. This is so we can re-render this component display
-    // to display the name of the selected device when it is changed while the users camera is off.
-    setStoredLocalVideoDeviceId(newVideoDeviceId);
-    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
-    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
-    localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
-    localVideoTrack?.restart({
-      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-      deviceId: { exact: newVideoDeviceId },
-    });
-  }
+  // function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
+  //   // Here we store the device ID in the component state. This is so we can re-render this component display
+  //   // to display the name of the selected device when it is changed while the users camera is off.
+  //   setStoredLocalVideoDeviceId(newVideoDeviceId);
+  //   window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
+  //   window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
+  //   localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
+  //   localVideoTrack?.restart({
+  //     ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+  //     deviceId: { exact: newVideoDeviceId },
+  //   });
+  // }
 
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
-  useEffect(() => {
-    if (
-      room?.localParticipant.identity === 'visiodomeapp' &&
-      videoInputDevices.length >= 1 &&
-      audioInputDevices.length >= 1
-    ) {
-      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-      if (device) {
-        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-        if (audioDevice) {
-          replaceTrack(device.deviceId, audioDevice.deviceId);
-        } else {
-          console.log('audio device not found');
-        }
-      } else {
-        console.log('video device not found');
-      }
-    }
-  }, [videoInputDevices, audioInputDevices, localTracks]);
+  // useEffect(() => {
+  //   if (
+  //     room?.localParticipant.identity === 'visiodomeapp' &&
+  //     videoInputDevices.length >= 1 &&
+  //     audioInputDevices.length >= 1
+  //   ) {
+  //     const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+  //     if (device) {
+  //       const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+  //       if (audioDevice) {
+  //         replaceTrack(device.deviceId, audioDevice.deviceId);
+  //       } else {
+  //         console.log('audio device not found');
+  //       }
+  //     } else {
+  //       console.log('video device not found');
+  //     }
+  //   }
+  // }, [videoInputDevices, audioInputDevices, localTracks]);
 
   return (
     <div

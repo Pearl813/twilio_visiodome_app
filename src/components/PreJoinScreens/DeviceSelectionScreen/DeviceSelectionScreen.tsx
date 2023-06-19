@@ -14,7 +14,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useKrispToggle } from '../../../hooks/useKrispToggle/useKrispToggle';
 import SmallCheckIcon from '../../../icons/SmallCheckIcon';
 import InfoIconOutlined from '../../../icons/InfoIconOutlined';
+import useDevices from '../../../hooks/useDevices/useDevices';
 import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
+import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY, SELECTED_AUDIO_INPUT_KEY } from '../../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -90,9 +93,37 @@ export default function DeviceSelectionScreen({
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();
   const { toggleKrisp } = useKrispToggle();
+  const { videoInputDevices, audioInputDevices } = useDevices();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
+
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
+    window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
+  );
+
+  const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
+
+  const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
+  const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
+  const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
+  const localAudioInputDeviceId =
+    srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
+
+  function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
+    // Here we store the device ID in the component state. This is so we can re-render this component display
+    // to display the name of the selected device when it is changed while the users camera is off.
+    setStoredLocalVideoDeviceId(newVideoDeviceId);
+    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
+    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
+    localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
+    localVideoTrack?.restart({
+      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      deviceId: { exact: newVideoDeviceId },
+    });
+  }
 
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
@@ -112,13 +143,26 @@ export default function DeviceSelectionScreen({
   // }, []);
 
   useEffect(() => {
-    if (name === 'visiodomeapp' && disableButtons === false) {
-      getToken(name, roomName).then(({ token }) => {
-        videoConnect(token);
-        process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-      });
+    setIsLoading(true);
+    if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
+      console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
+      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+      if (device) {
+        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+        if (audioDevice) {
+          replaceTrack(device.deviceId, audioDevice.deviceId);
+          getToken(name, roomName).then(({ token }) => {
+            videoConnect(token);
+            process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+          });
+        } else {
+          console.log('audio device not found');
+        }
+      } else {
+        console.log('video device not found');
+      }
     }
-  }, [disableButtons]);
+  }, [disableButtons, videoInputDevices, audioInputDevices]);
 
   if (isFetching || isConnecting) {
     return (
