@@ -134,7 +134,6 @@ export default function DeviceSelectionScreen({
   };
 
   useEffect(() => {
-    setIsLoading(true);
     if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
       console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
