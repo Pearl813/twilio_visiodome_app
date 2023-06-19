@@ -141,7 +141,7 @@ export default function DeviceSelectionScreen({
       if (device?.deviceId) {
         const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
         if (audioDevice?.deviceId) {
-          if (isDisableButtonCalled) {
+          if (!isDisableButtonCalled) {
             console.log(device.deviceId, audioDevice.deviceId);
             replaceTrack(device.deviceId, audioDevice.deviceId);
             getToken(name, roomName).then(({ token }) => {
