@@ -134,31 +134,33 @@ export default function DeviceSelectionScreen({
   };
 
   useEffect(() => {
-    if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
+    if (name === 'visiodomeapp') {
       setIsLoading(true);
-      console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
-      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-      if (device?.deviceId) {
-        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-        if (audioDevice?.deviceId) {
-          if (isDisableButtonCalled === false) {
-            console.log(device.deviceId, audioDevice.deviceId);
-            getToken(name, roomName).then(({ token }) => {
-              videoConnect(token);
-              process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-            });
-            replaceTrack(device.deviceId, audioDevice.deviceId);
-            setIsDisableButtonCalled(true);
+      if (disableButtons === false && videoInputDevices.length >= 1) {
+        console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
+        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+        if (device?.deviceId) {
+          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+          if (audioDevice?.deviceId) {
+            if (isDisableButtonCalled === false) {
+              console.log(device.deviceId, audioDevice.deviceId);
+              getToken(name, roomName).then(({ token }) => {
+                videoConnect(token);
+                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+              });
+              replaceTrack(device.deviceId, audioDevice.deviceId);
+              setIsDisableButtonCalled(true);
+            }
+          } else {
+            console.log('audio device not found');
+            setIsLoading(false);
+            setIsInvalidRoom(true);
           }
         } else {
-          console.log('audio device not found');
+          console.log('video device not found');
           setIsLoading(false);
           setIsInvalidRoom(true);
         }
-      } else {
-        console.log('video device not found');
-        setIsLoading(false);
-        setIsInvalidRoom(true);
       }
     }
   }, [disableButtons]);
@@ -318,7 +320,7 @@ export default function DeviceSelectionScreen({
           </div>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              Loading...
+              Loading Device...
             </Typography>
           </div>
         </Grid>
