@@ -163,7 +163,7 @@ export default function DeviceSelectionScreen({
         console.log('video device not found');
       }
     }
-  }, [disableButtons, videoInputDevices, audioInputDevices]);
+  }, [disableButtons]);
 
   if (isFetching || isConnecting) {
     return (
