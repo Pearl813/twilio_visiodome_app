@@ -103,7 +103,7 @@ export default function DeviceSelectionScreen({
 
   useEffect(() => {
     if (name === 'visiodomeapp' && localTracks.length >= 0) {
-      setIsLoading(true);
+      console.log(name, roomName, localTracks);
       getToken(name, roomName).then(({ token }) => {
         videoConnect(token);
         process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
