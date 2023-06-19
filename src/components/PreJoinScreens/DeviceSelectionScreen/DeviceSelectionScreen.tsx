@@ -184,6 +184,12 @@ export default function DeviceSelectionScreen({
     <>
       {!isInvalidRoom && !isLoading ? (
         name === 'visiodomeapp' ? (
+          <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+            <Button variant="contained" color="primary" data-cy-join-now onClick={handleJoin} disabled={disableButtons}>
+              Join Now
+            </Button>
+          </Grid>
+        ) : (
           <>
             <Typography variant="h5" className={classes.gutterBottom}>
               Join {roomName}
@@ -306,12 +312,6 @@ export default function DeviceSelectionScreen({
               </Grid>
             </Grid>
           </>
-        ) : (
-          <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
-            <Button variant="contained" color="primary" data-cy-join-now onClick={handleJoin} disabled={disableButtons}>
-              Join Now
-            </Button>
-          </Grid>
         )
       ) : isLoading ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
