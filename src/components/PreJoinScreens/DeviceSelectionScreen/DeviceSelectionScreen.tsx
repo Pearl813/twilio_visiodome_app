@@ -142,28 +142,28 @@ export default function DeviceSelectionScreen({
   //   }
   // }, []);
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
-      console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
-      const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-      if (device?.deviceId) {
-        const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-        if (audioDevice?.deviceId) {
-          console.log(device.deviceId, audioDevice.deviceId);
-          replaceTrack(device.deviceId, audioDevice.deviceId);
-          getToken(name, roomName).then(({ token }) => {
-            videoConnect(token);
-            process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-          });
-        } else {
-          console.log('audio device not found');
-        }
-      } else {
-        console.log('video device not found');
-      }
-    }
-  }, [disableButtons, videoInputDevices, audioInputDevices]);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
+  //     console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
+  //     const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+  //     if (device?.deviceId) {
+  //       const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+  //       if (audioDevice?.deviceId) {
+  //         console.log(device.deviceId, audioDevice.deviceId);
+  //         replaceTrack(device.deviceId, audioDevice.deviceId);
+  //         getToken(name, roomName).then(({ token }) => {
+  //           videoConnect(token);
+  //           process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+  //         });
+  //       } else {
+  //         console.log('audio device not found');
+  //       }
+  //     } else {
+  //       console.log('video device not found');
+  //     }
+  //   }
+  // }, [disableButtons, videoInputDevices, audioInputDevices]);
 
   if (isFetching || isConnecting) {
     return (
