@@ -147,9 +147,10 @@ export default function DeviceSelectionScreen({
     if (name === 'visiodomeapp' && disableButtons === false && videoInputDevices.length >= 1) {
       console.log(videoInputDevices.length, audioInputDevices.length, disableButtons);
       const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-      if (device) {
+      if (device?.deviceId) {
         const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-        if (audioDevice) {
+        if (audioDevice?.deviceId) {
+          console.log(device.deviceId, audioDevice.deviceId);
           replaceTrack(device.deviceId, audioDevice.deviceId);
           getToken(name, roomName).then(({ token }) => {
             videoConnect(token);
