@@ -14,7 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useKrispToggle } from '../../../hooks/useKrispToggle/useKrispToggle';
 import SmallCheckIcon from '../../../icons/SmallCheckIcon';
 import InfoIconOutlined from '../../../icons/InfoIconOutlined';
-import axios from 'axios';
+import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -101,19 +101,27 @@ export default function DeviceSelectionScreen({
     });
   };
 
+  // useEffect(() => {
+  //   if (name === 'visiodomeapp') {
+  //     setIsLoading(true);
+  //     getToken(name, roomName).then(({ token }) => {
+  //       videoConnect(token);
+  //       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+  //     });
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (name === 'visiodomeapp') {
+    const audioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
+    const videoTrack = localTracks.find(track => !track.name.includes('screen') && track.kind === 'video') as
+      | LocalVideoTrack
+      | undefined;
+    if (name === 'visiodomeapp' && roomName != null && audioTrack && videoTrack) {
       setIsLoading(true);
       getToken(name, roomName).then(({ token }) => {
         videoConnect(token);
         process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
       });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (name === 'visiodomeapp' && localTracks.length >= 0) {
-      console.log(name, roomName, localTracks);
     }
   }, [name, roomName, localTracks]);
 
