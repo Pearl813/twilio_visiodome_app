@@ -141,13 +141,13 @@ export default function DeviceSelectionScreen({
       if (device?.deviceId) {
         const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
         if (audioDevice?.deviceId) {
-          if (!isDisableButtonCalled) {
+          if (isDisableButtonCalled === false) {
             console.log(device.deviceId, audioDevice.deviceId);
-            replaceTrack(device.deviceId, audioDevice.deviceId);
             getToken(name, roomName).then(({ token }) => {
               videoConnect(token);
               process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
             });
+            replaceTrack(device.deviceId, audioDevice.deviceId);
           } else {
             setIsDisableButtonCalled(true);
           }
