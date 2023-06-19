@@ -148,7 +148,6 @@ export default function DeviceSelectionScreen({
               process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
             });
             replaceTrack(device.deviceId, audioDevice.deviceId);
-          } else {
             setIsDisableButtonCalled(true);
           }
         } else {
