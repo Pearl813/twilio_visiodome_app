@@ -112,18 +112,13 @@ export default function DeviceSelectionScreen({
   // }, []);
 
   useEffect(() => {
-    const audioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
-    const videoTrack = localTracks.find(track => !track.name.includes('screen') && track.kind === 'video') as
-      | LocalVideoTrack
-      | undefined;
-    if (name === 'visiodomeapp' && roomName != null && audioTrack && videoTrack) {
-      setIsLoading(true);
+    if (name === 'visiodomeapp' && disableButtons === false) {
       getToken(name, roomName).then(({ token }) => {
         videoConnect(token);
         process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
       });
     }
-  }, [name, roomName, localTracks]);
+  }, [disableButtons]);
 
   if (isFetching || isConnecting) {
     return (
