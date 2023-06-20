@@ -4,8 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 
 import { Button } from '@material-ui/core';
-import Snackbar from '../../Snackbar/Snackbar';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,11 +25,12 @@ interface FinishRoomButtonProps {
 
 export default function FinishRoomButton({ className }: FinishRoomButtonProps) {
   const classes = useStyles();
+  const { authUser } = useAuth();
 
   const completeRoom = async () => {
-    if (localStorage.getItem('token')) {
+    if (authUser) {
       const headers = {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${authUser.token}`,
       };
 
       axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, { headers }).then(res => {

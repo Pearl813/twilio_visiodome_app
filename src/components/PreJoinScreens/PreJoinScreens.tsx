@@ -181,9 +181,9 @@ export default function PreJoinScreens() {
       window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
     }
     setIsLoading(true);
-    if (localStorage.getItem('token')) {
+    if (authUser) {
       const headers = {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${authUser.token}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })

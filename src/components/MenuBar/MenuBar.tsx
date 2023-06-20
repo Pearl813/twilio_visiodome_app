@@ -15,6 +15,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import axios from 'axios';
+import { useAuth } from '../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,6 +73,7 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const participants = useParticipants();
+  const { authUser } = useAuth();
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 
@@ -84,7 +86,7 @@ export default function MenuBar() {
       })
       .then(response => {
         if (response.data.message === 'success') {
-          if (localStorage.getItem('token') && response.data.roomName === room?.name) {
+          if (authUser && response.data.roomName === room?.name) {
             setIsOrganizer(true);
           }
         } else {

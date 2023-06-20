@@ -5,6 +5,7 @@ import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import FinishRoomButton from '../Buttons/FinishRoomButton/FinishRoomButton';
 import Menu from '../MenuBar/Menu/Menu';
 import axios from 'axios';
+import { useAuth } from '../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function MobileTopMenuBar() {
   const classes = useStyles();
   const { room } = useVideoContext();
+  const { authUser } = useAuth();
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 
@@ -52,7 +54,7 @@ export default function MobileTopMenuBar() {
       })
       .then(response => {
         if (response.data.message === 'success') {
-          if (localStorage.getItem('token') && response.data.roomName === room?.name) {
+          if (authUser && response.data.roomName === room?.name) {
             setIsOrganizer(true);
           }
         } else {

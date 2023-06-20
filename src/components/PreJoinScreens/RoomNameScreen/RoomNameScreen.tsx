@@ -113,23 +113,21 @@ export default function RoomNameScreen({
                   fullWidth
                   size="small"
                   value={name}
-                  disabled={localStorage.getItem('token') ? true : false}
                   onChange={handleNameChange}
                 />
               </div>
             </div>
             <Grid container justifyContent="flex-end">
               <div className={classes.continueButtons}>
-                <Button
+                {/* <Button
                   variant="outlined"
                   color="primary"
                   onClick={() => {
                     history.replace('/');
-                    localStorage.clear();
                   }}
                 >
                   cancel
-                </Button>
+                </Button> */}
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
                   Start Room
                 </Button>
