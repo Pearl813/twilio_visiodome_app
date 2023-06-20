@@ -15,6 +15,7 @@ import {
 import CopyIcon from '../../../icons/CopyIcon';
 import { useAppState } from '../../../state';
 import { Steps } from '../PreJoinScreens';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -53,14 +54,22 @@ interface GenerateRoomLinkScreenProps {
   roomName: string;
   setStep: (step: Steps) => void;
   roomLinks: {
-    presenter: string,
-    customer: string,
-    visiodome: string,
+    presenter: string;
+    customer: string;
+    visiodome: string;
   };
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  endRoom: () => void;
 }
 
-export default function GenerateRoomLinkScreen({ name, roomName, setStep, roomLinks, handleSubmit }: GenerateRoomLinkScreenProps) {
+export default function GenerateRoomLinkScreen({
+  name,
+  roomName,
+  setStep,
+  roomLinks,
+  handleSubmit,
+  endRoom,
+}: GenerateRoomLinkScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
   const [open, setOpen] = useState(false);
@@ -95,7 +104,11 @@ export default function GenerateRoomLinkScreen({ name, roomName, setStep, roomLi
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton aria-label="copy presenter link" onClick={() => handleCopyClick(roomLinks?.presenter)} edge="end">
+                    <IconButton
+                      aria-label="copy presenter link"
+                      onClick={() => handleCopyClick(roomLinks?.presenter)}
+                      edge="end"
+                    >
                       <CopyIcon />
                     </IconButton>
                   </InputAdornment>
@@ -116,7 +129,11 @@ export default function GenerateRoomLinkScreen({ name, roomName, setStep, roomLi
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton aria-label="copy customer link" onClick={() => handleCopyClick(roomLinks?.customer)} edge="end">
+                    <IconButton
+                      aria-label="copy customer link"
+                      onClick={() => handleCopyClick(roomLinks?.customer)}
+                      edge="end"
+                    >
                       <CopyIcon />
                     </IconButton>
                   </InputAdornment>
@@ -137,7 +154,11 @@ export default function GenerateRoomLinkScreen({ name, roomName, setStep, roomLi
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton aria-label="copy visiodome link" onClick={() => handleCopyClick(roomLinks?.visiodome)} edge="end">
+                    <IconButton
+                      aria-label="copy visiodome link"
+                      onClick={() => handleCopyClick(roomLinks?.visiodome)}
+                      edge="end"
+                    >
                       <CopyIcon />
                     </IconButton>
                   </InputAdornment>
@@ -156,8 +177,8 @@ export default function GenerateRoomLinkScreen({ name, roomName, setStep, roomLi
         </div>
         <Grid container justifyContent="flex-end">
           <div className={classes.continueButtons}>
-            <Button variant="outlined" color="primary" onClick={() => setStep(Steps.roomNameStep)}>
-              Cancel
+            <Button variant="outlined" color="primary" onClick={endRoom}>
+              End Room
             </Button>
             <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
               Continue

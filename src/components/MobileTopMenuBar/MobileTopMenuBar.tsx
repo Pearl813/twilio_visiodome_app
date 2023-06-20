@@ -47,7 +47,9 @@ export default function MobileTopMenuBar() {
     if (room?.localParticipant.identity === 'visiodomeapp') setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsOrganizer`, { username: room?.localParticipant.identity })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-presenter`, {
+        username: room?.localParticipant.identity,
+      })
       .then(response => {
         if (response.data.message === 'success') {
           if (localStorage.getItem('token') && response.data.roomName === room?.name) {

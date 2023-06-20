@@ -192,7 +192,7 @@ export default function ParticipantInfo({
 
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsOrganizer`, { username: participant.identity })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-presenter`, { username: participant.identity })
       .then(response => {
         if (response.data.message === 'success') {
           if (response.data.roomName === room?.name) {

@@ -100,16 +100,15 @@ export default function LoginPage() {
     setIsSnackbarDismissed(false);
     setIsLoading(true);
     axios
-      .post(`${process.env.REACT_APP_STRAPI_URL}/api/auth/local`, {
-        identifier: email,
-        password: password,
-      })
-      .then(authResponse => {
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/login`, { email, password })
+      .then(response => {
         // Handle success.
-        if (authResponse.data.user.PackageType === 'Mobile') {
+        if (response.data.message === 'success') {
           setIsOpen(false);
-          localStorage.setItem('token', authResponse.data.jwt);
+          localStorage.setItem('token', response.data.payload);
+          console.log('success');
           history.replace(`/room`);
+          setIsLoading(false);
         } else {
           setIsOpen(true);
           setMessageContent('Permission Error.');

@@ -63,7 +63,6 @@ export default function PreJoinScreens() {
     if (URLRoomName) {
       setRoomName(URLRoomName);
     }
-
     if (visiodomeapp === 'presenter') {
       setIsLoading(true);
       let urlString: string = window.location.href;
@@ -79,7 +78,7 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsValidUser`, {}, { headers })
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-user`, {}, { headers })
           .then(res => {
             if (res.data.message === 'success') {
               setIsLoading(false);
@@ -110,7 +109,7 @@ export default function PreJoinScreens() {
       let roomName: string = URLRoomName!;
 
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
             setName(name);
@@ -144,7 +143,6 @@ export default function PreJoinScreens() {
     event.preventDefault();
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     // @ts-ignore
-
     if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
       window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
     }
@@ -154,7 +152,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
             setIsOpen(true);
@@ -207,6 +205,30 @@ export default function PreJoinScreens() {
     setStep(Steps.deviceSelectionStep);
   };
 
+  const endRoom = () => {
+    setIsLoading(true);
+    if (localStorage.getItem('token')) {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      };
+      axios
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
+        .then(response => {
+          if (response.data.message === 'completed') {
+            setIsOpen(true);
+            setMessageHeader('Success!');
+            setMessageContent('Room Closed Successfully.');
+            setMessageType('info');
+            setIsLoading(false);
+            setStep(Steps.roomNameStep);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+  };
+
   const isSnackbarOpen = isOpen;
 
   return (
@@ -245,7 +267,6 @@ export default function PreJoinScreens() {
               handleSubmit={handleRoomName}
             />
           )}
-
           {step === Steps.linkGenerateStep && (
             <GenerateRoomLinkScreen
               name={name}
@@ -253,9 +274,9 @@ export default function PreJoinScreens() {
               setStep={setStep}
               roomLinks={roomLinks}
               handleSubmit={handleGenerateLink}
+              endRoom={endRoom}
             />
           )}
-
           {step === Steps.deviceSelectionStep && (
             <DeviceSelectionScreen
               name={name}

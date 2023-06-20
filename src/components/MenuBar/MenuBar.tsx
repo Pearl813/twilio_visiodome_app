@@ -79,7 +79,9 @@ export default function MenuBar() {
     if (room?.localParticipant.identity === 'visiodomeapp') setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkIsOrganizer`, { username: room?.localParticipant.identity })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-presenter`, {
+        username: room?.localParticipant.identity,
+      })
       .then(response => {
         if (response.data.message === 'success') {
           if (localStorage.getItem('token') && response.data.roomName === room?.name) {
@@ -123,7 +125,7 @@ export default function MenuBar() {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
-                <EndCallButton isVisiodome={isVisiodome}/>
+                <EndCallButton isVisiodome={isVisiodome} />
                 {isOrganizer ? <FinishRoomButton /> : ''}
               </Grid>
             </Grid>

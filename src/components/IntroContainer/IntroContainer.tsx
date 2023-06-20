@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 'auto',
     [theme.breakpoints.down('sm')]: {
       display: 'block',
-      height: 'auto',
+      minHeight: '0px',
       width: 'calc(100% - 40px)',
       margin: 'auto',
       maxWidth: '400px',

@@ -112,7 +112,7 @@ export default function RoomNameScreen({
         //   setIsLoading(true);
 
         //   axios
-        //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+        //     .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
         //     .then(res => {
         //       if (res.data.message === 'success') {
         //         setIsLoading(false);
@@ -128,7 +128,7 @@ export default function RoomNameScreen({
         //     .catch(e => console.log(e));
         // } else {
         axios
-          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/checkValidRoom`, { roomName })
+          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
           .then(res => {
             if (res.data.message === 'success') {
               setIsInvalidRoom(false);
@@ -152,15 +152,11 @@ export default function RoomNameScreen({
       {!isInvalidRoom && !isLoading ? (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
-            {!localStorage.getItem('token') ? 'Join' : isCreated ? 'Join' : 'Create'} a Room
+            {!localStorage.getItem('token') ? 'Join' : 'Create'} a Room
             {!localStorage.getItem('token') ? ` (Room name: ${roomName})` : ''}
           </Typography>
           <Typography variant="body1">
-            {!localStorage.getItem('token')
-              ? 'Enter the your name.'
-              : isCreated
-              ? 'The Room is already created, you can join the room.'
-              : "Enter your name and the name of a room you'd like to create"}
+            {!localStorage.getItem('token') ? 'Enter the your name.' : 'Click "Start Room" to create room.'}
           </Typography>
           <form onSubmit={handleSubmit}>
             <div className={classes.inputContainer}>
@@ -208,10 +204,10 @@ export default function RoomNameScreen({
                     localStorage.clear();
                   }}
                 >
-                  Cancel
+                  Sign Out
                 </Button>
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
-                  Continue
+                  Start Room
                 </Button>
               </div>
             </Grid>
