@@ -1,11 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
-import { useAppState } from '../../../state';
-
-import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useAppState } from '../../../state';
+import Snackbar from '../../Snackbar/Snackbar';
+import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -46,7 +47,6 @@ interface RoomNameScreenProps {
   isCreated: boolean;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
-  setIsCreated: (isCreated: boolean) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -56,51 +56,30 @@ export default function RoomNameScreen({
   isCreated,
   setName,
   setRoomName,
-  setIsCreated,
   handleSubmit,
 }: RoomNameScreenProps) {
   const classes = useStyles();
-  const { user } = useAppState();
   const history = useHistory();
+  const { authUser, setAuthUser } = useAuth();
 
-  const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
-  useEffect(() => {
-    console.log(roomName);
-    if (roomName) {
-      setIsLoading(true);
-      axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
-        .then(res => {
-          console.log(res.data);
-          if (res.data.message === 'success') {
-            setIsInvalidRoom(false);
-          } else {
-            setIsInvalidRoom(true);
-          }
-          setIsLoading(false);
-        })
-        .catch(e => {
-          setIsInvalidRoom(true);
-          setIsLoading(false);
-          console.log(e);
-        });
-    }
-  }, [roomName]);
+  const handleRoomNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setRoomName(event.target.value);
+  };
 
   return (
     <>
-      {!isInvalidRoom && !isLoading ? (
+      {!isLoading ? (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
-            {`Join a Room (Room name: ${roomName})`}
+            {`Create a Room`}
           </Typography>
-          <Typography variant="body1">Enter the your name.</Typography>
+          <Typography variant="body1">{`Room name is "${roomName}".  Click "Start Room" to create room.`}</Typography>
           <form onSubmit={handleSubmit}>
             <div className={classes.inputContainer}>
               <div className={classes.textFieldContainer}>
@@ -113,8 +92,23 @@ export default function RoomNameScreen({
                   fullWidth
                   size="small"
                   value={name}
-                  disabled={localStorage.getItem('token') ? true : false}
+                  disabled={isCreated === true ? true : false}
                   onChange={handleNameChange}
+                />
+              </div>
+              <div className={classes.textFieldContainer}>
+                <InputLabel shrink htmlFor="input-room-name">
+                  Room Name
+                </InputLabel>
+                <TextField
+                  autoCapitalize="false"
+                  id="input-room-name"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={roomName}
+                  disabled={isCreated === true ? true : false}
+                  onChange={handleRoomNameChange}
                 />
               </div>
             </div>
@@ -124,11 +118,10 @@ export default function RoomNameScreen({
                   variant="outlined"
                   color="primary"
                   onClick={() => {
-                    history.replace('/');
-                    localStorage.clear();
+                    setAuthUser(null);
                   }}
                 >
-                  cancel
+                  Sign Out
                 </Button>
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
                   Start Room
@@ -137,7 +130,7 @@ export default function RoomNameScreen({
             </Grid>
           </form>
         </>
-      ) : isLoading ? (
+      ) : (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <CircularProgress variant="indeterminate" />
@@ -145,14 +138,6 @@ export default function RoomNameScreen({
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
               Loading...
-            </Typography>
-          </div>
-        </Grid>
-      ) : (
-        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
-          <div>
-            <Typography variant="h6" align="center">
-              This room doesn't exist!
             </Typography>
           </div>
         </Grid>

@@ -1,8 +1,12 @@
 import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import axios from 'axios';
+
 import { useAppState } from '../../state';
+import { useAuth } from '../AuthProvider';
+import Snackbar from '../Snackbar/Snackbar';
 
 import Button from '@material-ui/core/Button';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Grid from '@material-ui/core/Grid';
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
 import { InputLabel, Theme, CircularProgress } from '@material-ui/core';
@@ -11,9 +15,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation, useHistory } from 'react-router-dom';
-import axios from 'axios';
-import Snackbar from '../Snackbar/Snackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   googleButton: {
@@ -71,7 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function LoginPage() {
   const classes = useStyles();
-  const { signIn, user, isAuthReady } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
   const [email, setEmail] = useState('');
@@ -82,6 +82,7 @@ export default function LoginPage() {
   const [authError, setAuthError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
+  const { authUser, setAuthUser } = useAuth();
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -92,11 +93,15 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    history.replace('/');
+    if (authUser) {
+      setIsLoading(true);
+      history.replace('/rooms');
+    } else {
+      history.replace('/login');
+    }
   }, []);
 
   const login = () => {
-    setAuthError(null);
     setIsSnackbarDismissed(false);
     setIsLoading(true);
     axios
@@ -105,9 +110,8 @@ export default function LoginPage() {
         // Handle success.
         if (response.data.message === 'success') {
           setIsOpen(false);
-          localStorage.setItem('token', response.data.payload);
-          console.log('success');
-          history.replace(`/room`);
+          setAuthUser(response.data.payload);
+          history.replace(`/rooms`);
           setIsLoading(false);
         } else {
           setIsOpen(true);
@@ -120,8 +124,6 @@ export default function LoginPage() {
         setIsOpen(true);
         setIsLoading(false);
         setMessageContent('Email or password is incorrect.');
-
-        console.log('An error occurred:', error.response.data.error.name);
       });
   };
 

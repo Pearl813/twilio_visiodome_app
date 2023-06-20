@@ -9,7 +9,6 @@ export const createRoom: RequestHandler = (req, res) => {
   const roomName = req.body.roomName;
   const accessToken = req.headers.authorization;
   const token = accessToken?.split(' ')!;
-
   const headers = {
     Authorization: `${accessToken}`,
   };
@@ -18,44 +17,47 @@ export const createRoom: RequestHandler = (req, res) => {
     .then(roomDetail => {
       if (roomDetail?.data?.streamURL !== null) {
         client.video.v1.rooms
-        .list({
-          uniqueName: roomDetail?.data?.streamURL,
-          status: 'in-progress',
-        })
-        .then((room: any) => {
-          if (room.length === 0) {
-            client.video.v1.rooms
-            .create({ uniqueName: roomDetail.data.streamURL, emptyRoomTimeout: 2 })
-            .then((room: any) => {
-              if (room.sid) {
-                res.status(200).send({
-                  message: 'room created',
-                  roomName: roomDetail.data.streamURL,
-                  streamURLs: {
-                    presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
-                    customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
-                    visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
-                  },
+          .list({
+            uniqueName: roomDetail?.data?.streamURL,
+            status: 'in-progress',
+          })
+          .then((room: any) => {
+            if (room.length === 0) {
+              client.video.v1.rooms
+                .create({ uniqueName: roomDetail.data.streamURL, emptyRoomTimeout: 2 })
+                .then((room: any) => {
+                  if (room.sid) {
+                    res.status(200).send({
+                      message: 'Room is created successfully!',
+                      roomName: roomDetail.data.streamURL,
+                      streamURLs: {
+                        presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
+                        customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
+                        visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
+                      },
+                    });
+                  }
+                })
+                .catch((e: any) => {
+                  console.log(e);
                 });
-              }
-            })
-            .catch((e: any) => {
-              console.log(e);
-            });
-          } else if (room[0].uniqueName === roomDetail?.data?.streamURL) {
-            res.status(200).send({
-              message: 'room already created',
-              roomName: roomDetail.data.streamURL,
-              streamURLs: {
-                presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
-                customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
-                visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
-              },
-            });
-          }}).catch((error: any) => {
+            } else if (room[0].uniqueName === roomDetail?.data?.streamURL) {
+              res.status(200).send({
+                message: 'This room is already created!',
+                roomName: roomDetail.data.streamURL,
+                streamURLs: {
+                  presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
+                  customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
+                  visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
+                },
+              });
+            }
+          })
+          .catch((error: any) => {
             res.status(500).send(error);
           });
- }})
+      }
+    })
     .catch((error: any) => {
       res.status(500).send(error);
     });
@@ -116,6 +118,46 @@ export const completeRoom: RequestHandler = (req, res) => {
     });
 };
 
+export const getValidRoomLinks: RequestHandler = (req, res) => {
+  const roomName = req.body.roomName;
+  const accessToken = req.headers.authorization;
+  const token = accessToken?.split(' ')!;
+  const headers = {
+    Authorization: `Bearer ${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,
+  };
+  axios
+    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[streamURL][$eq]=${roomName}`, { headers })
+    .then(roomDetail => {
+      if (roomDetail.data.length === 0) {
+        res.status(200).send({ message: 'No exist' });
+      } else {
+        client.video.v1.rooms
+          .list({
+            uniqueName: roomName,
+            status: 'in-progress',
+          })
+          .then((room: any) => {
+            if (room.length > 0) {
+              res.status(200).send({
+                message: 'success',
+                roomName: roomName,
+                streamURLs: {
+                  presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
+                  customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
+                  visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
+                },
+              });
+            } else {
+              res.status(200).send({ message: 'no in progress room.' });
+            }
+          });
+      }
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+};
+
 export const checkValidRoom: RequestHandler = (req, res) => {
   const roomName = req.body.roomName;
   const headers = {
@@ -127,26 +169,23 @@ export const checkValidRoom: RequestHandler = (req, res) => {
       if (roomDetail.data.length === 0) {
         res.status(200).send({ message: 'No exist' });
       } else {
-        client.video.v1
-          .rooms(roomName)
-          .fetch()
-          .then((room: any) => {
-            res.status(200).send({
-              message: 'success',
-              roomName: roomName,
-              streamURLs: {
-                presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,
-                customer: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}`,
-                visiodome: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/visiodomeapp`,
-              },
-            });
+        client.video.v1.rooms
+          .list({
+            uniqueName: roomName,
+            status: 'in-progress',
           })
-          .catch((e: any) => {
-            res.status(200).send({ message: 'no in progress room.' });
+          .then((room: any) => {
+            if (room.length > 0) {
+              res.status(200).send({
+                message: 'success',
+              });
+            } else {
+              res.status(200).send({ message: 'no in progress room.' });
+            }
           });
       }
     })
     .catch((error: any) => {
-      res.status(500).send(error);
+      console.log(error);
     });
 };

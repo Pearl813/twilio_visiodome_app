@@ -11,8 +11,9 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import axios from 'axios';
 import Snackbar from '../Snackbar/Snackbar';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useAuth } from '../AuthProvider';
 
 export enum Steps {
   roomNameStep,
@@ -29,12 +30,15 @@ interface streamURLs {
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks, connect: videoConnect } = useVideoContext();
-  const { getToken } = useAppState();
+  const { authUser } = useAuth();
   const { connect: chatConnect } = useChatContext();
 
-  const { URLRoomName, visiodomeapp } = useParams<{ URLRoomName?: string; visiodomeapp?: string }>();
+  const { userName, URLRoomName, visiodomeapp } = useParams<{
+    userName?: string;
+    URLRoomName?: string;
+    visiodomeapp?: string;
+  }>();
   const [step, setStep] = useState(Steps.roomNameStep);
-  const { userName } = useParams<{ userName?: string }>();
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
@@ -62,14 +66,13 @@ export default function PreJoinScreens() {
     }
     if (URLRoomName) {
       setRoomName(URLRoomName);
+      setIsGetLink(true);
     }
     if (visiodomeapp === 'presenter') {
       setIsLoading(true);
       let urlString: string = window.location.href;
       // Create a URL object
       const url = new URL(urlString);
-      // Get the value of the `token` parameter
-      // const token: string = (window.location.search.includes('token') && url.searchParams.get('token'))!;
 
       if (window.location.search.includes('token')) {
         let token: string = url.searchParams.get('token')!;
@@ -78,15 +81,13 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-user`, {}, { headers })
+          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-user`, { headers })
           .then(res => {
             if (res.data.message === 'success') {
               setIsLoading(false);
-              setIsInvalidRoom(false);
               setName(res.data.username);
               setRoomName(res.data.roomName);
-              localStorage.setItem('token', token);
-              setIsGetLink(true);
+              setIsGetLink(false);
               setStep(Steps.deviceSelectionStep);
             } else {
               setIsLoading(false);
@@ -138,6 +139,39 @@ export default function PreJoinScreens() {
       });
     }
   }, [getAudioAndVideoTracks, step, mediaError]);
+
+  useEffect(() => {
+    if (authUser && step === Steps.linkGenerateStep) {
+      console.log(authUser.token);
+      setIsLoading(true);
+      const headers = {
+        Authorization: `Bearer ${authUser.token}`,
+      };
+      axios
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName: authUser.roomName }, { headers })
+        .then(res => {
+          console.log(res.data);
+          if (res.data.message === 'success') {
+            setIsInvalidRoom(false);
+            setRoomLinks({
+              ...roomLinks,
+              presenter: res.data.streamURLs.presenter,
+              customer: res.data.streamURLs.customer,
+              visiodome: res.data.streamURLs.visiodome,
+            });
+            setIsLoading(false);
+          } else {
+            setIsInvalidRoom(true);
+            setIsLoading(false);
+          }
+        })
+        .catch(e => {
+          setIsInvalidRoom(true);
+          setIsLoading(false);
+          console.log(e);
+        });
+    }
+  }, [step]);
 
   const handleRoomName = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -207,9 +241,9 @@ export default function PreJoinScreens() {
 
   const endRoom = () => {
     setIsLoading(true);
-    if (localStorage.getItem('token')) {
+    if (authUser) {
       const headers = {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${authUser.token}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
@@ -220,7 +254,7 @@ export default function PreJoinScreens() {
             setMessageContent('Room Closed Successfully.');
             setMessageType('info');
             setIsLoading(false);
-            setStep(Steps.roomNameStep);
+            history.replace('/rooms');
           }
         })
         .catch(e => {
@@ -243,6 +277,31 @@ export default function PreJoinScreens() {
               {isVisiodome ? `Joining Meeting... ` : ` Loading...`}
             </Typography>
           </div>
+        </Grid>
+      ) : isInvalidRoom ? (
+        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+          <div>
+            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+              {authUser
+                ? `The Room is expired because there is nobody in the room for 2minutes.`
+                : `The room is not existed.`}
+            </Typography>
+          </div>
+          {authUser ? (
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              style={{ marginTop: '8px' }}
+              onClick={() => {
+                history.replace(`/rooms`);
+              }}
+            >
+              Start again.
+            </Button>
+          ) : (
+            <></>
+          )}
         </Grid>
       ) : (
         <>

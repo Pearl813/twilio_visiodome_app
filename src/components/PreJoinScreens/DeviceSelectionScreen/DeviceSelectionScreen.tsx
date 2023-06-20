@@ -18,6 +18,8 @@ import useDevices from '../../../hooks/useDevices/useDevices';
 import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY, SELECTED_AUDIO_INPUT_KEY } from '../../../constants';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -89,6 +91,8 @@ export default function DeviceSelectionScreen({
   setStep,
 }: DeviceSelectionScreenProps) {
   const classes = useStyles();
+  const history = useHistory();
+  const { authUser } = useAuth();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();
@@ -183,136 +187,115 @@ export default function DeviceSelectionScreen({
   return (
     <>
       {!isInvalidRoom && !isLoading ? (
-        name === 'visiodomeapp' ? (
-          <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
-            <Button variant="contained" color="primary" data-cy-join-now onClick={handleJoin} disabled={disableButtons}>
-              Join Now
-            </Button>
-          </Grid>
-        ) : (
-          <>
-            <Typography variant="h5" className={classes.gutterBottom}>
-              Join {roomName}
-            </Typography>
-            <Grid container justifyContent="center">
-              <Grid item md={7} sm={12} xs={12}>
-                <div className={classes.localPreviewContainer}>
-                  <LocalVideoPreview identity={name} />
-                </div>
-                <div className={classes.mobileButtonBar}>
-                  <Hidden mdUp>
-                    <ToggleAudioButton className={classes.mobileButton} disabled={disableButtons} />
-                    <ToggleVideoButton className={classes.mobileButton} disabled={disableButtons} />
-                    <SettingsMenu mobileButtonClass={classes.mobileButton} />
+        <>
+          <Typography variant="h5" className={classes.gutterBottom}>
+            Join {roomName}
+          </Typography>
+          <Grid container justifyContent="center">
+            <Grid item md={7} sm={12} xs={12}>
+              <div className={classes.localPreviewContainer}>
+                <LocalVideoPreview identity={name} />
+              </div>
+              <div className={classes.mobileButtonBar}>
+                <Hidden mdUp>
+                  <ToggleAudioButton className={classes.mobileButton} disabled={disableButtons} />
+                  <ToggleVideoButton className={classes.mobileButton} disabled={disableButtons} />
+                  <SettingsMenu mobileButtonClass={classes.mobileButton} />
+                </Hidden>
+              </div>
+            </Grid>
+            <Grid item md={5} sm={12} xs={12}>
+              <Grid container direction="column" justifyContent="space-between" style={{ alignItems: 'normal' }}>
+                <div>
+                  <Hidden smDown>
+                    <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
+                    <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
                   </Hidden>
                 </div>
               </Grid>
-              <Grid item md={5} sm={12} xs={12}>
-                <Grid container direction="column" justifyContent="space-between" style={{ alignItems: 'normal' }}>
-                  <div>
-                    <Hidden smDown>
-                      <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />
-                      <ToggleVideoButton className={classes.deviceButton} disabled={disableButtons} />
-                    </Hidden>
+            </Grid>
+
+            <Grid item md={12} sm={12} xs={12}>
+              {isKrispInstalled && (
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  style={{ marginBottom: '1em' }}
+                >
+                  <div className={classes.toolTipContainer}>
+                    <Typography variant="subtitle2">Noise Cancellation</Typography>
+                    <Tooltip
+                      title="Suppress background noise from your microphone"
+                      interactive
+                      leaveDelay={250}
+                      leaveTouchDelay={15000}
+                      enterTouchDelay={0}
+                    >
+                      <div>
+                        <InfoIconOutlined />
+                      </div>
+                    </Tooltip>
+                  </div>
+
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={!!isKrispEnabled}
+                        checkedIcon={<SmallCheckIcon />}
+                        disableRipple={true}
+                        onClick={toggleKrisp}
+                      />
+                    }
+                    label={isKrispEnabled ? 'Enabled' : 'Disabled'}
+                    style={{ marginRight: 0 }}
+                    // Prevents <Switch /> from being temporarily enabled (and then quickly disabled) in unsupported browsers after
+                    // isAcquiringLocalTracks becomes false:
+                    disabled={isKrispEnabled && isAcquiringLocalTracks}
+                  />
+                </Grid>
+              )}
+              <Divider />
+            </Grid>
+
+            <Grid item md={12} sm={12} xs={12}>
+              <Grid container direction="row" alignItems="center" style={{ marginTop: '1em' }}>
+                <Hidden smDown>
+                  <Grid item md={7} sm={12} xs={12}>
+                    <SettingsMenu mobileButtonClass={classes.mobileButton} />
+                  </Grid>
+                </Hidden>
+
+                <Grid item md={5} sm={12} xs={12}>
+                  <div className={classes.joinButtons}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        if (!isGetLink) setStep(Steps.linkGenerateStep);
+                        else {
+                          setStep(Steps.roomNameStep);
+                        }
+                      }}
+                    >
+                      {!isGetLink ? `Show link` : `Cancel`}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      data-cy-join-now
+                      onClick={handleJoin}
+                      disabled={disableButtons}
+                    >
+                      Join Now
+                    </Button>
                   </div>
                 </Grid>
               </Grid>
-
-              <Grid item md={12} sm={12} xs={12}>
-                {isKrispInstalled && (
-                  <Grid
-                    container
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    style={{ marginBottom: '1em' }}
-                  >
-                    <div className={classes.toolTipContainer}>
-                      <Typography variant="subtitle2">Noise Cancellation</Typography>
-                      <Tooltip
-                        title="Suppress background noise from your microphone"
-                        interactive
-                        leaveDelay={250}
-                        leaveTouchDelay={15000}
-                        enterTouchDelay={0}
-                      >
-                        <div>
-                          <InfoIconOutlined />
-                        </div>
-                      </Tooltip>
-                    </div>
-
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={!!isKrispEnabled}
-                          checkedIcon={<SmallCheckIcon />}
-                          disableRipple={true}
-                          onClick={toggleKrisp}
-                        />
-                      }
-                      label={isKrispEnabled ? 'Enabled' : 'Disabled'}
-                      style={{ marginRight: 0 }}
-                      // Prevents <Switch /> from being temporarily enabled (and then quickly disabled) in unsupported browsers after
-                      // isAcquiringLocalTracks becomes false:
-                      disabled={isKrispEnabled && isAcquiringLocalTracks}
-                    />
-                  </Grid>
-                )}
-                <Divider />
-              </Grid>
-
-              <Grid item md={12} sm={12} xs={12}>
-                <Grid container direction="row" alignItems="center" style={{ marginTop: '1em' }}>
-                  <Hidden smDown>
-                    <Grid item md={7} sm={12} xs={12}>
-                      <SettingsMenu mobileButtonClass={classes.mobileButton} />
-                    </Grid>
-                  </Hidden>
-
-                  <Grid item md={5} sm={12} xs={12}>
-                    <div className={classes.joinButtons}>
-                      {isGetLink ? (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                          data-cy-join-now
-                          onClick={handleJoin}
-                          disabled={disableButtons}
-                        >
-                          Join Now
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={() => {
-                              if (isCreated) setStep(Steps.linkGenerateStep);
-                              else setStep(Steps.roomNameStep);
-                            }}
-                          >
-                            {isCreated ? `Show link` : `Cancel`}
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            data-cy-join-now
-                            onClick={handleJoin}
-                            disabled={disableButtons}
-                          >
-                            Join Now
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </Grid>
-                </Grid>
-              </Grid>
             </Grid>
-          </>
-        )
+          </Grid>
+        </>
       ) : isLoading ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
@@ -328,7 +311,7 @@ export default function DeviceSelectionScreen({
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <Typography variant="h6" align="center">
-              This room doesn't exist!
+              Can't find Device.
             </Typography>
           </div>
         </Grid>

@@ -1,6 +1,6 @@
 import './bootstrap-globals';
 import { createExpressHandler } from './createExpressHandler';
-import { createRoom, completeRoom, checkValidRoom} from './roomHandler';
+import { createRoom, completeRoom, checkValidRoom, getValidRoomLinks } from './roomHandler';
 import { checkIsPresenter, checkIsValidUser, login } from './userHandler';
 import express, { RequestHandler } from 'express';
 import path from 'path';
@@ -34,6 +34,7 @@ app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 app.all('/rooms/start', authMiddleware, createRoom);
 app.all('/rooms/end', authMiddleware, completeRoom);
 app.all('/rooms/validate', authMiddleware, checkValidRoom);
+app.all('/rooms/get-links', authMiddleware, getValidRoomLinks);
 app.all('/users/validate-presenter', authMiddleware, checkIsPresenter);
 app.all('/users/validate-user', authMiddleware, checkIsValidUser);
 app.all('/users/login', authMiddleware, login);

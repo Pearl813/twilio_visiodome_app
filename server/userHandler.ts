@@ -33,7 +33,7 @@ export const checkIsValidUser: RequestHandler = (req, res) => {
       if (roomDetail.data.username) {
         res
           .status(200)
-          .send({ message: 'success', username: roomDetail.data.username, roomname: roomDetail.data.streamURL });
+          .send({ message: 'success', username: roomDetail.data.username, roomName: roomDetail.data.streamURL });
       } else {
         res.status(200).send({ message: 'No exist' });
       }
@@ -45,15 +45,22 @@ export const checkIsValidUser: RequestHandler = (req, res) => {
 
 export const login: RequestHandler = (req, res) => {
   axios
-  .post(`${process.env.REACT_APP_STRAPI_URL}/api/auth/local`, {
-    identifier: req.body.email,
-    password: req.body.password,
-  })
-  .then(authResponse => {
-      if(authResponse.data.user.PackageType === 'Mobile'){
-        res.status(200).send({message:'success',payload:authResponse.data.jwt})
-      }else{
-        res.status(200).send({message:'permission error'})
+    .post(`${process.env.REACT_APP_STRAPI_URL}/api/auth/local`, {
+      identifier: req.body.email,
+      password: req.body.password,
+    })
+    .then(authResponse => {
+      if (authResponse.data.user.PackageType === 'Mobile') {
+        res.status(200).send({
+          message: 'success',
+          payload: {
+            token: authResponse.data.jwt,
+            username: authResponse.data.user.username,
+            roomName: authResponse.data.user.streamURL,
+          },
+        });
+      } else {
+        res.status(200).send({ message: 'permission error' });
       }
     })
     .catch((error: any) => {
