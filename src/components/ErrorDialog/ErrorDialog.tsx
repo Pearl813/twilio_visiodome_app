@@ -17,6 +17,8 @@ function ErrorDialog({ dismissError, error }: PropsWithChildren<ErrorDialogProps
   const { message, code } = error || {};
   const enhancedMessage = enhanceMessage(message, code);
 
+  if (code === 53118) error = null;
+
   return (
     <Dialog open={error !== null} onClose={() => dismissError()} fullWidth={true} maxWidth="xs">
       <DialogTitle>ERROR</DialogTitle>
