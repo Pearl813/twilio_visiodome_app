@@ -142,10 +142,10 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, step, mediaError]);
 
   useEffect(() => {
-    if (authUser && step === Steps.linkGenerateStep) {
+    if ((authUser || localStorage.getItem('token')) && step === Steps.linkGenerateStep) {
       setIsLoading(true);
       const headers = {
-        Authorization: `Bearer ${authUser.token}`,
+        Authorization: `Bearer ${authUser.token ?? localStorage.getItem('token')}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName: authUser.roomName }, { headers })
@@ -185,7 +185,6 @@ export default function PreJoinScreens() {
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
       .then(res => {
         if (res.data.message === 'success') {
-          console.log('soefijsoefij');
           setIsLoading(false);
           setStep(Steps.deviceSelectionStep);
         }
@@ -202,9 +201,9 @@ export default function PreJoinScreens() {
 
   const endRoom = () => {
     setIsLoading(true);
-    if (authUser) {
+    if (authUser || localStorage.getItem('token')) {
       const headers = {
-        Authorization: `Bearer ${authUser.token}`,
+        Authorization: `Bearer ${authUser.token ?? localStorage.getItem('token')}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
