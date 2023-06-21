@@ -129,7 +129,7 @@ export default function RoomNameScreen({
                   cancel
                 </Button> */}
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
-                  Start Room
+                  Join
                 </Button>
               </div>
             </Grid>
