@@ -84,6 +84,7 @@ export default function PreJoinScreens() {
           .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-user`, { headers })
           .then(res => {
             if (res.data.message === 'success') {
+              localStorage.setItem('token', token);
               setIsLoading(false);
               setName(res.data.username);
               setRoomName(res.data.roomName);
