@@ -86,7 +86,7 @@ export default function MenuBar() {
       })
       .then(response => {
         if (response.data.message === 'success') {
-          if (authUser && response.data.roomName === room?.name) {
+          if (response.data.roomName === room?.name) {
             setIsOrganizer(true);
           }
         } else {
