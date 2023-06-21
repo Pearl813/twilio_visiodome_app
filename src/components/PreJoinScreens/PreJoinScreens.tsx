@@ -142,10 +142,10 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, step, mediaError]);
 
   useEffect(() => {
-    if ((authUser || localStorage.getItem('token')) && step === Steps.linkGenerateStep) {
+    if (localStorage.getItem('token') && step === Steps.linkGenerateStep) {
       setIsLoading(true);
       const headers = {
-        Authorization: `Bearer ${authUser.token ?? localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName: authUser.roomName }, { headers })
