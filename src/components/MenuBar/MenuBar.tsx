@@ -73,7 +73,6 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const participants = useParticipants();
-  const { authUser } = useAuth();
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 

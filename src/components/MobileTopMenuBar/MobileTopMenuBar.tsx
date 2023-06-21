@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function MobileTopMenuBar() {
   const classes = useStyles();
   const { room } = useVideoContext();
-  const { authUser } = useAuth();
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 

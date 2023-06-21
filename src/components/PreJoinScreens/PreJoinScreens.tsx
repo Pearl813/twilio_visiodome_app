@@ -142,7 +142,6 @@ export default function PreJoinScreens() {
 
   useEffect(() => {
     if (authUser && step === Steps.linkGenerateStep) {
-      console.log(authUser.token);
       setIsLoading(true);
       const headers = {
         Authorization: `Bearer ${authUser.token}`,
@@ -243,12 +242,12 @@ export default function PreJoinScreens() {
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              {isGetLink
+              {isInvalidRoom && isGetLink
                 ? `The room is not existed.`
                 : `The Room is expired because there is nobody in the room for 2minutes.`}
             </Typography>
           </div>
-          {isGetLink ? (
+          {isInvalidRoom && isGetLink ? (
             <></>
           ) : (
             <Button
