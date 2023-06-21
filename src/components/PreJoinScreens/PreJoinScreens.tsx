@@ -241,9 +241,9 @@ export default function PreJoinScreens() {
       ) : isInvalidRoom ? (
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
-            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+            <Typography variant="h6" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
               {isInvalidRoom && isGetLink
-                ? `The room is not existed.`
+                ? `This room doesn't exist!`
                 : `The Room is expired because there is nobody in the room for 2minutes.`}
             </Typography>
           </div>
