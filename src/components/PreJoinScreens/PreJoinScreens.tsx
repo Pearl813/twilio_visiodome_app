@@ -201,9 +201,9 @@ export default function PreJoinScreens() {
 
   const endRoom = () => {
     setIsLoading(true);
-    if (authUser || localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {
       const headers = {
-        Authorization: `Bearer ${authUser.token ?? localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
