@@ -181,57 +181,18 @@ export default function PreJoinScreens() {
       window.history.replaceState(null, '', window.encodeURI(`/room/${roomName}${window.location.search || ''}`));
     }
     setIsLoading(true);
-    if (authUser) {
-      const headers = {
-        Authorization: `Bearer ${authUser.token}`,
-      };
-      axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
-        .then(res => {
-          if (res.data.message === 'success') {
-            setIsOpen(true);
-            setMessageHeader('Success!');
-            setMessageContent('The Room is already created.');
-            setMessageType('info');
-            setRoomLinks({
-              ...roomLinks,
-              presenter: res.data.streamURLs.presenter,
-              customer: res.data.streamURLs.customer,
-              visiodome: res.data.streamURLs.visiodome,
-            });
-            setIsLoading(false);
-            setStep(Steps.linkGenerateStep);
-          } else {
-            axios
-              .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/start`, { roomName }, { headers })
-              .then(response => {
-                if (response.status === 200) {
-                  setIsOpen(true);
-                  setMessageHeader('Success!');
-                  setMessageContent('Created Successfully.');
-                  setMessageType('info');
-                  setRoomLinks({
-                    ...roomLinks,
-                    presenter: response.data.streamURLs.presenter,
-                    customer: response.data.streamURLs.customer,
-                    visiodome: response.data.streamURLs.visiodome,
-                  });
-                  setIsLoading(false);
-                  setStep(Steps.linkGenerateStep);
-                }
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    } else {
-      setIsLoading(false);
-      setStep(Steps.deviceSelectionStep);
-    }
+    axios
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
+      .then(res => {
+        if (res.data.message === 'success') {
+          console.log('soefijsoefij');
+          setIsLoading(false);
+          setStep(Steps.deviceSelectionStep);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   const handleGenerateLink = (event: FormEvent<HTMLFormElement>) => {
@@ -274,7 +235,7 @@ export default function PreJoinScreens() {
           </div>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              {isVisiodome ? `Joining Meeting... ` : ` Loading...`}
+              {isVisiodome ? `Joining Meeting...` : `Loading...`}
             </Typography>
           </div>
         </Grid>
@@ -282,12 +243,14 @@ export default function PreJoinScreens() {
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              {authUser
-                ? `The Room is expired because there is nobody in the room for 2minutes.`
-                : `The room is not existed.`}
+              {isGetLink
+                ? `The room is not existed.`
+                : `The Room is expired because there is nobody in the room for 2minutes.`}
             </Typography>
           </div>
-          {authUser ? (
+          {isGetLink ? (
+            <></>
+          ) : (
             <Button
               variant="contained"
               type="submit"
@@ -299,8 +262,6 @@ export default function PreJoinScreens() {
             >
               Start again.
             </Button>
-          ) : (
-            <></>
           )}
         </Grid>
       ) : (

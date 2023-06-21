@@ -71,13 +71,11 @@ export default function RoomNameScreen({
   };
 
   useEffect(() => {
-    console.log(roomName);
     if (roomName) {
       setIsLoading(true);
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
         .then(res => {
-          console.log(res.data);
           if (res.data.message === 'success') {
             setIsInvalidRoom(false);
           } else {
@@ -119,15 +117,6 @@ export default function RoomNameScreen({
             </div>
             <Grid container justifyContent="flex-end">
               <div className={classes.continueButtons}>
-                {/* <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    history.replace('/');
-                  }}
-                >
-                  cancel
-                </Button> */}
                 <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
                   Join
                 </Button>
