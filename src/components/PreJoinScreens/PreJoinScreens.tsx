@@ -148,7 +148,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName: authUser.roomName }, { headers })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName }, { headers })
         .then(res => {
           console.log(res.data);
           if (res.data.message === 'success') {
