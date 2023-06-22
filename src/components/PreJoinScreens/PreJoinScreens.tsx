@@ -143,7 +143,6 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/get-links`, { roomName }, { headers })
         .then(res => {
-          console.log(res.data);
           if (res.data.message === 'success') {
             setIsInvalidRoom(false);
             setRoomLinks({

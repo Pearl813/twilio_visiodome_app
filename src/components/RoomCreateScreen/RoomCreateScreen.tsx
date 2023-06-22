@@ -86,7 +86,6 @@ export default function RoomCreateScreen() {
 
   const handleGenerateLink = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`/${roomLinks.presenter}`);
     window.location.href = `${roomLinks.presenter}`;
   };
 
