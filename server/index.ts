@@ -6,12 +6,9 @@ import express, { RequestHandler } from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
 
-var cors = require('cors');
-
 const PORT = process.env.PORT ?? 8081;
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded());
 
