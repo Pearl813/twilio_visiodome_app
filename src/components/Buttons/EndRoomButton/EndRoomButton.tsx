@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { Button } from '@material-ui/core';
 import { useAuth } from '../../AuthProvider';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +27,7 @@ interface EndRoomButtonProps {
 export default function EndRoomButton({ className }: EndRoomButtonProps) {
   const classes = useStyles();
   const { authUser } = useAuth();
+  const history = useHistory();
 
   const completeRoom = async () => {
     if (localStorage.getItem('token') || authUser.token) {
@@ -35,6 +37,7 @@ export default function EndRoomButton({ className }: EndRoomButtonProps) {
 
       axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, { headers }).then(res => {
         console.log(res);
+        history.replace('/rooms');
       });
     }
   };

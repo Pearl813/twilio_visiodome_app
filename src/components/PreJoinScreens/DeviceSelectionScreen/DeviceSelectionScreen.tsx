@@ -23,8 +23,6 @@ import {
   SELECTED_AUDIO_INPUT_KEY,
   VISIODOMEAPP_LINK_NAME,
 } from '../../../constants';
-import { useHistory } from 'react-router-dom';
-import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -96,8 +94,6 @@ export default function DeviceSelectionScreen({
   setStep,
 }: DeviceSelectionScreenProps) {
   const classes = useStyles();
-  const history = useHistory();
-  const { authUser } = useAuth();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();

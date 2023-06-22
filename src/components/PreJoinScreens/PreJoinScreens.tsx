@@ -39,12 +39,13 @@ export default function PreJoinScreens() {
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
+
+  const [mediaError, setMediaError] = useState<Error>();
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [messageHeader, setMessageHeader] = useState('');
   const [messageType, setMessageType] = useState<any>('');
   const [isCreated, setIsCreated] = useState(false);
-  const [mediaError, setMediaError] = useState<Error>();
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);

@@ -8,7 +8,7 @@ import App from './App';
 import AppStateProvider, { useAppState } from './state';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
-import LoginPage from './components/LoginPage/LoginPage';
+import LoginPage from './components/LoginPageV/LoginPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import theme from './theme';
 import './types';
@@ -45,9 +45,6 @@ export const ReactApp = () => (
         <AppStateProvider>
           <AuthProvider>
             <Switch>
-              {/* <PrivateRoute exact path="/">
-                <VideoApp />
-              </PrivateRoute> */}
               <AuthRoute exact path={`/`} component={RoomCreateScreen} />
               <AuthRoute exact path={`/rooms`} component={RoomCreateScreen} />
               <PrivateRoute exact path="/room/:URLRoomName">
@@ -56,19 +53,10 @@ export const ReactApp = () => (
               <PrivateRoute exact path="/room/:URLRoomName/:visiodomeapp">
                 <VideoApp />
               </PrivateRoute>
-              {/* <PrivateRoute exact path="/u/:userName">
-                <VideoApp />
-              </PrivateRoute> */}
-              {/* <PrivateRoute path="/u/:userName/room/:URLRoomName">
-                <VideoApp />
-              </PrivateRoute>
-              <PrivateRoute path="/room/:URLRoomName/u/:userName">
-                <VideoApp />
-              </PrivateRoute> */}
               <Route path="/login">
                 <LoginPage />
               </Route>
-              <Redirect to="/login" />
+              <Redirect to="/" />
             </Switch>
           </AuthProvider>
         </AppStateProvider>

@@ -92,22 +92,7 @@ export const endRoom: RequestHandler = (req, res) => {
                 .update({ status: 'completed' })
                 .then((room: { status: any }) => {
                   if (room.status === 'completed') res.status(200).send({ message: 'completed' });
-                  // axios
-                  //   .put(
-                  //     `${process.env.REACT_APP_STRAPI_URL}/api/users/${userId}`,
-                  //     {
-                  //       streamURL: null,
-                  //       description: null,
-                  //     },
-                  //     { headers }
-                  //   )
-                  //   .then(updateResponse => {
-                  //     res.status(200).send({ message: 'completed' });
-                  //   })
-                  //   .catch((error: any) => {
-                  //     res.status(500).send(error);
-                  //     console.log(error);
-                  //   });
+
                 });
             }
           });
