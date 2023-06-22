@@ -19,13 +19,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function EndCallButton(props: { className?: string, isVisiodome: boolean }) {
+export default function EndCallButton(props: { className?: string; isVisiodome: boolean }) {
   const classes = useStyles();
   const { room } = useVideoContext();
   const history = useHistory();
 
+  const pageRedirect = () => {
+    if (props.isVisiodome === true) history.replace('/');
+  };
+
   return (
-    <Button onClick={() => { room!.disconnect(); if (props.isVisiodome === true) history.replace('/') }} className={clsx(classes.button, props.className)} data-cy-disconnect>
+    <Button
+      onClick={() => {
+        room!.disconnect();
+        pageRedirect();
+      }}
+      className={clsx(classes.button, props.className)}
+      data-cy-disconnect
+    >
       Disconnect
     </Button>
   );

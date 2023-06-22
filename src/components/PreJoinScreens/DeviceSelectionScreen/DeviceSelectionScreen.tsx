@@ -168,6 +168,7 @@ export default function DeviceSelectionScreen({
     }
     if (isPresenter === true) {
       setIsLoading(true);
+      console.log('sdfsdfsdfsdf');
       if (disableButtons === false && videoInputDevices.length >= 1) {
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
         if (device?.deviceId) {
