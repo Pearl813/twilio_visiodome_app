@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY } from '../../../constants';
 import { FormControl, MenuItem, Typography, Select } from '@material-ui/core';
 import { LocalVideoTrack } from 'twilio-video';
@@ -29,7 +29,6 @@ export default function VideoInputList() {
   const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
   );
-
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
 
   function replaceTrack(newDeviceId: string) {
@@ -55,7 +54,6 @@ export default function VideoInputList() {
           <Typography variant="subtitle2" gutterBottom>
             Video Input
           </Typography>
-
           <Select
             onChange={e => replaceTrack(e.target.value as string)}
             value={localVideoInputDeviceId || ''}

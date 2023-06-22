@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';

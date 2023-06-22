@@ -12,7 +12,7 @@ export default function useLocalAudioToggle() {
     if (audioTrack) {
       audioTrack.isEnabled ? audioTrack.disable() : audioTrack.enable();
     }
-  }, [audioTrack, isEnabled]);
+  }, [audioTrack]);
 
   return [isEnabled, toggleAudioEnabled] as const;
 }

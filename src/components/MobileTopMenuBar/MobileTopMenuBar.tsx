@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.85rem',
     padding: '0 0.6em',
   },
-  finishCallButton: {
+  endRoomButton: {
     height: '28px',
     fontSize: '0.85rem',
     padding: '0 0.6em',
@@ -68,7 +68,7 @@ export default function MobileTopMenuBar() {
       <Typography variant="subtitle1">{room!.name}</Typography>
       <div>
         <EndCallButton className={classes.endCallButton} isVisiodome={isVisiodome} />
-        {isPresenter ? <EndRoomButton className={classes.finishCallButton} /> : ''}
+        {isPresenter ? <EndRoomButton className={classes.endRoomButton} /> : ''}
         <Menu buttonClassName={classes.settingsButton} />
       </div>
     </Grid>

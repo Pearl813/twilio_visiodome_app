@@ -15,7 +15,6 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import axios from 'axios';
-import { useAuth } from '../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

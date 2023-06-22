@@ -186,7 +186,7 @@ export default function ParticipantInfo({
   const { room } = useVideoContext();
 
   const { isGalleryViewActive } = useAppState();
-  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [isPresenter, setIsPresenter] = useState(false);
 
   const classes = useStyles();
 
@@ -196,10 +196,10 @@ export default function ParticipantInfo({
       .then(response => {
         if (response.data.message === 'success') {
           if (response.data.roomName === room?.name) {
-            setIsOrganizer(true);
+            setIsPresenter(true);
           }
         } else {
-          setIsOrganizer(false);
+          setIsPresenter(false);
         }
       })
       .catch(e => console.log(e));
@@ -229,7 +229,7 @@ export default function ParticipantInfo({
             <Typography variant="body1" className={classes.typography} component="span">
               {participant.identity}
               {isLocalParticipant && ' (You)'}
-              <span style={{ color: 'red' }}>{isOrganizer && ' Presenter'}</span>
+              <span style={{ color: 'red' }}>{isPresenter && ' Presenter'}</span>
             </Typography>
           </span>
         </div>

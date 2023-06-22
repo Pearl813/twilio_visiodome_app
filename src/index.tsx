@@ -1,26 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
 import { CssBaseline } from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import App from './App';
 import AppStateProvider, { useAppState } from './state';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
 import LoginPage from './components/LoginPageV/LoginPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import theme from './theme';
+import './types';
 import { ChatProvider } from './components/ChatProvider';
 import { ParticipantProvider } from './components/ParticipantProvider';
 import { VideoProvider } from './components/VideoProvider';
+import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
 import { AuthProvider } from './components/AuthProvider/index';
 import { AuthRoute } from './components/AuthRoute/index';
 import RoomCreateScreen from './components/RoomCreateScreen/RoomCreateScreen';
-
-import theme from './theme';
-import './types';
-import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 
 const VideoApp = () => {
   const { error, setError } = useAppState();
