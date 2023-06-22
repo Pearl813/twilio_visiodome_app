@@ -36,7 +36,6 @@ export default function EndRoomButton({ className }: EndRoomButtonProps) {
       };
 
       axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, { headers }).then(res => {
-        console.log(res);
         history.replace('/rooms');
       });
     }
