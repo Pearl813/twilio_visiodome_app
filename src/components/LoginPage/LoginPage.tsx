@@ -1,17 +1,20 @@
-import React, { ChangeEvent, useState, FormEvent } from 'react';
+import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import axios from 'axios';
+
 import { useAppState } from '../../state';
+import { useAuth } from '../AuthProvider';
+import Snackbar from '../Snackbar/Snackbar';
 
 import Button from '@material-ui/core/Button';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Grid from '@material-ui/core/Grid';
 import { ReactComponent as GoogleLogo } from './google-logo.svg';
-import { InputLabel, Theme } from '@material-ui/core';
+import { InputLabel, Theme, CircularProgress } from '@material-ui/core';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   googleButton: {
@@ -31,6 +34,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
     },
   },
+  inputContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '1.5em 0 3.5em',
+    '& div:not(:last-child)': {
+      marginRight: '1em',
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: '1.5em 0 2em',
+    },
+  },
   errorMessage: {
     color: 'red',
     display: 'flex',
@@ -42,6 +56,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gutterBottom: {
     marginBottom: '1em',
+  },
+  textFieldContainer: {
+    width: '100%',
   },
   passcodeContainer: {
     minHeight: '120px',
@@ -55,21 +72,59 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function LoginPage() {
   const classes = useStyles();
-  const { signIn, user, isAuthReady } = useAppState();
   const history = useHistory();
   const location = useLocation<{ from: Location }>();
-  const [passcode, setPasscode] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
   const [authError, setAuthError] = useState<Error | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
+  const { authUser, setAuthUser } = useAuth();
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  useEffect(() => {
+    if (authUser) {
+      setIsLoading(true);
+      history.replace('/rooms');
+    } else {
+      history.replace('/login');
+    }
+  }, []);
 
   const login = () => {
-    setAuthError(null);
-    signIn?.(passcode)
-      .then(() => {
-        history.replace(location?.state?.from || { pathname: '/' });
+    setIsSnackbarDismissed(false);
+    setIsLoading(true);
+    axios
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
+      .then(response => {
+        // Handle success.
+        if (response.data.message === 'success') {
+          setIsOpen(false);
+          setAuthUser(response.data.payload);
+          history.replace(`/rooms`);
+          setIsLoading(false);
+        } else {
+          setIsOpen(true);
+          setMessageContent('Permission Error.');
+        }
+        setIsLoading(false);
       })
-      .catch(err => setAuthError(err));
+      .catch(error => {
+        // Handle error.
+        setIsOpen(true);
+        setIsLoading(false);
+        setMessageContent('Email or password is incorrect.');
+      });
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -77,65 +132,74 @@ export default function LoginPage() {
     login();
   };
 
-  if (user || !isAuthEnabled) {
-    history.replace('/');
-  }
-
-  if (!isAuthReady) {
-    return null;
-  }
+  const isSnackbarOpen = !isSnackbarDismissed && isOpen;
 
   return (
     <IntroContainer>
-      {process.env.REACT_APP_SET_AUTH === 'firebase' && (
+      <Snackbar
+        headline="Warning!"
+        message={messageContent}
+        variant="warning"
+        open={isSnackbarOpen}
+        handleClose={() => setIsSnackbarDismissed(true)}
+      />
+      {isLoading ? (
+        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
+          <div>
+            <CircularProgress variant="indeterminate" />
+          </div>
+          <div>
+            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
+              Sign in...
+            </Typography>
+          </div>
+        </Grid>
+      ) : (
         <>
           <Typography variant="h5" className={classes.gutterBottom}>
-            Sign in to join a room
+            Sign in
           </Typography>
-          <Typography variant="body1">Sign in using your Twilio Google Account</Typography>
-          <Button variant="contained" className={classes.googleButton} onClick={login} startIcon={<GoogleLogo />}>
-            Sign in with Google
-          </Button>
-        </>
-      )}
-
-      {process.env.REACT_APP_SET_AUTH === 'passcode' && (
-        <>
-          <Typography variant="h5" className={classes.gutterBottom}>
-            Enter passcode to join a room
-          </Typography>
+          <Typography variant="body1">{'Enter your email and password.'}</Typography>
           <form onSubmit={handleSubmit}>
-            <Grid container justifyContent="space-between">
-              <div className={classes.passcodeContainer}>
-                <InputLabel shrink htmlFor="input-passcode">
-                  Passcode
+            <div className={classes.inputContainer}>
+              <div>
+                <InputLabel shrink htmlFor="input-email">
+                  Your Email
                 </InputLabel>
                 <TextField
-                  id="input-passcode"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPasscode(e.target.value)}
-                  type="password"
+                  id="input-email"
                   variant="outlined"
+                  fullWidth
                   size="small"
+                  value={email}
+                  onChange={handleEmailChange}
                 />
-                <div>
-                  {authError && (
-                    <Typography variant="caption" className={classes.errorMessage}>
-                      <ErrorOutlineIcon />
-                      {authError.message}
-                    </Typography>
-                  )}
-                </div>
               </div>
-            </Grid>
+              <div>
+                <InputLabel shrink htmlFor="input-password">
+                  Password
+                </InputLabel>
+                <TextField
+                  type="password"
+                  autoCapitalize="false"
+                  id="input-password"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </div>
+            </div>
             <Grid container justifyContent="flex-end">
               <Button
                 variant="contained"
-                color="primary"
                 type="submit"
-                disabled={!passcode.length}
+                color="primary"
+                disabled={!email || !password}
                 className={classes.submitButton}
               >
-                Submit
+                Sign in
               </Button>
             </Grid>
           </form>
