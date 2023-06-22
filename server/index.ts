@@ -1,7 +1,7 @@
 import './bootstrap-globals';
 import { createExpressHandler } from './createExpressHandler';
-import { createRoom, completeRoom, checkValidRoom, getValidRoomLinks } from './roomHandler';
-import { checkIsPresenter, checkIsValidUser, login } from './userHandler';
+import { startRoom, endRoom, checkValidRoom, getValidRoomLinks } from './handlers/roomHandler';
+import { checkIsPresenter, checkIsValidUser, login } from './handlers/userHandler';
 import express, { RequestHandler } from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
@@ -27,13 +27,13 @@ const authMiddleware =
 
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
-app.all('/rooms/start', authMiddleware, createRoom);
-app.all('/rooms/end', authMiddleware, completeRoom);
-app.all('/rooms/validate', authMiddleware, checkValidRoom);
-app.all('/rooms/get-links', authMiddleware, getValidRoomLinks);
-app.all('/users/validate-presenter', authMiddleware, checkIsPresenter);
-app.all('/users/validate-user', authMiddleware, checkIsValidUser);
-app.all('/users/login', authMiddleware, login);
+app.all('/room/start', authMiddleware, startRoom);
+app.all('/room/end', authMiddleware, endRoom);
+app.all('/room/validate', authMiddleware, checkValidRoom);
+app.all('/room/get-links', authMiddleware, getValidRoomLinks);
+app.all('/user/validate-presenter', authMiddleware, checkIsPresenter);
+app.all('/user/validate-user', authMiddleware, checkIsValidUser);
+app.all('/user/login', authMiddleware, login);
 
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.

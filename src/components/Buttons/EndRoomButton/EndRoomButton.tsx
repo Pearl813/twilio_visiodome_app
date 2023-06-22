@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
 
 import { Button } from '@material-ui/core';
-import Snackbar from '../../Snackbar/Snackbar';
-import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,11 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface FinishRoomButtonProps {
+interface EndRoomButtonProps {
   className?: string;
 }
 
-export default function FinishRoomButton({ className }: FinishRoomButtonProps) {
+export default function EndRoomButton({ className }: EndRoomButtonProps) {
   const classes = useStyles();
   const { authUser } = useAuth();
 
@@ -35,7 +33,7 @@ export default function FinishRoomButton({ className }: FinishRoomButtonProps) {
         Authorization: `Bearer ${localStorage.getItem('token') ?? authUser.token}`,
       };
 
-      axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, { headers }).then(res => {
+      axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, { headers }).then(res => {
         console.log(res);
       });
     }

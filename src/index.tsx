@@ -8,14 +8,14 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import App from './App';
 import AppStateProvider, { useAppState } from './state';
 import ErrorDialog from './components/ErrorDialog/ErrorDialog';
-import LoginPage from './components/LoginPage/LoginPage';
+import LoginPage from './components/LoginPageV/LoginPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ChatProvider } from './components/ChatProvider';
 import { ParticipantProvider } from './components/ParticipantProvider';
 import { VideoProvider } from './components/VideoProvider';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
 import { AuthProvider } from './components/AuthProvider/index';
-import { AuthProtectedRoute } from './components/AuthProtectedRoute/index';
+import { AuthRoute } from './components/AuthRoute/index';
 import RoomCreateScreen from './components/RoomCreateScreen/RoomCreateScreen';
 
 import theme from './theme';
@@ -49,7 +49,8 @@ export const ReactApp = () => (
               {/* <PrivateRoute exact path="/">
                 <VideoApp />
               </PrivateRoute> */}
-              <AuthProtectedRoute exact path={`/rooms`} component={RoomCreateScreen} />
+              <AuthRoute exact path={`/`} component={RoomCreateScreen} />
+              <AuthRoute exact path={`/rooms`} component={RoomCreateScreen} />
               <PrivateRoute exact path="/room/:URLRoomName">
                 <VideoApp />
               </PrivateRoute>

@@ -5,7 +5,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
-export const createRoom: RequestHandler = (req, res) => {
+export const startRoom: RequestHandler = (req, res) => {
   const roomName = req.body.roomName;
   const accessToken = req.headers.authorization;
   const token = accessToken?.split(' ')!;
@@ -63,7 +63,7 @@ export const createRoom: RequestHandler = (req, res) => {
     });
 };
 
-export const completeRoom: RequestHandler = (req, res) => {
+export const endRoom: RequestHandler = (req, res) => {
   const accessToken = req.headers.authorization;
 
   const headers = {

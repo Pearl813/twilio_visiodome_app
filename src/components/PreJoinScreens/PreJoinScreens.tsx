@@ -7,13 +7,12 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import GenerateRoomLinkScreen from './GenerateRoomLinkScreen/GenerateRoomLinkScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
-import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import axios from 'axios';
 import Snackbar from '../Snackbar/Snackbar';
 import { Typography, Grid, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useAuth } from '../AuthProvider';
+import { PRESENTER_LINK_NAME, VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 export enum Steps {
   roomNameStep,
@@ -29,9 +28,7 @@ interface streamURLs {
 
 export default function PreJoinScreens() {
   const { user } = useAppState();
-  const { getAudioAndVideoTracks, connect: videoConnect } = useVideoContext();
-  const { authUser } = useAuth();
-  const { connect: chatConnect } = useChatContext();
+  const { getAudioAndVideoTracks } = useVideoContext();
 
   const { userName, URLRoomName, visiodomeapp } = useParams<{
     userName?: string;
@@ -51,7 +48,7 @@ export default function PreJoinScreens() {
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
-  const [isGetLink, setIsGetLink] = useState(false);
+  const [isPresenter, setIsPresenter] = useState(false);
   const [roomLinks, setRoomLinks] = useState<streamURLs>({
     presenter: '',
     customer: '',
@@ -66,9 +63,8 @@ export default function PreJoinScreens() {
     }
     if (URLRoomName) {
       setRoomName(URLRoomName);
-      setIsGetLink(true);
     }
-    if (visiodomeapp === 'presenter') {
+    if (visiodomeapp === PRESENTER_LINK_NAME) {
       setIsLoading(true);
       let urlString: string = window.location.href;
       // Create a URL object
@@ -81,14 +77,14 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-user`, { headers })
+          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-user`, { headers })
           .then(res => {
             if (res.data.message === 'success') {
               localStorage.setItem('token', token);
               setIsLoading(false);
               setName(res.data.username);
               setRoomName(res.data.roomName);
-              setIsGetLink(false);
+              setIsPresenter(true);
               setStep(Steps.deviceSelectionStep);
             } else {
               setIsLoading(false);
@@ -104,24 +100,20 @@ export default function PreJoinScreens() {
         setIsInvalidRoom(true);
       }
     }
-    if (visiodomeapp === 'visiodomeapp') {
+    if (visiodomeapp === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       setIsVisiodome(true);
-      let name: string = 'visiodomeapp';
+      let name: string = VISIODOMEAPP_LINK_NAME;
       let roomName: string = URLRoomName!;
 
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
             setName(name);
             setRoomName(roomName);
             setStep(Steps.deviceSelectionStep);
             setIsLoading(false);
-            // getToken(name, roomName).then(({ token }) => {
-            //   videoConnect(token);
-            //   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-            // });
           } else {
             setIsLoading(false);
             setIsInvalidRoom(true);
@@ -148,7 +140,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/get-links`, { roomName }, { headers })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/get-links`, { roomName }, { headers })
         .then(res => {
           console.log(res.data);
           if (res.data.message === 'success') {
@@ -182,7 +174,7 @@ export default function PreJoinScreens() {
     }
     setIsLoading(true);
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
       .then(res => {
         if (res.data.message === 'success') {
           setIsLoading(false);
@@ -206,7 +198,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
           if (response.data.message === 'completed') {
             setIsOpen(true);
@@ -242,12 +234,12 @@ export default function PreJoinScreens() {
         <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
           <div>
             <Typography variant="h6" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              {isInvalidRoom && isGetLink
+              {isInvalidRoom && !isPresenter
                 ? `This room doesn't exist!`
                 : `The Room is expired because there is nobody in the room for 2minutes.`}
             </Typography>
           </div>
-          {isInvalidRoom && isGetLink ? (
+          {isInvalidRoom && !isPresenter ? (
             <></>
           ) : (
             <Button
@@ -301,7 +293,7 @@ export default function PreJoinScreens() {
               name={name}
               roomName={roomName}
               isCreated={isCreated}
-              isGetLink={isGetLink}
+              isPresenter={isPresenter}
               setStep={setStep}
             />
           )}

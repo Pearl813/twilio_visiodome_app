@@ -47,7 +47,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         roomName="test room name"
         isCreated={true}
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );
@@ -78,7 +78,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         roomName="test room name"
         isCreated={true}
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );
@@ -109,7 +109,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         roomName="test room name"
         isCreated={true}
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );
@@ -133,7 +133,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         isCreated={true}
         roomName="test room name"
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );
@@ -147,7 +147,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         isCreated={true}
         roomName="test room name"
-        isGetLink={true}
+        isPresenter={true}
         setStep={mockSetStep}
       />
     );
@@ -161,7 +161,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         isCreated={true}
         roomName="test room name"
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );
@@ -182,7 +182,7 @@ describe('the DeviceSelectionScreen component', () => {
         name="test name"
         roomName="test room name"
         isCreated={true}
-        isGetLink={true}
+        isPresenter={true}
         setStep={() => {}}
       />
     );

@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
-import FinishRoomButton from '../Buttons/FinishRoomButton/FinishRoomButton';
+import EndRoomButton from '../Buttons/EndRoomButton/EndRoomButton';
 import { isMobile } from '../../utils';
 import Menu from './Menu/Menu';
 import useParticipants from '../../hooks/useParticipants/useParticipants';
@@ -73,23 +73,23 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const participants = useParticipants();
-  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [isPresenter, setIsPresenter] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 
   useEffect(() => {
     if (room?.localParticipant.identity === 'visiodomeapp') setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-presenter`, {
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-presenter`, {
         username: room?.localParticipant.identity,
       })
       .then(response => {
         if (response.data.message === 'success') {
           if (response.data.roomName === room?.name) {
-            setIsOrganizer(true);
+            setIsPresenter(true);
           }
         } else {
-          setIsOrganizer(false);
+          setIsPresenter(false);
         }
       })
       .catch(e => console.log(e));
@@ -127,7 +127,7 @@ export default function MenuBar() {
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
                 <EndCallButton isVisiodome={isVisiodome} />
-                {isOrganizer ? <FinishRoomButton /> : ''}
+                {isPresenter ? <EndRoomButton /> : ''}
               </Grid>
             </Grid>
           </Hidden>

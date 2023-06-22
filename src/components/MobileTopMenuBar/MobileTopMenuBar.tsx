@@ -2,10 +2,10 @@ import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
-import FinishRoomButton from '../Buttons/FinishRoomButton/FinishRoomButton';
+import EndRoomButton from '../Buttons/EndRoomButton/EndRoomButton';
 import Menu from '../MenuBar/Menu/Menu';
 import axios from 'axios';
-import { useAuth } from '../AuthProvider';
+import { VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -41,23 +41,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function MobileTopMenuBar() {
   const classes = useStyles();
   const { room } = useVideoContext();
-  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [isPresenter, setIsPresenter] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
 
   useEffect(() => {
-    if (room?.localParticipant.identity === 'visiodomeapp') setIsVisiodome(true);
+    if (room?.localParticipant.identity === VISIODOMEAPP_LINK_NAME) setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/users/validate-presenter`, {
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-presenter`, {
         username: room?.localParticipant.identity,
       })
       .then(response => {
         if (response.data.message === 'success') {
           if (response.data.roomName === room?.name) {
-            setIsOrganizer(true);
+            setIsPresenter(true);
           }
         } else {
-          setIsOrganizer(false);
+          setIsPresenter(false);
         }
       })
       .catch(e => console.log(e));
@@ -68,7 +68,7 @@ export default function MobileTopMenuBar() {
       <Typography variant="subtitle1">{room!.name}</Typography>
       <div>
         <EndCallButton className={classes.endCallButton} isVisiodome={isVisiodome} />
-        {isOrganizer ? <FinishRoomButton className={classes.finishCallButton} /> : ''}
+        {isPresenter ? <EndRoomButton className={classes.finishCallButton} /> : ''}
         <Menu buttonClassName={classes.settingsButton} />
       </div>
     </Grid>

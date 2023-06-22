@@ -17,7 +17,12 @@ import InfoIconOutlined from '../../../icons/InfoIconOutlined';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
-import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY, SELECTED_AUDIO_INPUT_KEY } from '../../../constants';
+import {
+  DEFAULT_VIDEO_CONSTRAINTS,
+  SELECTED_VIDEO_INPUT_KEY,
+  SELECTED_AUDIO_INPUT_KEY,
+  VISIODOMEAPP_LINK_NAME,
+} from '../../../constants';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../AuthProvider';
 
@@ -79,7 +84,7 @@ interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
   isCreated: boolean;
-  isGetLink: boolean;
+  isPresenter: boolean;
   setStep: (step: Steps) => void;
 }
 
@@ -87,7 +92,7 @@ export default function DeviceSelectionScreen({
   name,
   roomName,
   isCreated,
-  isGetLink,
+  isPresenter,
   setStep,
 }: DeviceSelectionScreenProps) {
   const classes = useStyles();
@@ -138,7 +143,7 @@ export default function DeviceSelectionScreen({
   };
 
   useEffect(() => {
-    if (name === 'visiodomeapp') {
+    if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
@@ -162,6 +167,31 @@ export default function DeviceSelectionScreen({
           console.log('video device not found');
           setIsLoading(false);
           setIsInvalidRoom(true);
+        }
+      }
+    }
+    if (isPresenter === true) {
+      setIsLoading(true);
+      if (disableButtons === false && videoInputDevices.length >= 1) {
+        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+        if (device?.deviceId) {
+          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+          if (audioDevice?.deviceId) {
+            if (isDisableButtonCalled === false) {
+              getToken(name, roomName).then(({ token }) => {
+                videoConnect(token);
+                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+              });
+              replaceTrack(device.deviceId, audioDevice.deviceId);
+              setIsDisableButtonCalled(true);
+            }
+          } else {
+            console.log('audio device not found');
+            setIsLoading(false);
+          }
+        } else {
+          console.log('video device not found');
+          setIsLoading(false);
         }
       }
     }
@@ -271,13 +301,13 @@ export default function DeviceSelectionScreen({
                       variant="outlined"
                       color="primary"
                       onClick={() => {
-                        if (!isGetLink) setStep(Steps.linkGenerateStep);
+                        if (isPresenter) setStep(Steps.linkGenerateStep);
                         else {
                           setStep(Steps.roomNameStep);
                         }
                       }}
                     >
-                      {!isGetLink ? `Show link` : `Cancel`}
+                      {isPresenter ? `Show link` : `Cancel`}
                     </Button>
                     <Button
                       variant="contained"

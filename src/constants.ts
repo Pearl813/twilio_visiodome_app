@@ -14,3 +14,6 @@ export const SELECTED_BACKGROUND_SETTINGS_KEY = 'TwilioVideoApp-selectedBackgrou
 
 export const GALLERY_VIEW_ASPECT_RATIO = 9 / 16; // 16:9
 export const GALLERY_VIEW_MARGIN = 3;
+
+export const PRESENTER_LINK_NAME = 'presenter';
+export const VISIODOMEAPP_LINK_NAME = 'visiodomeapp';

@@ -97,7 +97,7 @@ export default function RoomCreateScreen() {
         Authorization: `Bearer ${authUser.token}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/end`, {}, { headers })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
           if (response.data.message === 'completed') {
             setIsOpen(true);

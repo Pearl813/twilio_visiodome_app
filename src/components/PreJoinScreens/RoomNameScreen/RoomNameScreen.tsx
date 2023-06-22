@@ -74,7 +74,7 @@ export default function RoomNameScreen({
     if (roomName) {
       setIsLoading(true);
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/rooms/validate`, { roomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
         .then(res => {
           if (res.data.message === 'success') {
             setIsInvalidRoom(false);
