@@ -84,7 +84,6 @@ export default function PreJoinScreens() {
               setIsLoading(false);
               setName(res.data.username);
               setRoomName(res.data.roomName);
-              console.log('seofijsoeifjsoeifjsoeifjoeij');
               setIsPresenter(true);
               setStep(Steps.deviceSelectionStep);
             } else {
