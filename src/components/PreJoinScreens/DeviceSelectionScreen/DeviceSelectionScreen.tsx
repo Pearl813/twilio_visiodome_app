@@ -172,11 +172,13 @@ export default function DeviceSelectionScreen({
     }
     if (isPresenter === true) {
       setIsLoading(true);
+      console.log(isPresenter);
       if (disableButtons === false && videoInputDevices.length >= 1) {
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
         if (device?.deviceId) {
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
           if (audioDevice?.deviceId) {
+            console.log('ffffffffffffffffff', audioDevice?.deviceId);
             if (isDisableButtonCalled === false) {
               getToken(name, roomName).then(({ token }) => {
                 videoConnect(token);
