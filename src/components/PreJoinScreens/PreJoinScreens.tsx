@@ -1,12 +1,11 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import GenerateRoomLinkScreen from './GenerateRoomLinkScreen/GenerateRoomLinkScreen';
 import { useAppState } from '../../state';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import axios from 'axios';
 import Snackbar from '../Snackbar/Snackbar';
@@ -78,7 +77,7 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-user`, { headers })
+          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/token/validate`, { headers })
           .then(res => {
             if (res.data.message === 'success') {
               localStorage.setItem('token', token);
@@ -141,7 +140,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/get-links`, { roomName }, { headers })
+        .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/links/${roomName}`, { headers })
         .then(res => {
           if (res.data.message === 'success') {
             setIsInvalidRoom(false);

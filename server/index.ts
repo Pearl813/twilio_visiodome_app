@@ -1,7 +1,7 @@
 import './bootstrap-globals';
 import { createExpressHandler } from './createExpressHandler';
-import { startRoom, endRoom, checkValidRoom, getValidRoomLinks } from './handlers/room';
-import { checkIsPresenter, checkIsValidUser, login } from './handlers/user';
+import { startRoom, endRoom, validateRoom, getRoomLinks } from './handlers/room';
+import { validatePresenter, validateToken, login } from './handlers/user';
 import express, { RequestHandler } from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
@@ -30,10 +30,10 @@ app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 app.all('/room/start', authMiddleware, startRoom);
 app.all('/room/end', authMiddleware, endRoom);
-app.all('/room/validate', authMiddleware, checkValidRoom);
-app.all('/room/get-links', authMiddleware, getValidRoomLinks);
-app.all('/user/validate-presenter', authMiddleware, checkIsPresenter);
-app.all('/user/validate-user', authMiddleware, checkIsValidUser);
+app.all('/room/validate', authMiddleware, validateRoom);
+app.get('/room/links/:roomName', authMiddleware, getRoomLinks);
+app.all('/user/presenter/validate', authMiddleware, validatePresenter);
+app.all('/user/token/validate', authMiddleware, validateToken);
 app.all('/user/login', authMiddleware, login);
 
 app.use((req, res, next) => {

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import React, { FormEvent, useState } from 'react';
 import {
   Typography,
   makeStyles,
@@ -13,9 +13,7 @@ import {
   Divider,
 } from '@material-ui/core';
 import CopyIcon from '../../../icons/CopyIcon';
-import { useAppState } from '../../../state';
 import { Steps } from '../RoomCreateScreen';
-import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -71,10 +69,7 @@ export default function GenerateRoomLinkScreen({
   endRoom,
 }: GenerateRoomLinkScreenProps) {
   const classes = useStyles();
-  const { user } = useAppState();
   const [open, setOpen] = useState(false);
-
-  const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   const handleCopyClick = (link: any) => {
     setOpen(true);

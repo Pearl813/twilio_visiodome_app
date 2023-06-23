@@ -45,8 +45,12 @@ export const ReactApp = () => (
         <AppStateProvider>
           <AuthProvider>
             <Switch>
-              <AuthRoute exact path={`/`} component={RoomCreateScreen} />
-              <AuthRoute exact path={`/rooms`} component={RoomCreateScreen} />
+              <AuthRoute exact path="/">
+                <RoomCreateScreen />
+              </AuthRoute>
+              <AuthRoute exact path="/rooms">
+                <RoomCreateScreen />
+              </AuthRoute>
               <PrivateRoute exact path="/room/:URLRoomName">
                 <VideoApp />
               </PrivateRoute>

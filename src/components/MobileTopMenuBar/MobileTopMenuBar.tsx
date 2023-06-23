@@ -48,7 +48,7 @@ export default function MobileTopMenuBar() {
     if (room?.localParticipant.identity === VISIODOMEAPP_LINK_NAME) setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-presenter`, {
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/presenter/validate`, {
         username: room?.localParticipant.identity,
       })
       .then(response => {
@@ -67,7 +67,7 @@ export default function MobileTopMenuBar() {
     <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
       <Typography variant="subtitle1">{room!.name}</Typography>
       <div>
-        <EndCallButton className={classes.endCallButton} isVisiodome={isVisiodome} />
+        <EndCallButton className={classes.endCallButton} redirectURL={isVisiodome ? '/' : null} />
         {isPresenter ? <EndRoomButton className={classes.endRoomButton} /> : ''}
         <Menu buttonClassName={classes.settingsButton} />
       </div>

@@ -1,10 +1,7 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useAppState } from '../../../state';
-import Snackbar from '../../Snackbar/Snackbar';
 import { useAuth } from '../../AuthProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,8 +55,7 @@ export default function RoomNameScreen({
   handleSubmit,
 }: RoomNameScreenProps) {
   const classes = useStyles();
-  const history = useHistory();
-  const { authUser, setAuthUser } = useAuth();
+  const { setAuthUser } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
 

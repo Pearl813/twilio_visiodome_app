@@ -13,7 +13,7 @@ jest.mock('../../../hooks/useVideoContext/useVideoContext', () => () => mockVide
 
 describe('End Call button', () => {
   it('should disconnect from the room when clicked', () => {
-    const wrapper = shallow(<EndCallButton isVisiodome={true}/>);
+    const wrapper = shallow(<EndCallButton redirectURL="" />);
     wrapper.simulate('click');
     expect(mockVideoContext.room.disconnect).toHaveBeenCalled();
   });

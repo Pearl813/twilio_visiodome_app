@@ -92,7 +92,6 @@ export const endRoom: RequestHandler = (req, res) => {
                 .update({ status: 'completed' })
                 .then((room: { status: any }) => {
                   if (room.status === 'completed') res.status(200).send({ message: 'completed' });
-
                 });
             }
           });
@@ -103,8 +102,8 @@ export const endRoom: RequestHandler = (req, res) => {
     });
 };
 
-export const getValidRoomLinks: RequestHandler = (req, res) => {
-  const roomName = req.body.roomName;
+export const getRoomLinks: RequestHandler = (req, res) => {
+  const roomName = req.params.roomName;
   const accessToken = req.headers.authorization;
   const token = accessToken?.split(' ')!;
   const headers = {
@@ -143,7 +142,7 @@ export const getValidRoomLinks: RequestHandler = (req, res) => {
     });
 };
 
-export const checkValidRoom: RequestHandler = (req, res) => {
+export const validateRoom: RequestHandler = (req, res) => {
   const roomName = req.body.roomName;
   const headers = {
     Authorization: `Bearer ${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,

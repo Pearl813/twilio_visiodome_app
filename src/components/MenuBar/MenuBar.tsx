@@ -15,6 +15,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import axios from 'axios';
+import { VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,10 +77,10 @@ export default function MenuBar() {
   const [isVisiodome, setIsVisiodome] = useState(false);
 
   useEffect(() => {
-    if (room?.localParticipant.identity === 'visiodomeapp') setIsVisiodome(true);
+    if (room?.localParticipant.identity === VISIODOMEAPP_LINK_NAME) setIsVisiodome(true);
 
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/validate-presenter`, {
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/presenter/validate`, {
         username: room?.localParticipant.identity,
       })
       .then(response => {
@@ -125,7 +126,7 @@ export default function MenuBar() {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
-                <EndCallButton isVisiodome={isVisiodome} />
+                <EndCallButton redirectURL={isVisiodome ? '/' : null} />
                 {isPresenter ? <EndRoomButton /> : ''}
               </Grid>
             </Grid>

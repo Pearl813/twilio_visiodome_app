@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAuth } from '../AuthProvider';
@@ -15,23 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  googleButton: {
-    background: 'white',
-    color: 'rgb(0, 94, 166)',
-    borderRadius: '4px',
-    border: '2px solid rgb(2, 122, 197)',
-    margin: '1.8em 0 0.7em',
-    textTransform: 'none',
-    boxShadow: 'none',
-    padding: '0.3em 1em',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    '&:hover': {
-      background: 'white',
-      boxShadow: 'none',
-    },
-  },
   inputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -43,23 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '1.5em 0 2em',
     },
   },
-  errorMessage: {
-    color: 'red',
-    display: 'flex',
-    alignItems: 'center',
-    margin: '1em 0 0.2em',
-    '& svg': {
-      marginRight: '0.4em',
-    },
-  },
   gutterBottom: {
     marginBottom: '1em',
-  },
-  textFieldContainer: {
-    width: '100%',
-  },
-  passcodeContainer: {
-    minHeight: '120px',
   },
   submitButton: {
     [theme.breakpoints.down('sm')]: {
@@ -71,15 +39,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const location = useLocation<{ from: Location }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
-  const [authError, setAuthError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
   const { authUser, setAuthUser } = useAuth();
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {

@@ -1,9 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
-import { useAppState } from '../../../state';
-
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -60,8 +56,6 @@ export default function RoomNameScreen({
   handleSubmit,
 }: RoomNameScreenProps) {
   const classes = useStyles();
-  const { user } = useAppState();
-  const history = useHistory();
 
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

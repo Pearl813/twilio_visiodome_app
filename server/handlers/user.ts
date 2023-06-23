@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
 
-export const checkIsPresenter: RequestHandler = (req, res) => {
+export const validatePresenter: RequestHandler = (req, res) => {
   const username = req.body.username;
   const headers = {
     Authorization: `Bearer ${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,
@@ -21,7 +21,7 @@ export const checkIsPresenter: RequestHandler = (req, res) => {
     });
 };
 
-export const checkIsValidUser: RequestHandler = (req, res) => {
+export const validateToken: RequestHandler = (req, res) => {
   const accessToken = req.headers.authorization;
 
   const headers = {
