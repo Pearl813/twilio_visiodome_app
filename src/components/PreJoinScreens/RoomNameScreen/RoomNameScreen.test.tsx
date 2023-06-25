@@ -13,10 +13,8 @@ describe('the RoomNameScreen component', () => {
     const wrapper = shallow(
       <RoomNameScreen
         name="test"
-        isCreated={true}
         roomName="testRoom"
         setName={() => {}}
-        setIsCreated={() => {}}
         setRoomName={() => {}}
         handleSubmit={() => {}}
       />
@@ -31,10 +29,8 @@ describe('the RoomNameScreen component', () => {
     const wrapper = shallow(
       <RoomNameScreen
         name="test"
-        isCreated={true}
         roomName="testRoom"
         setName={() => {}}
-        setIsCreated={() => {}}
         setRoomName={() => {}}
         handleSubmit={() => {}}
       />
@@ -58,10 +54,8 @@ describe('the RoomNameScreen component', () => {
     const wrapper = shallow(
       <RoomNameScreen
         name="test"
-        isCreated={true}
         roomName="testRoom"
         setName={() => {}}
-        setIsCreated={() => {}}
         setRoomName={() => {}}
         handleSubmit={() => {}}
       />

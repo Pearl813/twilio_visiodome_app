@@ -57,8 +57,6 @@ export default function RoomNameScreen({
   const classes = useStyles();
   const { setAuthUser } = useAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -69,74 +67,59 @@ export default function RoomNameScreen({
 
   return (
     <>
-      {!isLoading ? (
-        <>
-          <Typography variant="h5" className={classes.gutterBottom}>
-            {`Create a Room`}
-          </Typography>
-          <Typography variant="body1">{`Room name is "${roomName}".  Click "Start Room" to create room.`}</Typography>
-          <form onSubmit={handleSubmit}>
-            <div className={classes.inputContainer}>
-              <div className={classes.textFieldContainer}>
-                <InputLabel shrink htmlFor="input-user-name">
-                  Your Name
-                </InputLabel>
-                <TextField
-                  id="input-user-name"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  value={name}
-                  disabled={isCreated === true ? true : false}
-                  onChange={handleNameChange}
-                />
-              </div>
-              <div className={classes.textFieldContainer}>
-                <InputLabel shrink htmlFor="input-room-name">
-                  Room Name
-                </InputLabel>
-                <TextField
-                  autoCapitalize="false"
-                  id="input-room-name"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  value={roomName}
-                  disabled={isCreated === true ? true : false}
-                  onChange={handleRoomNameChange}
-                />
-              </div>
-            </div>
-            <Grid container justifyContent="flex-end">
-              <div className={classes.continueButtons}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    setAuthUser(null);
-                  }}
-                >
-                  Sign Out
-                </Button>
-                <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
-                  Start Room
-                </Button>
-              </div>
-            </Grid>
-          </form>
-        </>
-      ) : (
-        <Grid container justifyContent="center" alignItems="center" direction="column" style={{ height: '100%' }}>
-          <div>
-            <CircularProgress variant="indeterminate" />
+      <Typography variant="h5" className={classes.gutterBottom}>
+        {`Create a Room`}
+      </Typography>
+      <Typography variant="body1">{`Room name is "${roomName}".  Click "Start Room" to create room.`}</Typography>
+      <form onSubmit={handleSubmit}>
+        <div className={classes.inputContainer}>
+          <div className={classes.textFieldContainer}>
+            <InputLabel shrink htmlFor="input-user-name">
+              Your Name
+            </InputLabel>
+            <TextField
+              id="input-user-name"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={name}
+              disabled={isCreated === true ? true : false}
+              onChange={handleNameChange}
+            />
           </div>
-          <div>
-            <Typography variant="body2" style={{ fontWeight: 'bold', fontSize: '16px' }} align="center">
-              Loading...
-            </Typography>
+          <div className={classes.textFieldContainer}>
+            <InputLabel shrink htmlFor="input-room-name">
+              Room Name
+            </InputLabel>
+            <TextField
+              autoCapitalize="false"
+              id="input-room-name"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={roomName}
+              disabled={isCreated === true ? true : false}
+              onChange={handleRoomNameChange}
+            />
+          </div>
+        </div>
+        <Grid container justifyContent="flex-end">
+          <div className={classes.continueButtons}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                setAuthUser(null);
+              }}
+            >
+              Sign Out
+            </Button>
+            <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
+              Start Room
+            </Button>
           </div>
         </Grid>
-      )}
+      </form>
     </>
   );
 }

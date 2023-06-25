@@ -39,22 +39,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface RoomNameScreenProps {
   name: string;
   roomName: string;
-  isCreated: boolean;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
-  setIsCreated: (isCreated: boolean) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({
-  name,
-  roomName,
-  isCreated,
-  setName,
-  setRoomName,
-  setIsCreated,
-  handleSubmit,
-}: RoomNameScreenProps) {
+export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
 
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
@@ -70,7 +60,7 @@ export default function RoomNameScreen({
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
         .then(res => {
-          if (res.data.message === 'success') {
+          if (res.data.message === RESULT_MESSAGE) {
             setIsInvalidRoom(false);
           } else {
             setIsInvalidRoom(true);

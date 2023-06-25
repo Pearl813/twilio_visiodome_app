@@ -11,7 +11,7 @@ import axios from 'axios';
 import Snackbar from '../Snackbar/Snackbar';
 import { Typography, Grid, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { PRESENTER_LINK_NAME, VISIODOMEAPP_LINK_NAME } from '../../constants';
+import { PRESENTER_LINK_NAME, RESULT_MESSAGE, VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 export enum Steps {
   roomNameStep,
@@ -29,10 +29,10 @@ export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
 
-  const { userName, URLRoomName, visiodomeapp } = useParams<{
+  const { userName, URLRoomName, roleName } = useParams<{
     userName?: string;
     URLRoomName?: string;
-    visiodomeapp?: string;
+    roleName?: string;
   }>();
   const [step, setStep] = useState(Steps.roomNameStep);
 
@@ -44,7 +44,6 @@ export default function PreJoinScreens() {
   const [messageContent, setMessageContent] = useState('');
   const [messageHeader, setMessageHeader] = useState('');
   const [messageType, setMessageType] = useState<any>('');
-  const [isCreated, setIsCreated] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
@@ -64,7 +63,7 @@ export default function PreJoinScreens() {
     if (URLRoomName) {
       setRoomName(URLRoomName);
     }
-    if (visiodomeapp === PRESENTER_LINK_NAME) {
+    if (roleName === PRESENTER_LINK_NAME) {
       setIsLoading(true);
       let urlString: string = window.location.href;
       // Create a URL object
@@ -79,7 +78,7 @@ export default function PreJoinScreens() {
         axios
           .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/token/validate`, { headers })
           .then(res => {
-            if (res.data.message === 'success') {
+            if (res.data.message === RESULT_MESSAGE) {
               localStorage.setItem('token', token);
               setIsLoading(false);
               setName(res.data.username);
@@ -100,7 +99,7 @@ export default function PreJoinScreens() {
         setIsInvalidRoom(true);
       }
     }
-    if (visiodomeapp === VISIODOMEAPP_LINK_NAME) {
+    if (roleName === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       setIsVisiodome(true);
       let name: string = VISIODOMEAPP_LINK_NAME;
@@ -109,7 +108,7 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
         .then(res => {
-          if (res.data.message === 'success') {
+          if (res.data.message === RESULT_MESSAGE) {
             setName(name);
             setRoomName(roomName);
             setStep(Steps.deviceSelectionStep);
@@ -121,7 +120,7 @@ export default function PreJoinScreens() {
         })
         .catch(e => console.log(e));
     }
-  }, [user, URLRoomName, visiodomeapp]);
+  }, [user, URLRoomName, roleName]);
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
@@ -142,7 +141,7 @@ export default function PreJoinScreens() {
       axios
         .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/links/${roomName}`, { headers })
         .then(res => {
-          if (res.data.message === 'success') {
+          if (res.data.message === RESULT_MESSAGE) {
             setIsInvalidRoom(false);
             setRoomLinks({
               ...roomLinks,
@@ -175,7 +174,7 @@ export default function PreJoinScreens() {
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
       .then(res => {
-        if (res.data.message === 'success') {
+        if (res.data.message === RESULT_MESSAGE) {
           setIsLoading(false);
           setStep(Steps.deviceSelectionStep);
         }
@@ -205,7 +204,7 @@ export default function PreJoinScreens() {
             setMessageContent('Room Closed Successfully.');
             setMessageType('info');
             setIsLoading(false);
-            history.replace('/rooms');
+            history.push('/rooms');
           }
         })
         .catch(e => {
@@ -247,7 +246,7 @@ export default function PreJoinScreens() {
               color="primary"
               style={{ marginTop: '8px' }}
               onClick={() => {
-                history.replace(`/rooms`);
+                history.push(`/rooms`);
               }}
             >
               Start again.
@@ -270,10 +269,8 @@ export default function PreJoinScreens() {
             <RoomNameScreen
               name={name}
               roomName={roomName}
-              isCreated={isCreated}
               setName={setName}
               setRoomName={setRoomName}
-              setIsCreated={setIsCreated}
               handleSubmit={handleRoomName}
             />
           )}
@@ -288,13 +285,7 @@ export default function PreJoinScreens() {
             />
           )}
           {step === Steps.deviceSelectionStep && (
-            <DeviceSelectionScreen
-              name={name}
-              roomName={roomName}
-              isCreated={isCreated}
-              isPresenter={isPresenter}
-              setStep={setStep}
-            />
+            <DeviceSelectionScreen name={name} roomName={roomName} isPresenter={isPresenter} setStep={setStep} />
           )}
         </>
       )}

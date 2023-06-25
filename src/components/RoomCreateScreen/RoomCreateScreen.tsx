@@ -80,7 +80,7 @@ export default function RoomCreateScreen() {
         });
     } else {
       setIsLoading(false);
-      history.replace('/rooms');
+      history.push('/rooms');
     }
   };
 

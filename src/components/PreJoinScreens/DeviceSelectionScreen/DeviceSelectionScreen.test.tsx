@@ -43,13 +43,7 @@ describe('the DeviceSelectionScreen component', () => {
     }));
 
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        roomName="test room name"
-        isCreated={true}
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
 
     it('should show the loading screen', () => {
@@ -74,13 +68,7 @@ describe('the DeviceSelectionScreen component', () => {
     }));
 
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        roomName="test room name"
-        isCreated={true}
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
 
     it('should disable the Join Now, toggle video, and toggle audio buttons', () => {
@@ -105,13 +93,7 @@ describe('the DeviceSelectionScreen component', () => {
     }));
     mockUseAppState.mockImplementationOnce(() => ({ getToken: mockGetToken, isFetching: true }));
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        roomName="test room name"
-        isCreated={true}
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
 
     it('should show the loading screen', () => {
@@ -129,13 +111,7 @@ describe('the DeviceSelectionScreen component', () => {
 
   it('should not disable the Join Now button by default', () => {
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        isCreated={true}
-        roomName="test room name"
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
     expect(wrapper.find({ children: 'Join Now' }).prop('disabled')).toBe(false);
   });
@@ -143,13 +119,7 @@ describe('the DeviceSelectionScreen component', () => {
   it('should go back to the RoomNameScreen when the Cancel button is clicked', () => {
     const mockSetStep = jest.fn();
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        isCreated={true}
-        roomName="test room name"
-        isPresenter={true}
-        setStep={mockSetStep}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={mockSetStep} />
     );
     wrapper.find({ children: 'Cancel' }).simulate('click');
     expect(mockSetStep).toHaveBeenCalledWith(Steps.roomNameStep);
@@ -157,13 +127,7 @@ describe('the DeviceSelectionScreen component', () => {
 
   it('should fetch a token and connect to the Video SDK and Conversations SDK when the Join Now button is clicked', done => {
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        isCreated={true}
-        roomName="test room name"
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
     wrapper.find({ children: 'Join Now' }).simulate('click');
 
@@ -178,13 +142,7 @@ describe('the DeviceSelectionScreen component', () => {
   it('should fetch a token and connect to the Video SDK only when the Join Now button is clicked when the REACT_APP_DISABLE_TWILIO_CONVERSATIONS variable is true', done => {
     process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS = 'true';
     const wrapper = shallow(
-      <DeviceSelectionScreen
-        name="test name"
-        roomName="test room name"
-        isCreated={true}
-        isPresenter={true}
-        setStep={() => {}}
-      />
+      <DeviceSelectionScreen name="test name" roomName="test room name" isPresenter={true} setStep={() => {}} />
     );
     wrapper.find({ children: 'Join Now' }).simulate('click');
 

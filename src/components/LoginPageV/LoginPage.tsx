@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { RESULT_MESSAGE } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
@@ -71,7 +72,7 @@ export default function LoginPage() {
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
       .then(response => {
         // Handle success.
-        if (response.data.message === 'success') {
+        if (response.data.message === RESULT_MESSAGE) {
           setIsOpen(false);
           setAuthUser(response.data.payload);
           history.replace(`/rooms`);

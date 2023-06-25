@@ -81,18 +81,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
-  isCreated: boolean;
   isPresenter: boolean;
   setStep: (step: Steps) => void;
 }
 
-export default function DeviceSelectionScreen({
-  name,
-  roomName,
-  isCreated,
-  isPresenter,
-  setStep,
-}: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({ name, roomName, isPresenter, setStep }: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();
   const { connect: chatConnect } = useChatContext();

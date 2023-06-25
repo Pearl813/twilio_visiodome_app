@@ -17,6 +17,7 @@ import useTrack from '../../hooks/useTrack/useTrack';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useParticipantIsReconnecting from '../../hooks/useParticipantIsReconnecting/useParticipantIsReconnecting';
 import { useAppState } from '../../state';
+import { RESULT_MESSAGE } from '../../constants';
 
 const borderWidth = 2;
 
@@ -194,7 +195,7 @@ export default function ParticipantInfo({
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/presenter/validate`, { username: participant.identity })
       .then(response => {
-        if (response.data.message === 'success') {
+        if (response.data.message === RESULT_MESSAGE) {
           if (response.data.roomName === room?.name) {
             setIsPresenter(true);
           }

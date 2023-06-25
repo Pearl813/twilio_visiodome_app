@@ -5,7 +5,7 @@ import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import EndRoomButton from '../Buttons/EndRoomButton/EndRoomButton';
 import Menu from '../MenuBar/Menu/Menu';
 import axios from 'axios';
-import { VISIODOMEAPP_LINK_NAME } from '../../constants';
+import { RESULT_MESSAGE, VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -52,7 +52,7 @@ export default function MobileTopMenuBar() {
         username: room?.localParticipant.identity,
       })
       .then(response => {
-        if (response.data.message === 'success') {
+        if (response.data.message === RESULT_MESSAGE) {
           if (response.data.roomName === room?.name) {
             setIsPresenter(true);
           }
