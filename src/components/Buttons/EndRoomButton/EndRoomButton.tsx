@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 import { Button } from '@material-ui/core';
 import { useAuth } from '../../AuthProvider';
@@ -26,6 +27,7 @@ interface EndRoomButtonProps {
 export default function EndRoomButton({ className }: EndRoomButtonProps) {
   const classes = useStyles();
   const { authUser } = useAuth();
+  const history = useHistory();
 
   const completeRoom = async () => {
     if (localStorage.getItem('token') || authUser.token) {
