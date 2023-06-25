@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { RESULT_MESSAGE } from '../../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
