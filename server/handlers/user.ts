@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
+import { RESULT_CODE_SUCCESS } from '../constants';
 
 export const validatePresenter: RequestHandler = (req, res) => {
   const username = req.body.username;
@@ -11,13 +12,13 @@ export const validatePresenter: RequestHandler = (req, res) => {
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[username][$eq]=${username}`, { headers })
     .then(roomDetail => {
       if (roomDetail.data.length === 0) {
-        res.status(200).send({ message: 'No exist' });
+        res.status(200).send({ code: 1, message: 'No exist' });
       } else {
-        res.status(200).send({ message: 'success', roomName: roomDetail.data[0].streamURL });
+        res.status(200).send({ code: RESULT_CODE_SUCCESS, message: 'success', roomName: roomDetail.data[0].streamURL });
       }
     })
     .catch((error: any) => {
-      res.status(500).send(error);
+      res.status(500).send({ code: -1, error });
     });
 };
 
@@ -31,15 +32,18 @@ export const validateToken: RequestHandler = (req, res) => {
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(roomDetail => {
       if (roomDetail.data.username) {
-        res
-          .status(200)
-          .send({ message: 'success', username: roomDetail.data.username, roomName: roomDetail.data.streamURL });
+        res.status(200).send({
+          code: RESULT_CODE_SUCCESS,
+          message: 'success',
+          username: roomDetail.data.username,
+          roomName: roomDetail.data.streamURL,
+        });
       } else {
-        res.status(200).send({ message: 'No exist' });
+        res.status(200).send({ code: 1, message: 'No exist' });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ error });
+      res.status(500).send({ code: -1, error });
     });
 };
 
@@ -52,6 +56,7 @@ export const login: RequestHandler = (req, res) => {
     .then(authResponse => {
       if (authResponse.data.user.PackageType === 'Mobile') {
         res.status(200).send({
+          code: RESULT_CODE_SUCCESS,
           message: 'success',
           payload: {
             token: authResponse.data.jwt,
@@ -60,10 +65,10 @@ export const login: RequestHandler = (req, res) => {
           },
         });
       } else {
-        res.status(200).send({ message: 'permission error' });
+        res.status(200).send({ code: 1, message: 'permission error' });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ error });
+      res.status(500).send({ code: -1, error });
     });
 };

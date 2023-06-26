@@ -11,7 +11,7 @@ import axios from 'axios';
 import Snackbar from '../Snackbar/Snackbar';
 import { Typography, Grid, Button } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { PRESENTER_LINK_NAME, RESULT_MESSAGE, VISIODOMEAPP_LINK_NAME } from '../../constants';
+import { PRESENTER_LINK_NAME, RESULT_CODE_SUCCESS, VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 export enum Steps {
   roomNameStep,
@@ -78,7 +78,7 @@ export default function PreJoinScreens() {
         axios
           .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/token/validate`, { headers })
           .then(res => {
-            if (res.data.message === RESULT_MESSAGE) {
+            if (res.data.code === RESULT_CODE_SUCCESS) {
               localStorage.setItem('token', token);
               setIsLoading(false);
               setName(res.data.username);
@@ -108,7 +108,7 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
         .then(res => {
-          if (res.data.message === RESULT_MESSAGE) {
+          if (res.data.code === RESULT_CODE_SUCCESS) {
             setName(name);
             setRoomName(roomName);
             setStep(Steps.deviceSelectionStep);
@@ -141,7 +141,7 @@ export default function PreJoinScreens() {
       axios
         .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/links/${roomName}`, { headers })
         .then(res => {
-          if (res.data.message === RESULT_MESSAGE) {
+          if (res.data.code === RESULT_CODE_SUCCESS) {
             setIsInvalidRoom(false);
             setRoomLinks({
               ...roomLinks,
@@ -174,7 +174,7 @@ export default function PreJoinScreens() {
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
       .then(res => {
-        if (res.data.message === RESULT_MESSAGE) {
+        if (res.data.code === RESULT_CODE_SUCCESS) {
           setIsLoading(false);
           setStep(Steps.deviceSelectionStep);
         }
@@ -198,7 +198,7 @@ export default function PreJoinScreens() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
-          if (response.data.message === 'completed') {
+          if (response.data.code === RESULT_CODE_SUCCESS) {
             setIsOpen(true);
             setMessageHeader('Success!');
             setMessageContent('Room Closed Successfully.');

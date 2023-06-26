@@ -15,7 +15,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import axios from 'axios';
-import { RESULT_MESSAGE, VISIODOMEAPP_LINK_NAME } from '../../constants';
+import { RESULT_CODE_SUCCESS, VISIODOMEAPP_LINK_NAME } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,7 +84,7 @@ export default function MenuBar() {
         username: room?.localParticipant.identity,
       })
       .then(response => {
-        if (response.data.message === RESULT_MESSAGE) {
+        if (response.data.code === RESULT_CODE_SUCCESS) {
           if (response.data.roomName === room?.name) {
             setIsPresenter(true);
           }

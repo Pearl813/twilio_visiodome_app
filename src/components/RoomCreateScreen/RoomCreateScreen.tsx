@@ -11,6 +11,7 @@ import { Typography, Grid } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useAuth } from '../AuthProvider';
+import { RESULT_CODE_SUCCESS } from '../../constants';
 
 export enum Steps {
   roomNameStep,
@@ -98,7 +99,7 @@ export default function RoomCreateScreen() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
-          if (response.data.message === 'completed') {
+          if (response.data.code === RESULT_CODE_SUCCESS) {
             setIsOpen(true);
             setMessageHeader('Success!');
             setMessageContent('Room Closed Successfully.');

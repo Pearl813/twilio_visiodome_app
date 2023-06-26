@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
+import { RESULT_CODE_SUCCESS } from '../constants';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -28,6 +29,7 @@ export const startRoom: RequestHandler = (req, res) => {
                 .then((room: any) => {
                   if (room.sid) {
                     res.status(200).send({
+                      code: RESULT_CODE_SUCCESS,
                       message: 'Room is created successfully!',
                       roomName: roomDetail.data.streamURL,
                       streamURLs: {
@@ -43,6 +45,7 @@ export const startRoom: RequestHandler = (req, res) => {
                 });
             } else if (room[0].uniqueName === roomDetail?.data?.streamURL) {
               res.status(200).send({
+                code: 1,
                 message: 'This room is already created!',
                 roomName: roomDetail.data.streamURL,
                 streamURLs: {
@@ -54,12 +57,12 @@ export const startRoom: RequestHandler = (req, res) => {
             }
           })
           .catch((error: any) => {
-            res.status(500).send(error);
+            res.status(500).send({ code: -1, error });
           });
       }
     })
     .catch((error: any) => {
-      res.status(500).send(error);
+      res.status(500).send({ code: -1, error });
     });
 };
 
@@ -73,10 +76,9 @@ export const endRoom: RequestHandler = (req, res) => {
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(roomDetail => {
-      let userId = roomDetail.data.id;
       let uniqueName = roomDetail.data.streamURL;
       if (uniqueName === null) {
-        res.status(500).send({ message: 'No exist.' });
+        res.status(500).send({ code: 1, message: 'No exist.' });
       } else {
         client.video.v1.rooms
           .list({
@@ -85,20 +87,21 @@ export const endRoom: RequestHandler = (req, res) => {
           })
           .then((room: any) => {
             if (room.length === 0) {
-              res.status(500).send({ message: 'no exist' });
+              res.status(500).send({ code: 1, message: 'no exist' });
             } else if (room[0].uniqueName === uniqueName) {
               client.video.v1
                 .rooms(uniqueName)
                 .update({ status: 'completed' })
                 .then((room: { status: any }) => {
-                  if (room.status === 'completed') res.status(200).send({ message: 'completed' });
+                  if (room.status === 'completed')
+                    res.status(200).send({ code: RESULT_CODE_SUCCESS, message: 'completed' });
                 });
             }
           });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ error });
+      res.status(500).send({ code: -1, error });
     });
 };
 
@@ -113,7 +116,7 @@ export const getRoomLinks: RequestHandler = (req, res) => {
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[streamURL][$eq]=${roomName}`, { headers })
     .then(roomDetail => {
       if (roomDetail.data.length === 0) {
-        res.status(200).send({ message: 'No exist' });
+        res.status(200).send({ code: 1, message: 'No exist' });
       } else {
         client.video.v1.rooms
           .list({
@@ -123,6 +126,7 @@ export const getRoomLinks: RequestHandler = (req, res) => {
           .then((room: any) => {
             if (room.length > 0) {
               res.status(200).send({
+                code: RESULT_CODE_SUCCESS,
                 message: 'success',
                 roomName: roomName,
                 streamURLs: {
@@ -132,13 +136,13 @@ export const getRoomLinks: RequestHandler = (req, res) => {
                 },
               });
             } else {
-              res.status(200).send({ message: 'no in progress room.' });
+              res.status(200).send({ code: 1, message: 'no in progress room.' });
             }
           });
       }
     })
     .catch((error: any) => {
-      console.log(error);
+      res.status(500).send({ code: -1, error });
     });
 };
 
@@ -151,7 +155,7 @@ export const validateRoom: RequestHandler = (req, res) => {
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[streamURL][$eq]=${roomName}`, { headers })
     .then(roomDetail => {
       if (roomDetail.data.length === 0) {
-        res.status(200).send({ message: 'No exist' });
+        res.status(200).send({ code: 1, message: 'No exist' });
       } else {
         client.video.v1.rooms
           .list({
@@ -161,15 +165,16 @@ export const validateRoom: RequestHandler = (req, res) => {
           .then((room: any) => {
             if (room.length > 0) {
               res.status(200).send({
+                code: RESULT_CODE_SUCCESS,
                 message: 'success',
               });
             } else {
-              res.status(200).send({ message: 'no in progress room.' });
+              res.status(200).send({ code: 1, message: 'no in progress room.' });
             }
           });
       }
     })
     .catch((error: any) => {
-      console.log(error);
+      res.status(500).send({ code: -1, error });
     });
 };
