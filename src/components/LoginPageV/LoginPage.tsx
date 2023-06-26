@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { RESULT_CODE_SUCCESS } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   googleButton: {
@@ -71,15 +72,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const location = useLocation<{ from: Location }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
-  const [authError, setAuthError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
   const { authUser, setAuthUser } = useAuth();
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +104,7 @@ export default function LoginPage() {
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
       .then(response => {
         // Handle success.
-        if (response.data.message === 'success') {
+        if (response.data.code === RESULT_CODE_SUCCESS) {
           setIsOpen(false);
           setAuthUser(response.data.payload);
           history.replace(`/rooms`);
