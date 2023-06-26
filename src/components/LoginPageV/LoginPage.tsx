@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const email = useRef('');
-  const password = useRef('');
+  const emailRef = useRef<null | string>(null);
+  const passwordRef = useRef<null | string>(null);
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
@@ -60,8 +60,8 @@ export default function LoginPage() {
   const login = () => {
     setIsSnackbarDismissed(false);
     setIsLoading(true);
-    const emailFormData = email.current;
-    const passwordFormData = password.current;
+    const emailFormData = emailRef.current;
+    const passwordFormData = passwordRef.current;
     axios
       .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { emailFormData, passwordFormData })
       .then(response => {
@@ -130,8 +130,9 @@ export default function LoginPage() {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={email.current}
-                  onChange={e => (email.current = e.target.value)}
+                  inputRef={emailRef}
+                  value={emailRef.current}
+                  onChange={e => (emailRef.current = e.target.value)}
                 />
               </div>
               <div>
@@ -145,8 +146,9 @@ export default function LoginPage() {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={password.current}
-                  onChange={e => (password.current = e.target.value)}
+                  inputRef={passwordRef}
+                  value={passwordRef.current}
+                  onChange={e => (passwordRef.current = e.target.value)}
                 />
               </div>
             </div>
@@ -155,7 +157,7 @@ export default function LoginPage() {
                 variant="contained"
                 type="submit"
                 color="primary"
-                disabled={!email || !password}
+                disabled={!emailRef.current || !passwordRef.current}
                 className={classes.submitButton}
               >
                 Sign in
