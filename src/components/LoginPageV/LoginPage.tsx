@@ -148,7 +148,10 @@ export default function LoginPage() {
                   size="small"
                   inputRef={passwordRef}
                   value={passwordRef.current}
-                  onChange={e => (passwordRef.current = e.target.value)}
+                  onChange={e => {
+                    passwordRef.current = e.target.value;
+                    console.log(passwordRef.current);
+                  }}
                 />
               </div>
             </div>
