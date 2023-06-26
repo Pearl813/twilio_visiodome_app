@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
-import { RESULT_CODE_SUCCESS } from '../constants';
+import { RESULT_CODE_SUCCESS, RESULT_MESSAGE_SUCCESS } from '../constants';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -30,7 +30,7 @@ export const startRoom: RequestHandler = (req, res) => {
                   if (room.sid) {
                     res.status(200).send({
                       code: RESULT_CODE_SUCCESS,
-                      message: 'Room is created successfully!',
+                      message: RESULT_MESSAGE_SUCCESS,
                       roomName: roomDetail.data.streamURL,
                       streamURLs: {
                         presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
@@ -127,7 +127,7 @@ export const getRoomLinks: RequestHandler = (req, res) => {
             if (room.length > 0) {
               res.status(200).send({
                 code: RESULT_CODE_SUCCESS,
-                message: 'success',
+                message: RESULT_MESSAGE_SUCCESS,
                 roomName: roomName,
                 streamURLs: {
                   presenter: `${process.env.REACT_APP_FRONTEND_URL}/room/${roomName}/presenter?token=${token[1]}`,
@@ -166,7 +166,7 @@ export const validateRoom: RequestHandler = (req, res) => {
             if (room.length > 0) {
               res.status(200).send({
                 code: RESULT_CODE_SUCCESS,
-                message: 'success',
+                message: RESULT_MESSAGE_SUCCESS,
               });
             } else {
               res.status(200).send({ code: 1, message: 'no in progress room.' });

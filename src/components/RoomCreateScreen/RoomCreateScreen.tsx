@@ -64,7 +64,9 @@ export default function RoomCreateScreen() {
           if (response.status === 200) {
             setIsOpen(true);
             setMessageHeader('Success!');
-            setMessageContent(response.data.message);
+            setMessageContent(
+              response.data.code === RESULT_CODE_SUCCESS ? 'Room is created successfully!' : 'Room is Already Created!'
+            );
             setMessageType('info');
             setRoomLinks({
               ...roomLinks,

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import axios from 'axios';
-import { RESULT_CODE_SUCCESS } from '../constants';
+import { RESULT_CODE_SUCCESS, RESULT_MESSAGE_SUCCESS } from '../constants';
 
 export const validatePresenter: RequestHandler = (req, res) => {
   const username = req.body.username;
@@ -14,7 +14,9 @@ export const validatePresenter: RequestHandler = (req, res) => {
       if (roomDetail.data.length === 0) {
         res.status(200).send({ code: 1, message: 'No exist' });
       } else {
-        res.status(200).send({ code: RESULT_CODE_SUCCESS, message: 'success', roomName: roomDetail.data[0].streamURL });
+        res
+          .status(200)
+          .send({ code: RESULT_CODE_SUCCESS, message: RESULT_MESSAGE_SUCCESS, roomName: roomDetail.data[0].streamURL });
       }
     })
     .catch((error: any) => {
@@ -34,7 +36,7 @@ export const validateToken: RequestHandler = (req, res) => {
       if (roomDetail.data.username) {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
-          message: 'success',
+          message: RESULT_MESSAGE_SUCCESS,
           username: roomDetail.data.username,
           roomName: roomDetail.data.streamURL,
         });
@@ -57,7 +59,7 @@ export const login: RequestHandler = (req, res) => {
       if (authResponse.data.user.PackageType === 'Mobile') {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
-          message: 'success',
+          message: RESULT_MESSAGE_SUCCESS,
           payload: {
             token: authResponse.data.jwt,
             username: authResponse.data.user.username,
