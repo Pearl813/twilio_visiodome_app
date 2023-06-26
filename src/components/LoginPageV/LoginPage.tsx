@@ -163,7 +163,7 @@ export default function LoginPage() {
                 disabled={!emailRef.current || !passwordRef.current}
                 className={classes.submitButton}
               >
-                Sign in
+                Sign in {!emailRef.current || !passwordRef.current}
               </Button>
             </Grid>
           </form>
