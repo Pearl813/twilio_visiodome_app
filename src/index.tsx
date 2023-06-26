@@ -54,7 +54,7 @@ export const ReactApp = () => (
               <PrivateRoute exact path="/room/:URLRoomName">
                 <VideoApp />
               </PrivateRoute>
-              <PrivateRoute exact path="/room/:URLRoomName/:visiodomeapp">
+              <PrivateRoute exact path="/room/:URLRoomName/:roleName">
                 <VideoApp />
               </PrivateRoute>
               <Route path="/login">
