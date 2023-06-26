@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useState, FormEvent, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAuth } from '../AuthProvider';
@@ -13,9 +13,25 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { RESULT_CODE_SUCCESS } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  googleButton: {
+    background: 'white',
+    color: 'rgb(0, 94, 166)',
+    borderRadius: '4px',
+    border: '2px solid rgb(2, 122, 197)',
+    margin: '1.8em 0 0.7em',
+    textTransform: 'none',
+    boxShadow: 'none',
+    padding: '0.3em 1em',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    '&:hover': {
+      background: 'white',
+      boxShadow: 'none',
+    },
+  },
   inputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -27,8 +43,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '1.5em 0 2em',
     },
   },
+  errorMessage: {
+    color: 'red',
+    display: 'flex',
+    alignItems: 'center',
+    margin: '1em 0 0.2em',
+    '& svg': {
+      marginRight: '0.4em',
+    },
+  },
   gutterBottom: {
     marginBottom: '1em',
+  },
+  textFieldContainer: {
+    width: '100%',
+  },
+  passcodeContainer: {
+    minHeight: '120px',
   },
   submitButton: {
     [theme.breakpoints.down('sm')]: {
@@ -40,13 +71,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const email = useRef('');
-  const password = useRef('');
+  const location = useLocation<{ from: Location }>();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
+  const [authError, setAuthError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const isAuthEnabled = Boolean(process.env.REACT_APP_SET_AUTH);
   const { authUser, setAuthUser } = useAuth();
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
 
   useEffect(() => {
     if (authUser) {
@@ -60,13 +102,11 @@ export default function LoginPage() {
   const login = () => {
     setIsSnackbarDismissed(false);
     setIsLoading(true);
-    const emailFormData = email.current;
-    const passwordFormData = password.current;
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { emailFormData, passwordFormData })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
       .then(response => {
         // Handle success.
-        if (response.data.code === RESULT_CODE_SUCCESS) {
+        if (response.data.message === 'success') {
           setIsOpen(false);
           setAuthUser(response.data.payload);
           history.replace(`/rooms`);
@@ -126,12 +166,11 @@ export default function LoginPage() {
                 </InputLabel>
                 <TextField
                   id="input-email"
-                  type="email"
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={email.current}
-                  onChange={e => (email.current = e.target.value)}
+                  value={email}
+                  onChange={handleEmailChange}
                 />
               </div>
               <div>
@@ -145,8 +184,8 @@ export default function LoginPage() {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={password.current}
-                  onChange={e => (password.current = e.target.value)}
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
             </div>
