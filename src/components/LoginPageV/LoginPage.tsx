@@ -161,10 +161,10 @@ export default function LoginPage() {
                 variant="contained"
                 type="submit"
                 color="primary"
-                disabled={!emailRef.current || !passwordRef.current}
+                // disabled={!emailRef.current || !passwordRef.current}
                 className={classes.submitButton}
               >
-                `Sign in ${!emailRef.current || !passwordRef.current}`
+                Sign in
               </Button>
             </Grid>
           </form>
