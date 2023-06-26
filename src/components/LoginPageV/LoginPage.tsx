@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, FormEvent, useEffect } from 'react';
+import React, { ChangeEvent, useState, FormEvent, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { RESULT_MESSAGE } from '../../constants';
+import { RESULT_CODE_SUCCESS } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
@@ -40,21 +40,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const email = useRef('');
+  const password = useRef('');
   const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { authUser, setAuthUser } = useAuth();
-
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
 
   useEffect(() => {
     if (authUser) {
@@ -68,11 +60,13 @@ export default function LoginPage() {
   const login = () => {
     setIsSnackbarDismissed(false);
     setIsLoading(true);
+    const emailFormData = email.current;
+    const passwordFormData = password.current;
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { emailFormData, passwordFormData })
       .then(response => {
         // Handle success.
-        if (response.data.message === RESULT_MESSAGE) {
+        if (response.data.code === RESULT_CODE_SUCCESS) {
           setIsOpen(false);
           setAuthUser(response.data.payload);
           history.replace(`/rooms`);
@@ -132,11 +126,12 @@ export default function LoginPage() {
                 </InputLabel>
                 <TextField
                   id="input-email"
+                  type="email"
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={email}
-                  onChange={handleEmailChange}
+                  value={email.current}
+                  onChange={e => (email.current = e.target.value)}
                 />
               </div>
               <div>
@@ -150,8 +145,8 @@ export default function LoginPage() {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={password}
-                  onChange={handlePasswordChange}
+                  value={password.current}
+                  onChange={e => (password.current = e.target.value)}
                 />
               </div>
             </div>
