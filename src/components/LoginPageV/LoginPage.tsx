@@ -150,7 +150,8 @@ export default function LoginPage() {
                   value={passwordRef.current}
                   onChange={e => {
                     passwordRef.current = e.target.value;
-                    console.log(passwordRef.current);
+                    console.log(emailRef.current, passwordRef.current);
+                    console.log(!emailRef.current || !passwordRef.current);
                   }}
                 />
               </div>
@@ -163,7 +164,7 @@ export default function LoginPage() {
                 disabled={!emailRef.current || !passwordRef.current}
                 className={classes.submitButton}
               >
-                Sign in {!emailRef.current || !passwordRef.current}
+                `Sign in ${!emailRef.current || !passwordRef.current}`
               </Button>
             </Grid>
           </form>
