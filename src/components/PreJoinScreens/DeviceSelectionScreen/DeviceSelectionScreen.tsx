@@ -140,11 +140,11 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
           if (audioDevice?.deviceId) {
             if (isDisableButtonCalled === false) {
+              replaceTrack(device.deviceId, audioDevice.deviceId);
               getToken(name, roomName).then(({ token }) => {
                 videoConnect(token);
                 process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
               });
-              replaceTrack(device.deviceId, audioDevice.deviceId);
               setIsDisableButtonCalled(true);
             }
           } else {
@@ -167,11 +167,11 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
           if (audioDevice?.deviceId) {
             if (isDisableButtonCalled === false) {
+              replaceTrack(device.deviceId, audioDevice.deviceId);
               getToken(name, roomName).then(({ token }) => {
                 videoConnect(token);
                 process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
               });
-              replaceTrack(device.deviceId, audioDevice.deviceId);
               setIsDisableButtonCalled(true);
             }
           } else {
