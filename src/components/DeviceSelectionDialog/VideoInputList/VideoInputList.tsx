@@ -42,10 +42,6 @@ export default function VideoInputList() {
     });
   }
 
-  useEffect(() => {
-    console.log(videoInputDevices);
-  }, [videoInputDevices]);
-
   return (
     <div>
       {localVideoTrack && (
