@@ -133,6 +133,10 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   };
 
   useEffect(() => {
+    console.log(videoInputDevices);
+  }, [videoInputDevices]);
+
+  useEffect(() => {
     if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
