@@ -109,7 +109,7 @@ export default function LoginPage() {
           setAuthUser(response.data.payload);
           history.replace(`/rooms`);
           setIsLoading(false);
-        } else {
+        } else if (response.data.code === -1) {
           setIsOpen(true);
           setMessageContent('Permission Error.');
         }

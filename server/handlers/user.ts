@@ -10,17 +10,17 @@ export const validatePresenter: RequestHandler = (req, res) => {
 
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[username][$eq]=${username}`, { headers })
-    .then(roomDetail => {
-      if (roomDetail.data.length === 0) {
-        res.status(200).send({ code: 1, message: 'No exist' });
+    .then(response => {
+      if (response.data.length === 0) {
+        res.status(200).send({ code: -1, message: 'No exist' });
       } else {
         res
           .status(200)
-          .send({ code: RESULT_CODE_SUCCESS, message: RESULT_MESSAGE_SUCCESS, roomName: roomDetail.data[0].streamURL });
+          .send({ code: RESULT_CODE_SUCCESS, message: RESULT_MESSAGE_SUCCESS, roomName: response.data[0].streamURL });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ code: -1, error });
+      res.status(500).send(error);
     });
 };
 
@@ -32,20 +32,20 @@ export const validateToken: RequestHandler = (req, res) => {
   };
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
-    .then(roomDetail => {
-      if (roomDetail.data.username) {
+    .then(response => {
+      if (response.data.username) {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
           message: RESULT_MESSAGE_SUCCESS,
-          username: roomDetail.data.username,
-          roomName: roomDetail.data.streamURL,
+          username: response.data.username,
+          roomName: response.data.streamURL,
         });
       } else {
-        res.status(200).send({ code: 1, message: 'No exist' });
+        res.status(200).send({ code: -1, message: 'No exist' });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ code: -1, error });
+      res.status(500).send(error);
     });
 };
 
@@ -55,22 +55,22 @@ export const login: RequestHandler = (req, res) => {
       identifier: req.body.email,
       password: req.body.password,
     })
-    .then(authResponse => {
-      if (authResponse.data.user.PackageType === 'Mobile') {
+    .then(response => {
+      if (response.data.user.PackageType === 'Mobile') {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
           message: RESULT_MESSAGE_SUCCESS,
           payload: {
-            token: authResponse.data.jwt,
-            username: authResponse.data.user.username,
-            roomName: authResponse.data.user.streamURL,
+            token: response.data.jwt,
+            username: response.data.user.username,
+            roomName: response.data.user.streamURL,
           },
         });
       } else {
-        res.status(200).send({ code: 1, message: 'permission error' });
+        res.status(200).send({ code: -1, message: 'permission error' });
       }
     })
     .catch((error: any) => {
-      res.status(500).send({ code: -1, error });
+      res.status(500).send(error);
     });
 };
