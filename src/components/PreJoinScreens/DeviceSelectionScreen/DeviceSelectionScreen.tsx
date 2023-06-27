@@ -172,6 +172,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       const fetchMicrophonePermission = async () => {
         return await isPermissionDenied('microphone');
       };
+      console.log(fetchCameraPermission(), fetchCameraPermission());
       if (disableButtons === false && !fetchCameraPermission() && !fetchMicrophonePermission()) {
         console.log(videoInputDevices, audioInputDevices);
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
