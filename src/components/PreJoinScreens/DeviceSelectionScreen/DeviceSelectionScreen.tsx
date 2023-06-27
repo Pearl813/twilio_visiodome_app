@@ -134,72 +134,83 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   };
 
   useEffect(() => {
+    console.log(videoInputDevices);
+  }, [videoInputDevices]);
+
+  useEffect(() => {
     if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
-      if (disableButtons === false && videoInputDevices.length >= 1) {
-        console.log(videoInputDevices, audioInputDevices);
-        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-        console.log('video device', device);
-        if (device?.deviceId) {
-          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-          console.log('audio device', audioDevice);
-          if (audioDevice?.deviceId) {
-            if (isDisableButtonCalled === false) {
-              replaceTrack(device.deviceId, audioDevice.deviceId);
-              getToken(name, roomName).then(({ token }) => {
-                videoConnect(token);
-                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              });
-              setIsDisableButtonCalled(true);
+      isPermissionDenied('camera').then(res => {
+        if (res === false) {
+          isPermissionDenied('microphone').then(res => {
+            if (res === false) {
+              if (disableButtons === false && videoInputDevices.length > 0) {
+                console.log(videoInputDevices, audioInputDevices);
+                const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+                console.log('video device', device);
+                if (device?.deviceId) {
+                  const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+                  console.log('audio device', audioDevice);
+                  if (audioDevice?.deviceId) {
+                    if (isDisableButtonCalled === false) {
+                      replaceTrack(device.deviceId, audioDevice.deviceId);
+                      getToken(name, roomName).then(({ token }) => {
+                        videoConnect(token);
+                        process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+                      });
+                      setIsDisableButtonCalled(true);
+                    }
+                  } else {
+                    console.log('audio device not found');
+                    setIsLoading(false);
+                    setIsInvalidRoom(true);
+                  }
+                } else {
+                  console.log('video device not found');
+                  setIsLoading(false);
+                  setIsInvalidRoom(true);
+                }
+              }
             }
-          } else {
-            console.log('audio device not found');
-            setIsLoading(false);
-            setIsInvalidRoom(true);
-          }
-        } else {
-          console.log('video device not found');
-          setIsLoading(false);
-          setIsInvalidRoom(true);
+          });
         }
-      }
+      });
     }
     if (isPresenter === true) {
       setIsLoading(true);
-      const fetchCameraPermission = async () => {
-        const isVideoPermissionDenied = await isPermissionDenied('camera');
-        return isVideoPermissionDenied;
-      };
-      const fetchMicrophonePermission = async () => {
-        const isAudioPermissionDenied = await isPermissionDenied('microphone');
-        return isAudioPermissionDenied;
-      };
-      console.log(fetchCameraPermission(), fetchCameraPermission());
-      if (disableButtons === false && !fetchCameraPermission() && !fetchMicrophonePermission()) {
-        console.log(videoInputDevices, audioInputDevices);
-        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-        console.log('video device', device);
-        if (device?.deviceId) {
-          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-          console.log('audio device', audioDevice);
-          if (audioDevice?.deviceId) {
-            if (isDisableButtonCalled === false) {
-              replaceTrack(device.deviceId, audioDevice.deviceId);
-              getToken(name, roomName).then(({ token }) => {
-                videoConnect(token);
-                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              });
-              setIsDisableButtonCalled(true);
+      isPermissionDenied('camera').then(res => {
+        if (res === false) {
+          isPermissionDenied('microphone').then(res => {
+            if (res === false) {
             }
-          } else {
-            console.log('audio device not found');
-            setIsLoading(false);
-          }
-        } else {
-          console.log('video device not found');
-          setIsLoading(false);
+            if (disableButtons === false && videoInputDevices.length > 0) {
+              console.log(videoInputDevices, audioInputDevices);
+              const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+              console.log('video device', device);
+              if (device?.deviceId) {
+                const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+                console.log('audio device', audioDevice);
+                if (audioDevice?.deviceId) {
+                  if (isDisableButtonCalled === false) {
+                    replaceTrack(device.deviceId, audioDevice.deviceId);
+                    getToken(name, roomName).then(({ token }) => {
+                      videoConnect(token);
+                      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+                    });
+                    setIsDisableButtonCalled(true);
+                  }
+                } else {
+                  console.log('audio device not found');
+                  setIsLoading(false);
+                }
+              } else {
+                console.log('video device not found');
+                setIsLoading(false);
+              }
+            }
+          });
         }
-      }
+      });
     }
   }, [disableButtons]);
 
