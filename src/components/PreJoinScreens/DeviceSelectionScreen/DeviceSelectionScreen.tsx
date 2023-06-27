@@ -168,11 +168,11 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       setIsLoading(true);
       const fetchCameraPermission = async () => {
         const isVideoPermissionDenied = await isPermissionDenied('camera');
-        console.log(isVideoPermissionDenied);
+        return isVideoPermissionDenied;
       };
       const fetchMicrophonePermission = async () => {
         const isAudioPermissionDenied = await isPermissionDenied('microphone');
-        console.log(isAudioPermissionDenied);
+        return isAudioPermissionDenied;
       };
       console.log(fetchCameraPermission(), fetchCameraPermission());
       if (disableButtons === false && !fetchCameraPermission() && !fetchMicrophonePermission()) {
