@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_VIDEO_INPUT_KEY } from '../../../constants';
 import { FormControl, MenuItem, Typography, Select } from '@material-ui/core';
 import { LocalVideoTrack } from 'twilio-video';
@@ -41,6 +41,10 @@ export default function VideoInputList() {
       deviceId: { exact: newDeviceId },
     });
   }
+
+  useEffect(() => {
+    console.log(videoInputDevices);
+  }, [videoInputDevices]);
 
   return (
     <div>
