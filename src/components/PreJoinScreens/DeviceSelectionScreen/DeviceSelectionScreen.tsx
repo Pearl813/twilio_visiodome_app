@@ -122,6 +122,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newVideoDeviceId },
     });
+    console.log('replaceTrack---');
   }
 
   const handleJoin = () => {
@@ -135,9 +136,12 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
+        console.log(videoInputDevices, audioInputDevices);
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+        console.log('video device', device);
         if (device?.deviceId) {
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+          console.log('audio device', audioDevice);
           if (audioDevice?.deviceId) {
             if (isDisableButtonCalled === false) {
               replaceTrack(device.deviceId, audioDevice.deviceId);
@@ -162,9 +166,12 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (isPresenter === true) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
+        console.log(videoInputDevices, audioInputDevices);
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+        console.log('video device', device);
         if (device?.deviceId) {
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+          console.log('audio device', audioDevice);
           if (audioDevice?.deviceId) {
             if (isDisableButtonCalled === false) {
               replaceTrack(device.deviceId, audioDevice.deviceId);
