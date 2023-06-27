@@ -177,40 +177,55 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       });
     }
     if (isPresenter === true) {
-      setIsLoading(true);
-      isPermissionDenied('camera').then(res => {
-        if (res === false) {
-          isPermissionDenied('microphone').then(res => {
-            if (res === false) {
-            }
-            if (disableButtons === false && videoInputDevices.length > 0) {
-              console.log(videoInputDevices, audioInputDevices);
-              const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-              console.log('video device', device);
-              if (device?.deviceId) {
-                const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-                console.log('audio device', audioDevice);
-                if (audioDevice?.deviceId) {
-                  if (isDisableButtonCalled === false) {
-                    replaceTrack(device.deviceId, audioDevice.deviceId);
-                    getToken(name, roomName).then(({ token }) => {
-                      videoConnect(token);
-                      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-                    });
-                    setIsDisableButtonCalled(true);
-                  }
-                } else {
-                  console.log('audio device not found');
-                  setIsLoading(false);
-                }
-              } else {
-                console.log('video device not found');
-                setIsLoading(false);
-              }
-            }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        console.log('enumerateDevices() not supported.');
+      } else {
+        // List cameras and microphones.
+        navigator.mediaDevices
+          .enumerateDevices()
+          .then(devices => {
+            devices.forEach(device => {
+              console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
+            });
+          })
+          .catch(err => {
+            console.log(`${err.name}: ${err.message}`);
           });
-        }
-      });
+      }
+      // setIsLoading(true);
+      // isPermissionDenied('camera').then(res => {
+      //   if (res === false) {
+      //     isPermissionDenied('microphone').then(res => {
+      //       if (res === false) {
+      //         if (disableButtons === false && videoInputDevices.length > 0) {
+      //           console.log(videoInputDevices, audioInputDevices);
+      //           const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+      //           console.log('video device', device);
+      //           if (device?.deviceId) {
+      //             const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+      //             console.log('audio device', audioDevice);
+      //             if (audioDevice?.deviceId) {
+      //               if (isDisableButtonCalled === false) {
+      //                 replaceTrack(device.deviceId, audioDevice.deviceId);
+      //                 getToken(name, roomName).then(({ token }) => {
+      //                   videoConnect(token);
+      //                   process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+      //                 });
+      //                 setIsDisableButtonCalled(true);
+      //               }
+      //             } else {
+      //               console.log('audio device not found');
+      //               setIsLoading(false);
+      //             }
+      //           } else {
+      //             console.log('video device not found');
+      //             setIsLoading(false);
+      //           }
+      //         }
+      //       }
+      //     });
+      //   }
+      // });
     }
   }, [disableButtons]);
 
