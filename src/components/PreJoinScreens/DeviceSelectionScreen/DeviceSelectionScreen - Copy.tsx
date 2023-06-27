@@ -91,30 +91,17 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();
   const { toggleKrisp } = useKrispToggle();
-  const { videoInputDevices, audioInputDevices } = useDevices();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
-
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
-    window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
-  );
   const [isDisableButtonCalled, setIsDisableButtonCalled] = useState(false);
 
-  const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
-
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
-  const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
-  const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
-  const localAudioInputDeviceId =
-    srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
 
   function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
-    setStoredLocalVideoDeviceId(newVideoDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
     localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
@@ -132,56 +119,47 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   };
 
   useEffect(() => {
-    if (name === VISIODOMEAPP_LINK_NAME) {
-      setIsLoading(true);
-      if (disableButtons === false && videoInputDevices.length >= 1) {
-        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-        if (device?.deviceId) {
-          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-          if (audioDevice?.deviceId) {
-            if (isDisableButtonCalled === false) {
-              getToken(name, roomName).then(({ token }) => {
-                videoConnect(token);
-                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              });
-              replaceTrack(device.deviceId, audioDevice.deviceId);
-              setIsDisableButtonCalled(true);
+    if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        console.log('enumerateDevices() not supported.');
+      } else {
+        // List cameras and microphones.
+        navigator.mediaDevices
+          .enumerateDevices()
+          .then(devices => {
+            setIsLoading(true);
+            if (disableButtons === false && devices.length > 0) {
+              const videoDevice = devices
+                .filter(device => device.kind === 'videoinput')
+                .find((d: any) => d.label === 'NDI Webcam Video 1');
+              if (videoDevice?.deviceId) {
+                const audioDevice = devices
+                  .filter(device => device.kind === 'audioinput')
+                  .find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+                if (audioDevice?.deviceId) {
+                  if (isDisableButtonCalled === false) {
+                    replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+                    getToken(name, roomName).then(({ token }) => {
+                      videoConnect(token);
+                      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
+                    });
+                    setIsDisableButtonCalled(true);
+                  }
+                } else {
+                  console.log('audio device not found');
+                  setIsLoading(false);
+                  if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
+                }
+              } else {
+                console.log('video device not found');
+                setIsLoading(false);
+                if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
+              }
             }
-          } else {
-            console.log('audio device not found');
-            setIsLoading(false);
-            setIsInvalidRoom(true);
-          }
-        } else {
-          console.log('video device not found');
-          setIsLoading(false);
-          setIsInvalidRoom(true);
-        }
-      }
-    }
-    if (isPresenter === true) {
-      setIsLoading(true);
-      if (disableButtons === false && videoInputDevices.length >= 1) {
-        const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
-        if (device?.deviceId) {
-          const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-          if (audioDevice?.deviceId) {
-            if (isDisableButtonCalled === false) {
-              getToken(name, roomName).then(({ token }) => {
-                videoConnect(token);
-                process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-              });
-              replaceTrack(device.deviceId, audioDevice.deviceId);
-              setIsDisableButtonCalled(true);
-            }
-          } else {
-            console.log('audio device not found');
-            setIsLoading(false);
-          }
-        } else {
-          console.log('video device not found');
-          setIsLoading(false);
-        }
+          })
+          .catch(err => {
+            console.log(`${err.name}: ${err.message}`);
+          });
       }
     }
   }, [disableButtons]);
