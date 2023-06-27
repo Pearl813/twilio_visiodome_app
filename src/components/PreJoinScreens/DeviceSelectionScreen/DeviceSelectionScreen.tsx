@@ -23,7 +23,6 @@ import {
   SELECTED_AUDIO_INPUT_KEY,
   VISIODOMEAPP_LINK_NAME,
 } from '../../../constants';
-import { isPermissionDenied } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -92,30 +91,17 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting, localTracks } = useVideoContext();
   const { toggleKrisp } = useKrispToggle();
-  const { videoInputDevices, audioInputDevices } = useDevices();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
-
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  const [storedLocalVideoDeviceId, setStoredLocalVideoDeviceId] = useState(
-    window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
-  );
   const [isDisableButtonCalled, setIsDisableButtonCalled] = useState(false);
 
-  const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
-
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
-  const srcMediaStreamTrack = localAudioTrack?.noiseCancellation?.sourceTrack;
-  const mediaStreamAudioTrack = useMediaStreamTrack(localAudioTrack);
-  const localAudioInputDeviceId =
-    srcMediaStreamTrack?.getSettings().deviceId || mediaStreamAudioTrack?.getSettings().deviceId;
 
   function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
-    setStoredLocalVideoDeviceId(newVideoDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
     localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
@@ -123,7 +109,6 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newVideoDeviceId },
     });
-    console.log('replaceTrack---');
   }
 
   const handleJoin = () => {
