@@ -23,6 +23,7 @@ import {
   SELECTED_AUDIO_INPUT_KEY,
   VISIODOMEAPP_LINK_NAME,
 } from '../../../constants';
+import { isPermissionDenied } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -133,10 +134,6 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   };
 
   useEffect(() => {
-    console.log(videoInputDevices);
-  }, [videoInputDevices]);
-
-  useEffect(() => {
     if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
@@ -169,7 +166,13 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     }
     if (isPresenter === true) {
       setIsLoading(true);
-      if (disableButtons === false && videoInputDevices.length >= 1) {
+      const fetchCameraPermission = async () => {
+        return await isPermissionDenied('camera');
+      };
+      const fetchMicrophonePermission = async () => {
+        return await isPermissionDenied('microphone');
+      };
+      if (disableButtons === false && !fetchCameraPermission() && !fetchMicrophonePermission()) {
         console.log(videoInputDevices, audioInputDevices);
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
         console.log('video device', device);
