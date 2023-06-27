@@ -135,6 +135,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       if (disableButtons === false && videoInputDevices.length >= 1) {
+        console.log(videoInputDevices, audioInputDevices);
         const device = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
         if (device?.deviceId) {
           const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
