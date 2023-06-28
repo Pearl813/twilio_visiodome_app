@@ -127,6 +127,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
+              console.log(disableButtons);
               replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
               handleJoin();
             } else {
