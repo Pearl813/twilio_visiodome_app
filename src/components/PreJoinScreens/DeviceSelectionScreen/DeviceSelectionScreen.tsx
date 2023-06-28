@@ -95,7 +95,6 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
-  const [isDisableButtonCalled, setIsDisableButtonCalled] = useState(false);
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
@@ -128,11 +127,8 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
-              if (isDisableButtonCalled === false) {
-                replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-                handleJoin();
-                setIsDisableButtonCalled(true);
-              }
+              replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+              handleJoin();
             } else {
               console.log('audio device not found');
               setIsLoading(false);
