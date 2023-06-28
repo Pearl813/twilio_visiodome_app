@@ -20,3 +20,6 @@ export const VISIODOMEAPP_LINK_NAME = 'visiodomeapp';
 
 export const RESULT_MESSAGE_SUCCESS = 'success';
 export const RESULT_CODE_SUCCESS = 0;
+
+export const DEFAULT_VIDEO_DEVICE_LABEL = 'NDI Webcam Video 1';
+export const DEFAULT_AUDIO_DEVICE_LABEL = 'NDI Webcam 1 (NewTek NDI Audio)';

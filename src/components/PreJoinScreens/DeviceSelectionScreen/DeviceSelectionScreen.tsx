@@ -20,6 +20,8 @@ import {
   SELECTED_VIDEO_INPUT_KEY,
   SELECTED_AUDIO_INPUT_KEY,
   VISIODOMEAPP_LINK_NAME,
+  DEFAULT_VIDEO_DEVICE_LABEL,
+  DEFAULT_AUDIO_DEVICE_LABEL,
 } from '../../../constants';
 import { getDeviceInfo } from '../../../utils';
 
@@ -121,18 +123,14 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
-        console.log({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices });
         if (disableButtons === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
-          const videoDevice = videoInputDevices.find((d: any) => d.label === 'NDI Webcam Video 1');
+          const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
           if (videoDevice?.deviceId) {
-            const audioDevice = audioInputDevices.find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
+            const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
               if (isDisableButtonCalled === false) {
                 replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-                getToken(name, roomName).then(({ token }) => {
-                  videoConnect(token);
-                  process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-                });
+                handleJoin();
                 setIsDisableButtonCalled(true);
               }
             } else {
