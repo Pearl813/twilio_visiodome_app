@@ -123,6 +123,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
+      console.log(isAcquiringLocalTracks, isPresenter, name, handleJoin, replaceTrack);
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
         if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
