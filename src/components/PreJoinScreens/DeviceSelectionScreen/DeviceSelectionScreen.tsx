@@ -128,11 +128,11 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
-              if (hasJoined === false) {
-                replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-                handleJoin();
-                setHasJoined(true);
-              }
+              // if (hasJoined === false) {
+              replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+              handleJoin();
+              // setHasJoined(true);
+              // }
             } else {
               console.log('audio device not found');
               setIsLoading(false);
