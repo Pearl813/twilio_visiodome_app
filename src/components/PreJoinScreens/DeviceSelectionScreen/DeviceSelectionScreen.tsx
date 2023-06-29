@@ -123,7 +123,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
-        if (disableButtons === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
+        if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
           const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
@@ -146,7 +146,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [disableButtons]);
+  }, [isAcquiringLocalTracks]);
 
   if (isFetching || isConnecting) {
     return (
