@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden, Switch, Tooltip } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
@@ -99,31 +99,27 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
 
-  const replaceTrack = useCallback(
-    (newVideoDeviceId: string, newAudioDeviceId: string) => {
-      // Here we store the device ID in the component state. This is so we can re-render this component display
-      // to display the name of the selected device when it is changed while the users camera is off.
-      window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
-      window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
-      localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
-      localVideoTrack?.restart({
-        ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
-        deviceId: { exact: newVideoDeviceId },
-      });
-    },
-    [localAudioTrack, localVideoTrack]
-  );
+  function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
+    // Here we store the device ID in the component state. This is so we can re-render this component display
+    // to display the name of the selected device when it is changed while the users camera is off.
+    window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
+    window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
+    localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
+    localVideoTrack?.restart({
+      ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
+      deviceId: { exact: newVideoDeviceId },
+    });
+  }
 
-  const handleJoin = useCallback(() => {
+  const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
-  }, [name, roomName, chatConnect, getToken, videoConnect]);
+  };
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
-      console.log(isAcquiringLocalTracks, isPresenter, name, handleJoin, replaceTrack);
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
         if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
@@ -146,7 +142,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [isAcquiringLocalTracks, isPresenter, name, handleJoin, replaceTrack]);
+  }, [isAcquiringLocalTracks]);
 
   if (isFetching || isConnecting) {
     return (
