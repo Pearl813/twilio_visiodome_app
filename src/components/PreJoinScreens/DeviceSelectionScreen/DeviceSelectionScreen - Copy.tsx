@@ -120,49 +120,30 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-        console.log('enumerateDevices() not supported.');
-      } else {
-        // List cameras and microphones.
-        navigator.mediaDevices
-          .enumerateDevices()
-          .then(devices => {
-            setIsLoading(true);
-            if (disableButtons === false && devices.length > 0) {
-              const videoDevice = devices
-                .filter(device => device.kind === 'videoinput')
-                .find((d: any) => d.label === 'NDI Webcam Video 1');
-              if (videoDevice?.deviceId) {
-                const audioDevice = devices
-                  .filter(device => device.kind === 'audioinput')
-                  .find((d: any) => d.label === 'NDI Webcam 1 (NewTek NDI Audio)');
-                if (audioDevice?.deviceId) {
-                  if (isDisableButtonCalled === false) {
-                    replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-                    getToken(name, roomName).then(({ token }) => {
-                      videoConnect(token);
-                      process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
-                    });
-                    setIsDisableButtonCalled(true);
-                  }
-                } else {
-                  console.log('audio device not found');
-                  setIsLoading(false);
-                  if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
-                }
-              } else {
-                console.log('video device not found');
-                setIsLoading(false);
-                if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
-              }
+      setIsLoading(true);
+      getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
+        if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
+          const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
+          if (videoDevice?.deviceId) {
+            const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
+            if (audioDevice?.deviceId) {
+              console.log('soisoisoisoijsoij');
+              replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+              handleJoin();
+            } else {
+              console.log('audio device not found');
+              setIsLoading(false);
+              if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
             }
-          })
-          .catch(err => {
-            console.log(`${err.name}: ${err.message}`);
-          });
-      }
+          } else {
+            console.log('video device not found');
+            setIsLoading(false);
+            if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
+          }
+        }
+      });
     }
-  }, [disableButtons]);
+  }, [isAcquiringLocalTracks, isPresenter, name]);
 
   if (isFetching || isConnecting) {
     return (
