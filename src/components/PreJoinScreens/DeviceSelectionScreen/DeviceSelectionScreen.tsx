@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden, Switch, Tooltip } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
@@ -111,12 +111,12 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     });
   };
 
-  const handleJoin = () => {
+  const handleJoin = useCallback(() => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
-  };
+  }, [name, roomName, getToken, videoConnect, chatConnect]);
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
@@ -143,7 +143,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [isAcquiringLocalTracks, isPresenter, name, replaceTrack]);
+  }, [isAcquiringLocalTracks, isPresenter, name, handleJoin]);
 
   if (isFetching || isConnecting) {
     return (
