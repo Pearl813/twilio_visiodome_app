@@ -14,15 +14,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useKrispToggle } from '../../../hooks/useKrispToggle/useKrispToggle';
 import SmallCheckIcon from '../../../icons/SmallCheckIcon';
 import InfoIconOutlined from '../../../icons/InfoIconOutlined';
-import useDevices from '../../../hooks/useDevices/useDevices';
 import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
-import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import {
   DEFAULT_VIDEO_CONSTRAINTS,
   SELECTED_VIDEO_INPUT_KEY,
   SELECTED_AUDIO_INPUT_KEY,
   VISIODOMEAPP_LINK_NAME,
+  DEFAULT_VIDEO_DEVICE_LABEL,
+  DEFAULT_AUDIO_DEVICE_LABEL,
 } from '../../../constants';
+import { getDeviceInfo } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
