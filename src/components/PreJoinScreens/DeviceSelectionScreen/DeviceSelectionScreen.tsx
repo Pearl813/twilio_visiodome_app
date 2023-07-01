@@ -127,6 +127,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
+              console.log(isAcquiringLocalTracks, isPresenter, name, 000000000000000000000);
               replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
               handleJoin();
             } else {
