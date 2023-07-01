@@ -99,7 +99,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
 
-  function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
+  const replaceTrack = (newVideoDeviceId: string, newAudioDeviceId: string) => {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
@@ -109,7 +109,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newVideoDeviceId },
     });
-  }
+  };
 
   const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
@@ -127,6 +127,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
+              console.log('soefijseofij');
               replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
               handleJoin();
             } else {
@@ -142,7 +143,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [isAcquiringLocalTracks, isPresenter, name]);
+  }, [isAcquiringLocalTracks, isPresenter, name, handleJoin]);
 
   if (isFetching || isConnecting) {
     return (
