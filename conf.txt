@@ -1,0 +1,15 @@
+REACT_APP_FRONTEND_URL = https://livestream-z8rk.onrender.com
+REACT_APP_STRAPI_ACCESS_TOKEN = 8bcf35e25aa203323b187fdcddb1cb1dd3b9627c17fe6426f253e455380bd802147acd99599f12e241773e460007cf14c0bffe247d32397c0efaf7ac2fcbaec4296aed910a16407f40b8c0eecc017b4fbb9e41808ca6362d2ae1acf783e02c15a49bf5122330f7bad1bbb7afcc136b72b0c182170871a58c4e313fe0c4829daf
+REACT_APP_STRAPI_URL = https://visiodome-io-backend.onrender.com
+REACT_APP_TOKEN_ENDPOINT = https://livestream-z8rk.onrender.com/token
+REACT_APP_TOKEN_SERVER_URL = https://livestream-z8rk.onrender.com
+TWILIO_ACCOUNT_SID = ACb94858dff86b2cea62b7d471e2b31570
+TWILIO_API_KEY_SECRET = pyldUtjUnVTqTxANiZYhPRjjqDDPLEzs
+TWILIO_API_KEY_SID = SK5eede2177cb32d146c370a11a0d3922c
+TWILIO_AUTH_TOKEN = c69e4819c95b347347e87af3361745dd
+TWILIO_CONVERSATIONS_SERVICE_SID = ISb3163693ff28408b88e0696800d102cf
+
+
+curl -X POST https://livestream-z8rk.onrender.com/room/start -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY4Nzg2NjA0MiwiZXhwIjoxNjkwNDU4MDQyfQ.ukBTsOfWk7lxtq5hc12FKcxsQpg-GyUVe491affwqYI" -d "roomName=TestRoom"
+
+curl -X POST https://livestream-z8rk.onrender.com/room/end -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY4Nzg2NjA0MiwiZXhwIjoxNjkwNDU4MDQyfQ.ukBTsOfWk7lxtq5hc12FKcxsQpg-GyUVe491affwqYI"

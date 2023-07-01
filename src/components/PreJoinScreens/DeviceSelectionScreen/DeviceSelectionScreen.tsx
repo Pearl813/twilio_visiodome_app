@@ -143,7 +143,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [isAcquiringLocalTracks, isPresenter, name, handleJoin]);
+  }, [isAcquiringLocalTracks, isPresenter, name, replaceTrack]);
 
   if (isFetching || isConnecting) {
     return (
