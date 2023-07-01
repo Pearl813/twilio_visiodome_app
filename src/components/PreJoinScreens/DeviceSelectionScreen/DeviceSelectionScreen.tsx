@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, Typography, Grid, Button, Theme, Hidden, Switch, Tooltip } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
@@ -111,12 +111,12 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     });
   };
 
-  const handleJoin = useCallback(() => {
+  const handleJoin = () => {
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
-  }, [name, roomName, getToken, videoConnect, chatConnect]);
+  };
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
@@ -127,7 +127,6 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
-              console.log('soefijseofij');
               replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
               handleJoin();
             } else {
@@ -143,7 +142,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
         }
       });
     }
-  }, [isAcquiringLocalTracks, isPresenter, name, handleJoin]);
+  }, [isAcquiringLocalTracks, isPresenter, name]);
 
   if (isFetching || isConnecting) {
     return (
