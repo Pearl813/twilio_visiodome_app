@@ -14,6 +14,7 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { getDeviceInfo } from '../../utils';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
