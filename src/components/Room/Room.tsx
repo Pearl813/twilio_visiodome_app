@@ -15,6 +15,7 @@ import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/use
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { getDeviceInfo } from '../../utils';
 import { DEFAULT_VIDEO_DEVICE_LABEL, SELECTED_VIDEO_INPUT_KEY } from '../../constants';
+import { LocalVideoTrack } from 'twilio-video';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -75,11 +76,16 @@ export function useSetSpeakerViewOnScreenShare(
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { isBackgroundSelectionOpen, room } = useVideoContext();
+  const { isBackgroundSelectionOpen, room, localTracks } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const screenShareParticipant = useScreenShareParticipant();
+
+  const videoTrack = localTracks.find(
+    track => !track.name.includes('screen') && track.kind === 'video'
+  ) as LocalVideoTrack;
+  console.log(videoTrack);
 
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
@@ -91,10 +97,10 @@ export default function Room() {
     getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
       if (hasVideoInputDevices === true) {
         const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        console.log(visiodomeVideoDevice, selectedVideoDeviceId);
+        console.log(visiodomeVideoDevice, videoTrack);
       }
     });
-  }, [selectedVideoDeviceId]);
+  }, []);
 
   return (
     <div
