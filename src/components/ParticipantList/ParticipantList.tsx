@@ -72,11 +72,11 @@ export default function ParticipantList() {
     >
       <div className={classes.scrollContainer}>
         <div className={classes.innerScrollContainer}>
-          <Participant
+          {/* <Participant
             participant={localParticipant}
             isLocalParticipant={true}
             mirrorForceDisabled={mirrorForceDisabled}
-          />
+          /> */}
           {speakerViewParticipants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
