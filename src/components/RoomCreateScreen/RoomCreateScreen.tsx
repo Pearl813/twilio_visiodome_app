@@ -101,7 +101,7 @@ export default function RoomCreateScreen() {
       axios
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
-          if (response.data.code === RESULT_CODE_SUCCESS) {
+          if (response.data.code === RESULT_CODE_SUCCESS || response.data.code === -1) {
             setIsOpen(true);
             setMessageHeader('Success!');
             setMessageContent('Room Closed Successfully.');
