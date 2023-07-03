@@ -40,13 +40,15 @@ export default function App() {
   // We will dynamically set the height with 'window.innerHeight', which means that this
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
-
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    console.log('this is right device');
-    // setMirrorForceDisabled(true);
-  }
+
+  useEffect(() => {
+    if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+      console.log('this is right device');
+      setMirrorForceDisabled(true);
+    }
+  }, []);
 
   return (
     <Container style={{ height }}>
