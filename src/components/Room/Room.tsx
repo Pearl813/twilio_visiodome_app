@@ -76,7 +76,7 @@ export function useSetSpeakerViewOnScreenShare(
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { isBackgroundSelectionOpen, room, localTracks } = useVideoContext();
+  const { isBackgroundSelectionOpen, room, getLocalVideoTrack } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -86,18 +86,17 @@ export default function Room() {
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-
   useEffect(() => {
     console.log('seofijseofijseofij');
     getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
-      console.log(videoInputDevices, localVideoTrack);
       if (hasVideoInputDevices === true) {
         const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        console.log(visiodomeVideoDevice, localVideoTrack);
+        getLocalVideoTrack().then(localVideoTrack => {
+          console.log(visiodomeVideoDevice, localVideoTrack);
+        });
       }
     });
-  }, [localVideoTrack]);
+  }, []);
 
   return (
     <div
