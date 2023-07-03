@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import Participant from '../Participant/Participant';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -7,6 +7,9 @@ import useParticipantsContext from '../../hooks/useParticipantsContext/usePartic
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
+import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import { LocalVideoTrack } from 'twilio-video';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,20 +43,26 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-interface ParticipantListProps {
-  mirrorForceDisabled?: boolean;
-}
-export default function ParticipantList({ mirrorForceDisabled }: ParticipantListProps) {
+
+export default function ParticipantList() {
   const classes = useStyles();
-  const { room } = useVideoContext();
+  const { room, localTracks } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const { speakerViewParticipants } = useParticipantsContext();
   const [selectedParticipant, setSelectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
+  const [mirrorForceDisabled, setMirrorForceDisabled] = useState(false);
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
 
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
+
+  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+    console.log('this is right device');
+    setMirrorForceDisabled(true);
+  }
 
   return (
     <aside

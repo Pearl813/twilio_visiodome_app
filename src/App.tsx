@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -10,10 +10,6 @@ import Room from './components/Room/Room';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from './constants';
-import { LocalVideoTrack } from 'twilio-video';
-import useVideoContext from './hooks/useVideoContext/useVideoContext';
-import useMediaStreamTrack from './hooks/useMediaStreamTrack/useMediaStreamTrack';
 
 const Container = styled('div')({
   display: 'grid',
@@ -31,8 +27,6 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 
 export default function App() {
   const roomState = useRoomState();
-  const { localTracks } = useVideoContext();
-  const [mirrorForceDisabled, setMirrorForceDisabled] = useState(false);
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
@@ -40,15 +34,6 @@ export default function App() {
   // We will dynamically set the height with 'window.innerHeight', which means that this
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-
-  useEffect(() => {
-    if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-      console.log('this is right device');
-      setMirrorForceDisabled(true);
-    }
-  }, []);
 
   return (
     <Container style={{ height }}>
@@ -59,7 +44,7 @@ export default function App() {
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room mirrorForceDisabled={mirrorForceDisabled} />
+          <Room />
           <MenuBar />
         </Main>
       )}
