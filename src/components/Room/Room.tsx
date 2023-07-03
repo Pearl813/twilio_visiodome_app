@@ -91,8 +91,9 @@ export default function Room() {
     getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
       if (hasVideoInputDevices === true) {
         const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        getLocalVideoTrack().then(localVideoTrack => {
-          console.log(visiodomeVideoDevice, localVideoTrack);
+        console.log(visiodomeVideoDevice);
+        getLocalVideoTrack().then((track: LocalVideoTrack) => {
+          console.log(visiodomeVideoDevice, track);
         });
       }
     });
