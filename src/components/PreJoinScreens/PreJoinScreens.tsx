@@ -120,7 +120,7 @@ export default function PreJoinScreens() {
         })
         .catch(e => console.log(e));
     }
-  }, [user, URLRoomName, roleName]);
+  }, [userName, URLRoomName, roleName]);
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
