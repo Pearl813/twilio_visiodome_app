@@ -57,7 +57,7 @@ export default function App() {
     //     console.log(visiodomeVideoDevice, videoTrack.mediaStreamTrack.label);
     //   }
     // });
-  }, []);
+  }, [localTracks]);
 
   return (
     <Container style={{ height }}>
