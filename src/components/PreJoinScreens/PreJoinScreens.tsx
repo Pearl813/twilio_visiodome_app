@@ -199,6 +199,7 @@ export default function PreJoinScreens() {
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
           if (response.data.code === RESULT_CODE_SUCCESS || response.data.code === -1) {
+            console.log(response.data.code);
             setIsOpen(true);
             setMessageHeader('Success!');
             setMessageContent('Room Closed Successfully.');
