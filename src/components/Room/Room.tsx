@@ -15,6 +15,7 @@ import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/use
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { getDeviceInfo } from '../../utils';
 import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
+import { LocalVideoTrack } from 'twilio-video';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -85,13 +86,15 @@ export default function Room() {
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
 
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+
   useEffect(() => {
     console.log('seofijseofijseofij');
     getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
-      console.log(videoInputDevices, localTracks);
+      console.log(videoInputDevices, localVideoTrack);
       if (hasVideoInputDevices === true) {
         const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        console.log(visiodomeVideoDevice, localTracks);
+        console.log(visiodomeVideoDevice, localVideoTrack);
       }
     });
   }, []);
