@@ -54,7 +54,9 @@ export default function ParticipantList() {
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
   let visiodomeVideoDevice;
 
+  console.log('seofijseofijseofij');
   getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
+    console.log(videoInputDevices, localTracks);
     if (hasVideoInputDevices === true) {
       visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
       console.log(visiodomeVideoDevice, localTracks);
