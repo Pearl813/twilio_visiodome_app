@@ -7,8 +7,6 @@ import useParticipantsContext from '../../hooks/useParticipantsContext/usePartic
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
-import { getDeviceInfo } from '../../utils';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,23 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ParticipantList() {
   const classes = useStyles();
-  const { room, localTracks } = useVideoContext();
+  const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const { speakerViewParticipants } = useParticipantsContext();
   const [selectedParticipant, setSelectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
-  let visiodomeVideoDevice;
-
-  console.log('seofijseofijseofij');
-  getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
-    console.log(videoInputDevices, localTracks);
-    if (hasVideoInputDevices === true) {
-      visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-      console.log(visiodomeVideoDevice, localTracks);
-    }
-  });
 
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
 

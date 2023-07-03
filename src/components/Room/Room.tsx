@@ -13,6 +13,7 @@ import { useAppState } from '../../state';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { getDeviceInfo } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -73,7 +74,7 @@ export function useSetSpeakerViewOnScreenShare(
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { isBackgroundSelectionOpen, room } = useVideoContext();
+  const { isBackgroundSelectionOpen, room, localTracks } = useVideoContext();
   const { isGalleryViewActive, setIsGalleryViewActive } = useAppState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -82,6 +83,17 @@ export default function Room() {
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
+
+  useEffect(() => {
+    console.log('seofijseofijseofij');
+    getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
+      console.log(videoInputDevices, localTracks);
+      if (hasVideoInputDevices === true) {
+        const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
+        console.log(visiodomeVideoDevice, localTracks);
+      }
+    });
+  }, []);
 
   return (
     <div
