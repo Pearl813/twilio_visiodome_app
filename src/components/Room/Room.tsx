@@ -82,11 +82,6 @@ export default function Room() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const screenShareParticipant = useScreenShareParticipant();
 
-  const videoTrack = localTracks.find(
-    track => !track.name.includes('screen') && track.kind === 'video'
-  ) as LocalVideoTrack;
-  console.log(videoTrack);
-
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
@@ -97,10 +92,10 @@ export default function Room() {
     getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
       if (hasVideoInputDevices === true) {
         const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        console.log(visiodomeVideoDevice, videoTrack);
+        console.log(visiodomeVideoDevice, localTracks);
       }
     });
-  }, []);
+  }, [localTracks]);
 
   return (
     <div
