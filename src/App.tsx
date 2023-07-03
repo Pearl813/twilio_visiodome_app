@@ -13,6 +13,7 @@ import useRoomState from './hooks/useRoomState/useRoomState';
 import { SELECTED_VIDEO_INPUT_KEY } from './constants';
 import { LocalVideoTrack } from 'twilio-video';
 import useVideoContext from './hooks/useVideoContext/useVideoContext';
+import useMediaStreamTrack from './hooks/useMediaStreamTrack/useMediaStreamTrack';
 
 const Container = styled('div')({
   display: 'grid',
@@ -39,25 +40,26 @@ export default function App() {
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
 
-  useEffect(() => {
-    const selectedVideoDeviceId = window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY);
-    console.log(selectedVideoDeviceId);
-    const videoTrack = localTracks.find(
-      track => !track.name.includes('screen') && track.kind === 'video'
-    ) as LocalVideoTrack;
-    console.log(videoTrack);
-    console.log(localTracks);
-    // console.log('seofijseofijseofij');
-    // getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
-    //   if (hasVideoInputDevices === true) {
-    //     const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-    // const videoTrack = localTracks.find(
-    //   track => !track.name.includes('screen') && track.kind === 'video'
-    // ) as LocalVideoTrack;
-    //     console.log(visiodomeVideoDevice, videoTrack.mediaStreamTrack.label);
-    //   }
-    // });
-  }, [localTracks]);
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+
+  const selectedVideoDeviceId = window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY);
+  console.log(selectedVideoDeviceId);
+  const videoTrack = localTracks.find(
+    track => !track.name.includes('screen') && track.kind === 'video'
+  ) as LocalVideoTrack;
+  console.log(videoTrack);
+  console.log(mediaStreamTrack);
+  // console.log('seofijseofijseofij');
+  // getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
+  //   if (hasVideoInputDevices === true) {
+  //     const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
+  // const videoTrack = localTracks.find(
+  //   track => !track.name.includes('screen') && track.kind === 'video'
+  // ) as LocalVideoTrack;
+  //     console.log(visiodomeVideoDevice, videoTrack.mediaStreamTrack.label);
+  //   }
+  // });
 
   return (
     <Container style={{ height }}>
