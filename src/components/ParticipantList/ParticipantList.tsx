@@ -73,7 +73,7 @@ export default function ParticipantList() {
       <div className={classes.scrollContainer}>
         <div className={classes.innerScrollContainer}>
           <Participant participant={localParticipant} isLocalParticipant={true} mirrorForceDisabled={true} />
-          {speakerViewParticipants.map(participant => {
+          {/* {speakerViewParticipants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
               participant === mainParticipant && participant !== screenShareParticipant && !isSelected;
@@ -86,7 +86,7 @@ export default function ParticipantList() {
                 hideParticipant={hideParticipant}
               />
             );
-          })}
+          })} */}
         </div>
       </div>
     </aside>
