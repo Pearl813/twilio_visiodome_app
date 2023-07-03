@@ -44,8 +44,8 @@ export default function App() {
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
   if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    // console.log('this is right device')
-    setMirrorForceDisabled(true);
+    console.log('this is right device');
+    // setMirrorForceDisabled(true);
   }
 
   return (
