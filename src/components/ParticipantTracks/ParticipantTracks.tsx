@@ -40,6 +40,7 @@ export default function ParticipantTracks({
     // Else, remove all screenshare tracks
     filteredPublications = publications.filter(p => !p.trackName.includes('screen'));
   }
+  console.log('------Publication------', mirrorForceDisabled);
 
   return (
     <>

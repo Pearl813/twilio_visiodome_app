@@ -21,6 +21,7 @@ export default function Publication({
   mirrorForceDisabled,
 }: PublicationProps) {
   const track = useTrack(publication);
+  console.log('------VideoTrack------', mirrorForceDisabled);
 
   if (!track) return null;
 

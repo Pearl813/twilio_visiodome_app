@@ -22,6 +22,7 @@ export default function VideoTrack({ track, isLocal, priority, mirrorForceDisabl
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
   const isPortrait = (dimensions?.height ?? 0) > (dimensions?.width ?? 0);
+  console.log('------LAST------', mirrorForceDisabled);
 
   useEffect(() => {
     const el = ref.current;
