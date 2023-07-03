@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 interface ParticipantListProps {
-  mirrorForceDisabled: boolean;
+  mirrorForceDisabled?: boolean;
 }
 export default function ParticipantList({ mirrorForceDisabled }: ParticipantListProps) {
   const classes = useStyles();

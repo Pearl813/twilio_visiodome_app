@@ -70,7 +70,7 @@ export function useSetSpeakerViewOnScreenShare(
   }, [screenShareParticipant, setIsGalleryViewActive, room]);
 }
 interface RoomProps {
-  mirrorForceDisabled: boolean;
+  mirrorForceDisabled?: boolean;
 }
 export default function Room({ mirrorForceDisabled }: RoomProps) {
   const classes = useStyles();
