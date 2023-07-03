@@ -58,7 +58,7 @@ export default function ParticipantList() {
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
 
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
-
+  console.log(mediaStreamTrack);
   if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
     console.log('this is right device');
     setMirrorForceDisabled(true);
