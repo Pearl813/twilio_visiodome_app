@@ -85,16 +85,25 @@ export default function Room() {
   // Here we switch to speaker view when a participant starts sharing their screen, but
   // the user is still free to switch back to gallery view.
   useSetSpeakerViewOnScreenShare(screenShareParticipant, room, setIsGalleryViewActive, isGalleryViewActive);
-  const selectedVideoDeviceId = window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY);
 
   useEffect(() => {
-    console.log('seofijseofijseofij');
-    getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
-      if (hasVideoInputDevices === true) {
-        const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
-        console.log(visiodomeVideoDevice, localTracks);
-      }
-    });
+    const selectedVideoDeviceId = window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY);
+    console.log(selectedVideoDeviceId);
+    const videoTrack = localTracks.find(
+      track => !track.name.includes('screen') && track.kind === 'video'
+    ) as LocalVideoTrack;
+    console.log(videoTrack);
+    console.log(localTracks);
+    // console.log('seofijseofijseofij');
+    // getDeviceInfo().then(({ videoInputDevices, hasVideoInputDevices }) => {
+    //   if (hasVideoInputDevices === true) {
+    //     const visiodomeVideoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
+    // const videoTrack = localTracks.find(
+    //   track => !track.name.includes('screen') && track.kind === 'video'
+    // ) as LocalVideoTrack;
+    //     console.log(visiodomeVideoDevice, videoTrack.mediaStreamTrack.label);
+    //   }
+    // });
   }, [localTracks]);
 
   return (
