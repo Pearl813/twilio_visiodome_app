@@ -26,7 +26,7 @@ export function Participant({
   isDominantSpeaker,
   mirrorForceDisabled,
 }: ParticipantProps) {
-  console.log('------ParticipantTracks------', mirrorForceDisabled);
+  console.log('------ParticipantTracks------', isLocalParticipant);
   return (
     <ParticipantInfo
       participant={participant}

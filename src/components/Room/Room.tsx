@@ -103,10 +103,8 @@ export default function Room() {
           <GalleryView />
         )
       ) : (
-        <>
-          <MainParticipant />
-          <ParticipantList />
-        </>
+        <>{/* <MainParticipant />
+          <ParticipantList /> */}</>
       )}
 
       <ChatWindow />
