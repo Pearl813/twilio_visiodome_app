@@ -69,8 +69,10 @@ export function useSetSpeakerViewOnScreenShare(
     }
   }, [screenShareParticipant, setIsGalleryViewActive, room]);
 }
-
-export default function Room() {
+interface RoomProps {
+  mirrorForceDisabled: boolean;
+}
+export default function Room({ mirrorForceDisabled }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen, room } = useVideoContext();
@@ -105,7 +107,7 @@ export default function Room() {
       ) : (
         <>
           <MainParticipant />
-          <ParticipantList />
+          <ParticipantList mirrorForceDisabled={mirrorForceDisabled} />
         </>
       )}
 

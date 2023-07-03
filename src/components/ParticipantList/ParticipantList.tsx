@@ -40,8 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-export default function ParticipantList() {
+interface ParticipantListProps {
+  mirrorForceDisabled: boolean;
+}
+export default function ParticipantList({ mirrorForceDisabled }: ParticipantListProps) {
   const classes = useStyles();
   const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
@@ -61,7 +63,11 @@ export default function ParticipantList() {
     >
       <div className={classes.scrollContainer}>
         <div className={classes.innerScrollContainer}>
-          <Participant participant={localParticipant} isLocalParticipant={true} />
+          <Participant
+            participant={localParticipant}
+            isLocalParticipant={true}
+            mirrorForceDisabled={mirrorForceDisabled}
+          />
           {speakerViewParticipants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
