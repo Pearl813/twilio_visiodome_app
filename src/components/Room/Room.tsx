@@ -97,7 +97,7 @@ export default function Room() {
         console.log(visiodomeVideoDevice, localVideoTrack);
       }
     });
-  }, []);
+  }, [localVideoTrack]);
 
   return (
     <div
