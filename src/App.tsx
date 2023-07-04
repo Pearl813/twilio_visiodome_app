@@ -44,7 +44,7 @@ export default function App() {
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          {/* <Room /> */}
+          <Room />
           <MenuBar />
         </Main>
       )}
