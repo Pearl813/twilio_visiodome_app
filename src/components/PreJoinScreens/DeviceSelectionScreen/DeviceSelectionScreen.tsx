@@ -95,6 +95,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
@@ -123,21 +124,16 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
-        console.log(
-          videoInputDevices,
-          audioInputDevices,
-          hasAudioInputDevices,
-          hasVideoInputDevices,
-          isAcquiringLocalTracks
-        );
         if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
           const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
-              console.log('-------------------', videoDevice.deviceId, ':', audioDevice.deviceId);
-              // replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-              // handleJoin();
+              if (hasJoined === false) {
+                replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+                handleJoin();
+                setHasJoined(true);
+              }
             } else {
               console.log('audio device not found');
               setIsLoading(false);
