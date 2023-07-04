@@ -14,15 +14,13 @@ interface VideoTrackProps {
   track: IVideoTrack;
   isLocal?: boolean;
   priority?: Track.Priority | null;
-  mirrorForceDisabled?: boolean;
 }
 
-export default function VideoTrack({ track, isLocal, priority, mirrorForceDisabled }: VideoTrackProps) {
+export default function VideoTrack({ track, isLocal, priority }: VideoTrackProps) {
   const ref = useRef<HTMLVideoElement>(null!);
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
   const isPortrait = (dimensions?.height ?? 0) > (dimensions?.width ?? 0);
-  console.log('------LAST------', mirrorForceDisabled);
 
   useEffect(() => {
     const el = ref.current;
