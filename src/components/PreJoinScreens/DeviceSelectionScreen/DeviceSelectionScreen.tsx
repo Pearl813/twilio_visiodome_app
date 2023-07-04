@@ -112,6 +112,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   }
 
   const handleJoin = () => {
+    console.log('soefijsofjsofjsoefjoseijfoseifj');
     getToken(name, roomName).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
@@ -127,6 +128,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
+              console.log('fofofofo-');
               replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
               handleJoin();
             } else {
