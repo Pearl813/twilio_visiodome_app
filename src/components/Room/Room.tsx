@@ -105,7 +105,7 @@ export default function Room() {
       ) : (
         <>
           <MainParticipant />
-          {/* <ParticipantList /> */}
+          <ParticipantList />
         </>
       )}
 
