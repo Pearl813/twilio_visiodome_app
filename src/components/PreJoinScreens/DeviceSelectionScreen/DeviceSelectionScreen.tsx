@@ -123,20 +123,13 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
-        if (hasVideoInputDevices === true && hasAudioInputDevices === true) {
+        if (hasJoined.current === true && hasVideoInputDevices === true && hasAudioInputDevices === true) {
           const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
-              console.log(videoDevice.deviceId, ':::', audioDevice.deviceId);
-              if (hasJoined.current === true) {
-                console.log('hasjoined==========', hasJoined.current);
-                console.log('called once-------------------');
-                replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
-                handleJoin();
-              }
-              console.log('seoifjsoeifjsoefi', hasJoined.current, isAcquiringLocalTracks);
-              hasJoined.current = isAcquiringLocalTracks;
+              replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
+              handleJoin();
             } else {
               console.log('audio device not found');
               setIsLoading(false);
@@ -148,6 +141,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
             if (name === VISIODOMEAPP_LINK_NAME) setIsInvalidRoom(true);
           }
         }
+        hasJoined.current = isAcquiringLocalTracks;
       });
     }
   }, [isAcquiringLocalTracks]);
