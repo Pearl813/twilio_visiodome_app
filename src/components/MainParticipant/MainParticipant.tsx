@@ -29,7 +29,6 @@ export default function MainParticipant() {
         enableScreenShare={mainParticipant !== localParticipant}
         videoPriority={videoPriority}
         isLocalParticipant={mainParticipant === localParticipant}
-        mirrorForceDisabled={true}
       />
     </MainParticipantInfo>
   );

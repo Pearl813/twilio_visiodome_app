@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import Participant from '../Participant/Participant';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -57,7 +57,17 @@ export default function ParticipantList() {
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
 
+  useEffect(() => {
+    console.log(mirrorForceDisabled);
+  }, [mirrorForceDisabled]);
+
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
+
+  console.log(mediaStreamTrack);
+  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+    console.log('this is right device');
+    setMirrorForceDisabled(true);
+  }
 
   return (
     <aside
