@@ -102,15 +102,12 @@ export default function PreJoinScreens() {
     if (roleName === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
       setIsVisiodome(true);
-      let name: string = VISIODOMEAPP_LINK_NAME;
-      let roomName: string = URLRoomName!;
-
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName: URLRoomName })
         .then(res => {
           if (res.data.code === RESULT_CODE_SUCCESS) {
-            setName(name);
-            setRoomName(roomName);
+            setName(VISIODOMEAPP_LINK_NAME);
+            setRoomName(URLRoomName!);
             setStep(Steps.deviceSelectionStep);
             setIsLoading(false);
           } else {
@@ -199,7 +196,6 @@ export default function PreJoinScreens() {
         .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
           if (response.data.code === RESULT_CODE_SUCCESS || response.data.code === -1) {
-            console.log(response.data.code);
             setIsOpen(true);
             setMessageHeader('Success!');
             setMessageContent('Room Closed Successfully.');

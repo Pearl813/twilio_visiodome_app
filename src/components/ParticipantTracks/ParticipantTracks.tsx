@@ -9,7 +9,6 @@ interface ParticipantTracksProps {
   enableScreenShare?: boolean;
   videoPriority?: Track.Priority | null;
   isLocalParticipant?: boolean;
-  mirrorForceDisabled?: boolean;
 }
 
 /*
@@ -26,7 +25,6 @@ export default function ParticipantTracks({
   enableScreenShare,
   videoPriority,
   isLocalParticipant,
-  mirrorForceDisabled,
 }: ParticipantTracksProps) {
   const publications = usePublications(participant);
 
@@ -40,7 +38,6 @@ export default function ParticipantTracks({
     // Else, remove all screenshare tracks
     filteredPublications = publications.filter(p => !p.trackName.includes('screen'));
   }
-  console.log('------Publication------', mirrorForceDisabled);
 
   return (
     <>
@@ -52,7 +49,6 @@ export default function ParticipantTracks({
           isLocalParticipant={isLocalParticipant}
           videoOnly={videoOnly}
           videoPriority={videoPriority}
-          mirrorForceDisabled={mirrorForceDisabled}
         />
       ))}
     </>

@@ -12,7 +12,6 @@ interface ParticipantProps {
   isLocalParticipant?: boolean;
   hideParticipant?: boolean;
   isDominantSpeaker?: boolean;
-  mirrorForceDisabled?: boolean;
 }
 
 export function Participant({
@@ -24,9 +23,7 @@ export function Participant({
   isLocalParticipant,
   hideParticipant,
   isDominantSpeaker,
-  mirrorForceDisabled,
 }: ParticipantProps) {
-  console.log('------ParticipantTracks------', mirrorForceDisabled);
   return (
     <ParticipantInfo
       participant={participant}
@@ -41,7 +38,6 @@ export function Participant({
         videoOnly={videoOnly}
         enableScreenShare={enableScreenShare}
         isLocalParticipant={isLocalParticipant}
-        mirrorForceDisabled={mirrorForceDisabled}
       />
     </ParticipantInfo>
   );
