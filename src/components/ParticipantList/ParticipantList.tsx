@@ -58,11 +58,6 @@ export default function ParticipantList() {
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
 
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
-  console.log(mediaStreamTrack);
-  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    console.log('this is right device');
-    setMirrorForceDisabled(true);
-  }
 
   return (
     <aside
@@ -73,7 +68,7 @@ export default function ParticipantList() {
       <div className={classes.scrollContainer}>
         <div className={classes.innerScrollContainer}>
           <Participant participant={localParticipant} isLocalParticipant={true} mirrorForceDisabled={true} />
-          {/* {speakerViewParticipants.map(participant => {
+          {speakerViewParticipants.map(participant => {
             const isSelected = participant === selectedParticipant;
             const hideParticipant =
               participant === mainParticipant && participant !== screenShareParticipant && !isSelected;
@@ -86,7 +81,7 @@ export default function ParticipantList() {
                 hideParticipant={hideParticipant}
               />
             );
-          })} */}
+          })}
         </div>
       </div>
     </aside>
