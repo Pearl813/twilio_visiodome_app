@@ -103,6 +103,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   function replaceTrack(newVideoDeviceId: string, newAudioDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
     // to display the name of the selected device when it is changed while the users camera is off.
+    console.log('replaceTrack========', newVideoDeviceId, newAudioDeviceId);
     window.localStorage.setItem(SELECTED_VIDEO_INPUT_KEY, newVideoDeviceId);
     window.localStorage.setItem(SELECTED_AUDIO_INPUT_KEY, newAudioDeviceId);
     localAudioTrack?.restart({ deviceId: { exact: newAudioDeviceId } });
@@ -113,7 +114,9 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   }
 
   const handleJoin = () => {
+    console.log('token-----------------');
     getToken(name, roomName).then(({ token }) => {
+      console.log('token===', token);
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
@@ -121,6 +124,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
 
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
+      console.log('name-----------', name);
       setIsLoading(true);
       getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
         if (isAcquiringLocalTracks === false && hasVideoInputDevices === true && hasAudioInputDevices === true) {
@@ -128,6 +132,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
           if (videoDevice?.deviceId) {
             const audioDevice = audioInputDevices.find(device => device.label === DEFAULT_AUDIO_DEVICE_LABEL);
             if (audioDevice?.deviceId) {
+              console.log(videoDevice.deviceId, ':::', audioDevice.deviceId);
               if (hasJoined === false) {
                 replaceTrack(videoDevice.deviceId, audioDevice.deviceId);
                 handleJoin();
