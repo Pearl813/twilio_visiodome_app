@@ -102,7 +102,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidRoom, setIsInvalidRoom] = useState(false);
-  const previousAcquiringLocalTracksValue = usePreviousValue(isAcquiringLocalTracks);
+  const previousIsAcquiringLocalTracks = usePreviousValue(isAcquiringLocalTracks);
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const localAudioTrack = localTracks.find(track => track.kind === 'audio') as LocalAudioTrack;
@@ -129,7 +129,7 @@ export default function DeviceSelectionScreen({ name, roomName, isPresenter, set
   useEffect(() => {
     if (isPresenter === true || name === VISIODOMEAPP_LINK_NAME) {
       setIsLoading(true);
-      if (previousAcquiringLocalTracksValue === true && isAcquiringLocalTracks === false) {
+      if (previousIsAcquiringLocalTracks === true && isAcquiringLocalTracks === false) {
         getDeviceInfo().then(({ videoInputDevices, audioInputDevices, hasAudioInputDevices, hasVideoInputDevices }) => {
           if (hasVideoInputDevices === true && hasAudioInputDevices === true) {
             const videoDevice = videoInputDevices.find(device => device.label === DEFAULT_VIDEO_DEVICE_LABEL);
