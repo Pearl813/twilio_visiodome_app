@@ -31,12 +31,17 @@ export function Participant({
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  const { speakerViewParticipants } = useParticipantsContext();
   let isForceMirroringDisabled = false;
 
   console.log('this is mediaStreamTrack-----', mediaStreamTrack);
   console.log('this is local Track-----', localVideoTrack);
 
-  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+  if (
+    isLocalParticipant &&
+    mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL &&
+    speakerViewParticipants.length === 0
+  ) {
     console.log('this is right device', mediaStreamTrack?.label);
     isForceMirroringDisabled = true;
   }
