@@ -7,9 +7,6 @@ import useParticipantsContext from '../../hooks/useParticipantsContext/usePartic
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useSelectedParticipant from '../VideoProvider/useSelectedParticipant/useSelectedParticipant';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
-import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
-import { LocalVideoTrack } from 'twilio-video';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,24 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ParticipantList() {
   const classes = useStyles();
-  const { room, localTracks } = useVideoContext();
+  const { room } = useVideoContext();
   const localParticipant = room!.localParticipant;
   const { speakerViewParticipants } = useParticipantsContext();
   const [selectedParticipant, setSelectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
 
   if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
-
-  console.log('this is mediaStreamTrack-----', mediaStreamTrack);
-  console.log('this is local Track-----', localVideoTrack);
-
-  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    console.log('this is right device', mediaStreamTrack?.label);
-  }
 
   return (
     <aside

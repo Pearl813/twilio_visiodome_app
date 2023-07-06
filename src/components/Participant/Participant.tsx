@@ -38,6 +38,7 @@ export function Participant({
         videoOnly={videoOnly}
         enableScreenShare={enableScreenShare}
         isLocalParticipant={isLocalParticipant}
+        isForceMirroringDisabled={true}
       />
     </ParticipantInfo>
   );
