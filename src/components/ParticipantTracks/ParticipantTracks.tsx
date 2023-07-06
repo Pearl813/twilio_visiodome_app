@@ -5,6 +5,7 @@ import usePublications from '../../hooks/usePublications/usePublications';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
+import { LocalVideoTrack } from 'twilio-video';
 
 interface ParticipantTracksProps {
   participant: Participant;
