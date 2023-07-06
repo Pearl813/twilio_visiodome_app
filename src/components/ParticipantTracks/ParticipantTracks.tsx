@@ -38,11 +38,8 @@ export default function ParticipantTracks({
   let isForceMirroringDisabled = false;
 
   if (isLocalParticipant && mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    console.log('this is right device', mediaStreamTrack?.label);
     isForceMirroringDisabled = true;
   }
-
-  console.log(isLocalParticipant, participant);
 
   let filteredPublications;
 

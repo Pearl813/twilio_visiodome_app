@@ -5,6 +5,8 @@ import LocalAudioLevelIndicator from '../../../LocalAudioLevelIndicator/LocalAud
 import { LocalVideoTrack } from 'twilio-video';
 import VideoTrack from '../../../VideoTrack/VideoTrack';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
+import useMediaStreamTrack from '../../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../../../constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -57,6 +59,14 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
   const classes = useStyles();
   const { localTracks } = useVideoContext();
 
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  let isForceMirroringDisabled = false;
+
+  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+    isForceMirroringDisabled = true;
+  }
+
   const videoTrack = localTracks.find(
     track => !track.name.includes('screen') && track.kind === 'video'
   ) as LocalVideoTrack;
@@ -65,7 +75,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
     <div className={classes.container}>
       <div className={classes.innerContainer}>
         {videoTrack ? (
-          <VideoTrack track={videoTrack} isLocal />
+          <VideoTrack track={videoTrack} isLocal isForceMirroringDisabled={isForceMirroringDisabled} />
         ) : (
           <div className={classes.avatarContainer}>
             <AvatarIcon />
