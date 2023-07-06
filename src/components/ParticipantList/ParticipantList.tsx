@@ -53,11 +53,10 @@ export default function ParticipantList() {
   const screenShareParticipant = useScreenShareParticipant();
   const mainParticipant = useMainParticipant();
   const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
-
-  if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
-
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+
+  if (speakerViewParticipants.length === 0) return null; // Don't render this component if there are no remote participants.
 
   console.log('this is mediaStreamTrack-----', mediaStreamTrack);
   console.log('this is local Track-----', localVideoTrack);
