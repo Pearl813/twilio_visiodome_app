@@ -2,6 +2,9 @@ import React from 'react';
 import { Participant, Track } from 'twilio-video';
 import Publication from '../Publication/Publication';
 import usePublications from '../../hooks/usePublications/usePublications';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 
 interface ParticipantTracksProps {
   participant: Participant;
@@ -9,7 +12,6 @@ interface ParticipantTracksProps {
   enableScreenShare?: boolean;
   videoPriority?: Track.Priority | null;
   isLocalParticipant?: boolean;
-  isForceMirroringDisabled?: boolean;
 }
 
 /*
@@ -26,9 +28,20 @@ export default function ParticipantTracks({
   enableScreenShare,
   videoPriority,
   isLocalParticipant,
-  isForceMirroringDisabled,
 }: ParticipantTracksProps) {
   const publications = usePublications(participant);
+  const { localTracks } = useVideoContext();
+
+  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
+  let isForceMirroringDisabled = false;
+
+  if (isLocalParticipant && mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+    console.log('this is right device', mediaStreamTrack?.label);
+    isForceMirroringDisabled = true;
+  }
+
+  console.log(isLocalParticipant, participant);
 
   let filteredPublications;
 

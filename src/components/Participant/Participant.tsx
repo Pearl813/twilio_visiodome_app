@@ -2,11 +2,6 @@ import React from 'react';
 import ParticipantInfo from '../ParticipantInfo/ParticipantInfo';
 import ParticipantTracks from '../ParticipantTracks/ParticipantTracks';
 import { Participant as IParticipant } from 'twilio-video';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
-import { LocalVideoTrack } from 'twilio-video';
-import useParticipantsContext from '../../hooks/useParticipantsContext/useParticipantsContext';
 
 interface ParticipantProps {
   participant: IParticipant;
@@ -29,26 +24,6 @@ export function Participant({
   hideParticipant,
   isDominantSpeaker,
 }: ParticipantProps) {
-  const { localTracks } = useVideoContext();
-
-  const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  const { speakerViewParticipants } = useParticipantsContext();
-  let isForceMirroringDisabled = false;
-
-  console.log('this is mediaStreamTrack-----', mediaStreamTrack);
-  console.log('this is local Track-----', localVideoTrack);
-
-  if (
-    isLocalParticipant &&
-    mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL &&
-    speakerViewParticipants.length === 0
-  ) {
-    console.log('this is right device', mediaStreamTrack?.label);
-    isForceMirroringDisabled = true;
-  }
-
-  console.log(isLocalParticipant, participant);
   return (
     <ParticipantInfo
       participant={participant}
@@ -63,7 +38,6 @@ export function Participant({
         videoOnly={videoOnly}
         enableScreenShare={enableScreenShare}
         isLocalParticipant={isLocalParticipant}
-        isForceMirroringDisabled={isForceMirroringDisabled}
       />
     </ParticipantInfo>
   );
