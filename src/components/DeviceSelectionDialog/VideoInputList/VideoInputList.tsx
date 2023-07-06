@@ -7,6 +7,7 @@ import VideoTrack from '../../VideoTrack/VideoTrack';
 import useDevices from '../../../hooks/useDevices/useDevices';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../../constants';
 
 const useStyles = makeStyles({
   preview: {
@@ -30,6 +31,7 @@ export default function VideoInputList() {
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
   );
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
+  let isForceMirroringDisabled = false;
 
   function replaceTrack(newDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
@@ -42,11 +44,15 @@ export default function VideoInputList() {
     });
   }
 
+  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
+    isForceMirroringDisabled = true;
+  }
+
   return (
     <div>
       {localVideoTrack && (
         <div className={classes.preview}>
-          <VideoTrack isLocal track={localVideoTrack} />
+          <VideoTrack isLocal track={localVideoTrack} isForceMirroringDisabled={isForceMirroringDisabled} />
         </div>
       )}
       {videoInputDevices.length > 1 ? (
