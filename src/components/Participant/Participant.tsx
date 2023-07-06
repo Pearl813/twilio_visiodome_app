@@ -6,6 +6,8 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
 import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 import { LocalVideoTrack } from 'twilio-video';
+import useParticipantsContext from '../../hooks/useParticipantsContext/useParticipantsContext';
+
 interface ParticipantProps {
   participant: IParticipant;
   videoOnly?: boolean;
