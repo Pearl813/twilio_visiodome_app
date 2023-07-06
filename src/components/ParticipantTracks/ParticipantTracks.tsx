@@ -51,7 +51,7 @@ export default function ParticipantTracks({
           isLocalParticipant={isLocalParticipant}
           videoOnly={videoOnly}
           videoPriority={videoPriority}
-          isForceMirroringDisabled={isForceMirroringDisabled}
+          isForceMirroringDisabled={true}
         />
       ))}
     </>

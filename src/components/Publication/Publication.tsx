@@ -24,6 +24,7 @@ export default function Publication({
 
   if (!track) return null;
 
+  console.log(isForceMirroringDisabled);
   // Even though we only have one case here, let's keep this switch() in case
   // we even need to add a 'data' case for rendering DataTracks.
   switch (track.kind) {
