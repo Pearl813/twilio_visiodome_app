@@ -86,13 +86,14 @@ interface DeviceSelectionScreenProps {
   setStep: (step: Steps) => void;
 }
 
-function usePreviousValue(value: boolean) {
+function usePreviousValue(value: any) {
   const ref = useRef(false);
   useEffect(() => {
     ref.current = value;
   });
   return ref.current;
 }
+
 export default function DeviceSelectionScreen({ name, roomName, isPresenter, setStep }: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { getToken, isFetching, isKrispEnabled, isKrispInstalled } = useAppState();

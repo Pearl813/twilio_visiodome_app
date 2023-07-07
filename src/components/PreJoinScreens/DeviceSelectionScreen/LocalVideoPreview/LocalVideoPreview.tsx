@@ -6,7 +6,7 @@ import { LocalVideoTrack } from 'twilio-video';
 import VideoTrack from '../../../VideoTrack/VideoTrack';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
 import useMediaStreamTrack from '../../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../../../constants';
+import { isVisiodomeCamera } from '../../../../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -60,11 +60,11 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
   const { localTracks } = useVideoContext();
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  let isForceMirroringDisabled = false;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack)!;
+  let isMirroringDisable = false;
 
-  if (mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    isForceMirroringDisabled = true;
+  if (isVisiodomeCamera(mediaStreamTrack?.label) === true) {
+    isMirroringDisable = true;
   }
 
   const videoTrack = localTracks.find(
@@ -75,7 +75,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
     <div className={classes.container}>
       <div className={classes.innerContainer}>
         {videoTrack ? (
-          <VideoTrack track={videoTrack} isLocal isForceMirroringDisabled={isForceMirroringDisabled} />
+          <VideoTrack track={videoTrack} isLocal isMirroringDisable={isMirroringDisable} />
         ) : (
           <div className={classes.avatarContainer}>
             <AvatarIcon />

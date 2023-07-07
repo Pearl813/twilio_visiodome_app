@@ -1,4 +1,5 @@
 import { isPlainObject } from 'is-plain-object';
+import { DEFAULT_VIDEO_DEVICE_LABEL } from '../constants';
 
 export const isMobile = (() => {
   if (typeof navigator === 'undefined' || typeof navigator.userAgent !== 'string') {
@@ -51,3 +52,8 @@ export async function isPermissionDenied(name: 'camera' | 'microphone') {
     return false;
   }
 }
+
+export const isVisiodomeCamera = (cameraLabel: string) => {
+  if (cameraLabel === DEFAULT_VIDEO_DEVICE_LABEL) return true;
+  else return false;
+};

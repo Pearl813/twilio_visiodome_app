@@ -11,14 +11,14 @@ interface PublicationProps {
   isLocalParticipant?: boolean;
   videoOnly?: boolean;
   videoPriority?: Track.Priority | null;
-  isForceMirroringDisabled?: boolean;
+  isMirroringDisable?: boolean;
 }
 
 export default function Publication({
   publication,
   isLocalParticipant,
   videoPriority,
-  isForceMirroringDisabled,
+  isMirroringDisable,
 }: PublicationProps) {
   const track = useTrack(publication);
 
@@ -33,7 +33,7 @@ export default function Publication({
           track={track as IVideoTrack}
           priority={videoPriority}
           isLocal={!track.name.includes('screen') && isLocalParticipant}
-          isForceMirroringDisabled={isForceMirroringDisabled}
+          isMirroringDisable={isMirroringDisable}
         />
       );
     // All participant audio tracks are rendered in ParticipantAudioTracks.tsx

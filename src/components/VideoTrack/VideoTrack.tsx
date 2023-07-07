@@ -14,10 +14,10 @@ interface VideoTrackProps {
   track: IVideoTrack;
   isLocal?: boolean;
   priority?: Track.Priority | null;
-  isForceMirroringDisabled?: boolean;
+  isMirroringDisable?: boolean;
 }
 
-export default function VideoTrack({ track, isLocal, priority, isForceMirroringDisabled }: VideoTrackProps) {
+export default function VideoTrack({ track, isLocal, priority, isMirroringDisable }: VideoTrackProps) {
   const ref = useRef<HTMLVideoElement>(null!);
   const mediaStreamTrack = useMediaStreamTrack(track);
   const dimensions = useVideoTrackDimensions(track);
@@ -47,7 +47,7 @@ export default function VideoTrack({ track, isLocal, priority, isForceMirroringD
   // The local video track is mirrored if it is not facing the environment.
   const isFrontFacing = mediaStreamTrack?.getSettings().facingMode !== 'environment';
   const style = {
-    transform: isLocal && isFrontFacing && !isForceMirroringDisabled ? 'scaleX(-1)' : '',
+    transform: isLocal && isFrontFacing && !isMirroringDisable ? 'scaleX(-1)' : '',
     objectFit: isPortrait || track.name.includes('screen') ? ('contain' as const) : ('cover' as const),
   };
 

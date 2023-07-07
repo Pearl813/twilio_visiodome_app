@@ -4,8 +4,8 @@ import Publication from '../Publication/Publication';
 import usePublications from '../../hooks/usePublications/usePublications';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import useMediaStreamTrack from '../../hooks/useMediaStreamTrack/useMediaStreamTrack';
-import { DEFAULT_VIDEO_DEVICE_LABEL } from '../../constants';
 import { LocalVideoTrack } from 'twilio-video';
+import { isVisiodomeCamera } from '../../utils';
 
 interface ParticipantTracksProps {
   participant: Participant;
@@ -34,11 +34,11 @@ export default function ParticipantTracks({
   const { localTracks } = useVideoContext();
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
-  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack);
-  let isForceMirroringDisabled = false;
+  const mediaStreamTrack = useMediaStreamTrack(localVideoTrack)!;
+  let isMirroringDisable = false;
 
-  if (isLocalParticipant && mediaStreamTrack?.label === DEFAULT_VIDEO_DEVICE_LABEL) {
-    isForceMirroringDisabled = true;
+  if (isLocalParticipant && isVisiodomeCamera(mediaStreamTrack?.label) === true) {
+    isMirroringDisable = true;
   }
 
   let filteredPublications;
@@ -62,7 +62,7 @@ export default function ParticipantTracks({
           isLocalParticipant={isLocalParticipant}
           videoOnly={videoOnly}
           videoPriority={videoPriority}
-          isForceMirroringDisabled={isForceMirroringDisabled}
+          isMirroringDisable={isMirroringDisable}
         />
       ))}
     </>
