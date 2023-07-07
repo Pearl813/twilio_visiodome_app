@@ -61,11 +61,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack)!;
-  let isMirroringDisable = false;
-
-  if (isVisiodomeCamera(mediaStreamTrack?.label) === true) {
-    isMirroringDisable = true;
-  }
+  const isMirroringDisable = isVisiodomeCamera(mediaStreamTrack?.label);
 
   const videoTrack = localTracks.find(
     track => !track.name.includes('screen') && track.kind === 'video'

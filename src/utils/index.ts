@@ -54,6 +54,5 @@ export async function isPermissionDenied(name: 'camera' | 'microphone') {
 }
 
 export const isVisiodomeCamera = (cameraLabel: string) => {
-  if (cameraLabel === DEFAULT_VIDEO_DEVICE_LABEL) return true;
-  else return false;
+  return cameraLabel === DEFAULT_VIDEO_DEVICE_LABEL;
 };

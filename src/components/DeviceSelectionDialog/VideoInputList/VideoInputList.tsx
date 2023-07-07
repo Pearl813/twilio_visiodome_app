@@ -31,7 +31,7 @@ export default function VideoInputList() {
     window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY)
   );
   const localVideoInputDeviceId = mediaStreamTrack?.getSettings().deviceId || storedLocalVideoDeviceId;
-  let isMirroringDisable = false;
+  const isMirroringDisable = isVisiodomeCamera(mediaStreamTrack?.label);
 
   function replaceTrack(newDeviceId: string) {
     // Here we store the device ID in the component state. This is so we can re-render this component display
@@ -42,10 +42,6 @@ export default function VideoInputList() {
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       deviceId: { exact: newDeviceId },
     });
-  }
-
-  if (isVisiodomeCamera(mediaStreamTrack?.label) === true) {
-    isMirroringDisable = true;
   }
 
   return (

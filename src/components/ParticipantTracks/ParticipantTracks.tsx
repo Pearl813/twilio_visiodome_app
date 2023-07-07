@@ -35,11 +35,7 @@ export default function ParticipantTracks({
 
   const localVideoTrack = localTracks.find(track => track.kind === 'video') as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(localVideoTrack)!;
-  let isMirroringDisable = false;
-
-  if (isLocalParticipant && isVisiodomeCamera(mediaStreamTrack?.label) === true) {
-    isMirroringDisable = true;
-  }
+  const isMirroringDisable = isLocalParticipant && isVisiodomeCamera(mediaStreamTrack?.label);
 
   let filteredPublications;
 
