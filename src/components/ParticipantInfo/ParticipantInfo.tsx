@@ -193,7 +193,7 @@ export default function ParticipantInfo({
 
   useEffect(() => {
     axios
-      .post(`user/presenter/validate`, { username: participant.identity })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/presenter/validate`, { username: participant.identity })
       .then(response => {
         if (response.data.code === RESULT_CODE_SUCCESS) {
           if (response.data.roomName === room?.name) {

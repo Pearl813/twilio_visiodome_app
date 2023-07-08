@@ -76,7 +76,7 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .get(`user/token/validate`, { headers })
+          .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/token/validate`, { headers })
           .then(res => {
             if (res.data.code === RESULT_CODE_SUCCESS) {
               localStorage.setItem('token', token);
@@ -103,7 +103,7 @@ export default function PreJoinScreens() {
       setIsLoading(true);
       setIsVisiodome(true);
       axios
-        .post(`room/validate`, { roomName: URLRoomName })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName: URLRoomName })
         .then(res => {
           if (res.data.code === RESULT_CODE_SUCCESS) {
             setName(VISIODOMEAPP_LINK_NAME);
@@ -136,7 +136,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .get(`room/links/${roomName}`, { headers })
+        .get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/links/${roomName}`, { headers })
         .then(res => {
           if (res.data.code === RESULT_CODE_SUCCESS) {
             setIsInvalidRoom(false);
@@ -169,7 +169,7 @@ export default function PreJoinScreens() {
     }
     setIsLoading(true);
     axios
-      .post(`room/validate`, { roomName })
+      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/validate`, { roomName })
       .then(res => {
         if (res.data.code === RESULT_CODE_SUCCESS) {
           setIsLoading(false);
@@ -193,7 +193,7 @@ export default function PreJoinScreens() {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       };
       axios
-        .post(`room/end`, {}, { headers })
+        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
         .then(response => {
           if (response.data.code === RESULT_CODE_SUCCESS || response.data.code === -1) {
             setIsOpen(true);
