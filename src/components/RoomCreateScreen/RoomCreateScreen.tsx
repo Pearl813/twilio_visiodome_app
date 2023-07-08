@@ -59,7 +59,7 @@ export default function RoomCreateScreen() {
         Authorization: `Bearer ${authUser.token}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/start`, { roomName }, { headers })
+        .post(`room/start`, { roomName }, { headers })
         .then(response => {
           if (response.status === 200) {
             setIsOpen(true);
@@ -99,7 +99,7 @@ export default function RoomCreateScreen() {
         Authorization: `Bearer ${authUser.token}`,
       };
       axios
-        .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, {}, { headers })
+        .post(`room/end`, {}, { headers })
         .then(response => {
           if (response.data.code === RESULT_CODE_SUCCESS || response.data.code === -1) {
             setIsOpen(true);

@@ -45,9 +45,6 @@ export const ReactApp = () => (
         <AppStateProvider>
           <AuthProvider>
             <Switch>
-              <AuthRoute exact path="/">
-                <RoomCreateScreen />
-              </AuthRoute>
               <AuthRoute exact path="/rooms">
                 <RoomCreateScreen />
               </AuthRoute>
@@ -60,6 +57,7 @@ export const ReactApp = () => (
               <Route path="/login">
                 <LoginPage />
               </Route>
+              <Redirect path="/" to="/rooms" />
               <Redirect to="/" />
             </Switch>
           </AuthProvider>

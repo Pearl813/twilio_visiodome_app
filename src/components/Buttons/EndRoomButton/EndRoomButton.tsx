@@ -35,7 +35,7 @@ export default function EndRoomButton({ className }: EndRoomButtonProps) {
         Authorization: `Bearer ${localStorage.getItem('token') ?? authUser.token}`,
       };
 
-      axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/end`, { headers }).then(res => {
+      axios.get(`room/end`, { headers }).then(res => {
         history.replace('/rooms');
       });
     }
