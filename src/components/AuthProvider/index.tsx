@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { RESULT_CODE_SUCCESS } from '../../constants';
 
 export interface AuthContextType {
   authUser: any;
   setAuthUser: React.Dispatch<any>;
+  validUser: boolean;
+  setValidUser: React.Dispatch<React.SetStateAction<boolean>>;
+  isValidating: boolean;
+  setIsValidating: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AuthContext = React.createContext<AuthContextType>({ authUser: null, setAuthUser: () => null });
+const AuthContext = React.createContext<AuthContextType>({
+  authUser: null,
+  setAuthUser: () => null,
+  validUser: false,
+  setValidUser: () => null,
+  isValidating: false,
+  setIsValidating: () => null,
+});
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -18,12 +31,43 @@ function getInitialData(type: string) {
   return data;
 }
 
+function validateToken(token: string) {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  return axios.get(`/user/token/validate`, { headers }).then(res => {
+    if (res.data.code === RESULT_CODE_SUCCESS) {
+      return Promise.resolve(RESULT_CODE_SUCCESS);
+    } else {
+      return Promise.reject(-1);
+    }
+  });
+}
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authUser, setAuthUser] = useState(getInitialData('authUser'));
+  const [validUser, setValidUser] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
 
   useEffect(() => {
     try {
       localStorage.setItem('authUser', JSON.stringify(authUser));
+      setIsValidating(true);
+      validateToken(authUser)
+        .then((result: number) => {
+          if (result === RESULT_CODE_SUCCESS) {
+            setValidUser(true);
+            setIsValidating(false);
+          } else {
+            setValidUser(false);
+            setIsValidating(false);
+          }
+        })
+        .catch(() => {
+          setValidUser(false);
+          setIsValidating(false);
+        });
     } catch (e) {
       console.log('localStorage/authUser/error', e);
     }
@@ -34,6 +78,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       value={{
         authUser,
         setAuthUser,
+        validUser,
+        setValidUser,
+        isValidating,
+        setIsValidating,
       }}
     >
       {children}
