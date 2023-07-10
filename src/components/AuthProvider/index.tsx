@@ -54,20 +54,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       localStorage.setItem('authUser', JSON.stringify(authUser));
       setIsValidating(true);
-      validateToken(authUser)
-        .then((result: number) => {
-          if (result === RESULT_CODE_SUCCESS) {
-            setValidUser(true);
-            setIsValidating(false);
-          } else {
+      if (authUser) {
+        validateToken(authUser)
+          .then((result: number) => {
+            if (result === RESULT_CODE_SUCCESS) {
+              setValidUser(true);
+              setIsValidating(false);
+            } else {
+              setValidUser(false);
+              setIsValidating(false);
+            }
+          })
+          .catch(() => {
             setValidUser(false);
             setIsValidating(false);
-          }
-        })
-        .catch(() => {
-          setValidUser(false);
-          setIsValidating(false);
-        });
+          });
+      } else {
+        setValidUser(false);
+      }
     } catch (e) {
       console.log('localStorage/authUser/error', e);
     }
