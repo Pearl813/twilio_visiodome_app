@@ -31,18 +31,18 @@ function getInitialData(type: string) {
   return data;
 }
 
-function validateToken(token: string) {
+async function validateToken(token: string) {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
-  return axios.get(`/user/token/validate`, { headers }).then(res => {
-    if (res.data.code === RESULT_CODE_SUCCESS) {
-      return Promise.resolve(RESULT_CODE_SUCCESS);
-    } else {
-      return Promise.reject(-1);
-    }
-  });
+  const res = await axios.get(`/user/token/validate`, { headers });
+
+  if (res.data.code === RESULT_CODE_SUCCESS) {
+    return RESULT_CODE_SUCCESS;
+  } else {
+    return -1;
+  }
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
