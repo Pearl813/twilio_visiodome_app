@@ -32,12 +32,13 @@ function getInitialData(type: string) {
 }
 
 async function validateToken(token: string) {
+  console.log(token);
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
   const res = await axios.get(`/user/token/validate`, { headers });
-
+  console.log(res);
   if (res.data.code === RESULT_CODE_SUCCESS) {
     return RESULT_CODE_SUCCESS;
   } else {
