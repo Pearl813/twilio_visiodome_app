@@ -11,7 +11,7 @@ import Room from './components/Room/Room';
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
 import useVideoContext from './hooks/useVideoContext/useVideoContext';
-import LoginPage from './components/LoginPageV/LoginPage';
+import { Redirect } from 'react-router-dom';
 
 const Container = styled('div')({
   display: 'grid',
@@ -41,10 +41,10 @@ export default function App() {
   return (
     <Container style={{ height }}>
       {roomState === 'disconnected' ? (
-        endRedirectURL ? (
+        endRedirectURL === null ? (
           <PreJoinScreens />
         ) : (
-          <LoginPage />
+          <Redirect to={endRedirectURL} />
         )
       ) : (
         <Main>
