@@ -21,14 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function EndCallButton(props: { className?: string; redirectURL: any }) {
   const classes = useStyles();
-  const { room } = useVideoContext();
-  const history = useHistory();
+  const { room, setEndRedirectURL } = useVideoContext();
 
   return (
     <Button
       onClick={() => {
         room!.disconnect();
-        if (props.redirectURL !== null) history.replace(props.redirectURL);
+        if (props.redirectURL !== null) setEndRedirectURL(props.redirectURL);
       }}
       className={clsx(classes.button, props.className)}
       data-cy-disconnect

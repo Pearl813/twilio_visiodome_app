@@ -35,6 +35,8 @@ export interface IVideoContext {
   setIsBackgroundSelectionOpen: (value: boolean) => void;
   backgroundSettings: BackgroundSettings;
   setBackgroundSettings: (settings: BackgroundSettings) => void;
+  endRedirectURL: string | null;
+  setEndRedirectURL: (redirect: any) => void;
 }
 
 export const VideoContext = createContext<IVideoContext>(null!);
@@ -83,6 +85,7 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
     | LocalVideoTrack
     | undefined;
   const [backgroundSettings, setBackgroundSettings] = useBackgroundSettings(videoTrack, room);
+  const [endRedirectURL, setEndRedirectURL] = useState(null);
 
   return (
     <VideoContext.Provider
@@ -102,6 +105,8 @@ export function VideoProvider({ options, children, onError = () => {} }: VideoPr
         setIsBackgroundSelectionOpen,
         backgroundSettings,
         setBackgroundSettings,
+        endRedirectURL,
+        setEndRedirectURL,
       }}
     >
       <SelectedParticipantProvider room={room}>{children}</SelectedParticipantProvider>
