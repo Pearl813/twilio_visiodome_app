@@ -101,7 +101,7 @@ export default function LoginPage() {
     setIsSnackbarDismissed(false);
     setIsLoading(true);
     axios
-      .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/login`, { email, password })
+      .post(`/user/login`, { email, password })
       .then(response => {
         // Handle success.
         if (response.data.code === RESULT_CODE_SUCCESS) {
