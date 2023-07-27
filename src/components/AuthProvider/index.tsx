@@ -56,7 +56,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (authUser) {
         validateToken(authUser.token)
           .then((result: number) => {
-            console.log('this is response after api call', result);
             if (result === RESULT_CODE_SUCCESS) {
               setValidUser(true);
               setIsValidating(false);
