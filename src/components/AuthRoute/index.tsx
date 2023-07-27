@@ -4,12 +4,10 @@ import { useAuth } from '../AuthProvider';
 
 export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   const { authUser, validUser, isValidating, validatingStatus } = useAuth();
-  console.log('===========', validUser, isValidating);
 
   const isAuthReady = validUser && !isValidating;
   console.log(validUser, isValidating, validatingStatus, isAuthReady);
-  if (!authUser && !isAuthReady && validatingStatus === 'INVALID') {
-    console.log(!authUser && !isAuthReady && validatingStatus === 'INVALID');
+  if (!authUser && !isAuthReady && validatingStatus !== 'SUCCESS') {
     return null;
   }
 
