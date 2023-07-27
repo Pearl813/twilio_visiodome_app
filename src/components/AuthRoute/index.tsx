@@ -10,8 +10,9 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   return (
     <Route
       {...rest}
-      render={({ location }) =>
-        isAuthReady ? (
+      render={({ location }) => {
+        console.log('---------', location);
+        return isAuthReady ? (
           children
         ) : (
           <Redirect
@@ -20,8 +21,8 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
               state: { from: location },
             }}
           />
-        )
-      }
+        );
+      }}
     />
   );
 };
