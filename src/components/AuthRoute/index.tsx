@@ -4,7 +4,7 @@ import { useAuth } from '../AuthProvider';
 
 export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   const { validUser, isValidating } = useAuth();
-  console.log(validUser, isValidating);
+  console.log('===========', validUser, isValidating);
   const isAuthReady = validUser && !isValidating;
 
   return (

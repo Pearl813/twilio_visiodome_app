@@ -60,15 +60,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               setValidUser(true);
               setIsValidating(false);
             } else {
+              console.log('++++++++++++++1');
               setValidUser(false);
               setIsValidating(false);
             }
           })
           .catch(() => {
+            console.log('++++++++++++++2');
+
             setValidUser(false);
             setIsValidating(false);
           });
       } else {
+        console.log('++++++++++++++3');
+
         setValidUser(false);
         setIsValidating(false);
       }
