@@ -75,6 +75,7 @@ export default function MenuBar() {
   const participants = useParticipants();
   const [isPresenter, setIsPresenter] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
+  const isEndRoomButtonEnable = isPresenter || isVisiodome;
 
   useEffect(() => {
     if (room?.localParticipant.identity === VISIODOMEAPP_LINK_NAME) setIsVisiodome(true);
@@ -127,7 +128,7 @@ export default function MenuBar() {
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
                 <EndCallButton redirectURL={isVisiodome ? '/' : null} />
-                {isPresenter ? <EndRoomButton /> : ''}
+                {isEndRoomButtonEnable ? <EndRoomButton /> : ''}
               </Grid>
             </Grid>
           </Hidden>
