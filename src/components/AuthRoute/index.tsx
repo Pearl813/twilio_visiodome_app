@@ -7,7 +7,7 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
 
   const isAuthReady = validUser && !isValidating;
 
-  if (!isAuthReady) {
+  if (!isValidating && !isAuthReady) {
     console.log('not ready', authUser, validUser, isValidating, isAuthReady);
     return null;
   }
