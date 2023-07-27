@@ -33,6 +33,7 @@ export const validateToken: RequestHandler = (req, res) => {
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(response => {
+      console.log(response);
       if (response.data.username) {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
