@@ -9,7 +9,7 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   console.log(validUser, isValidating, validatingStatus, isAuthReady);
   if (
     (!authUser && !isAuthReady && validatingStatus === 'INVALID') ||
-    (authUser && !isAuthReady && validatingStatus !== 'SUCCESS')
+    (authUser && !isAuthReady && validatingStatus !== 'NOLOGIN')
   ) {
     return null;
   }
