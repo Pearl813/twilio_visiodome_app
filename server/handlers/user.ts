@@ -25,6 +25,7 @@ export const validatePresenter: RequestHandler = (req, res) => {
 };
 
 export const validateToken: RequestHandler = (req, res) => {
+  console.log('sdsd', req.headers);
   const accessToken = req.headers.authorization;
 
   const headers = {

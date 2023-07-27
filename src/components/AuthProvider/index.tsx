@@ -37,7 +37,7 @@ async function validateToken(token: string) {
   };
 
   const res = await axios.get(`/user/token/validate`, { headers });
-  console.log(res.data);
+  console.log('this is res from the backend', res.data);
   if (res.data.code === RESULT_CODE_SUCCESS) {
     return RESULT_CODE_SUCCESS;
   } else {
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (authUser) {
         validateToken(authUser)
           .then((result: number) => {
-            console.log(result);
+            console.log('this is response after api call', result);
             if (result === RESULT_CODE_SUCCESS) {
               setValidUser(true);
               setIsValidating(false);
