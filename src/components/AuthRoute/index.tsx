@@ -3,15 +3,9 @@ import { Redirect, Route, RouteProps } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 
 export const AuthRoute = ({ children, ...rest }: RouteProps) => {
-  const { authUser, validUser, isValidating } = useAuth();
+  const { validUser, isValidating } = useAuth();
 
-  const isAuthReady = validUser || isValidating;
-
-  console.log(authUser, validUser, isValidating, isAuthReady);
-
-  // if (!authUser && !isAuthReady) {
-  //   return null;
-  // }
+  const isAuthReady = validUser && !isValidating;
 
   return (
     <Route
