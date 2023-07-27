@@ -62,17 +62,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (result === RESULT_CODE_SUCCESS) {
               setValidUser(true);
               setIsValidating(false);
-              setValidatingStatus('SUCCESS');
+              setValidatingStatus('LOGIN');
             } else {
               setValidUser(false);
               setIsValidating(false);
-              setValidatingStatus('NOEXIST');
+              setValidatingStatus('LOGIN');
             }
           })
           .catch(() => {
             setValidUser(false);
             setIsValidating(false);
-            setValidatingStatus('INVALID');
+            setValidatingStatus('LOGIN');
           });
       } else {
         setValidUser(false);

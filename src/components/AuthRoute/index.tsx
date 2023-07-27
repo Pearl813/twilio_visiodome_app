@@ -5,9 +5,10 @@ import { useAuth } from '../AuthProvider';
 export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   const { authUser, validUser, isValidating, validatingStatus } = useAuth();
   console.log('===========', validUser, isValidating);
-  const isAuthReady = validUser && !isValidating && validatingStatus === 'SUCCESS';
 
-  if (!authUser && !isAuthReady) {
+  const isAuthReady = validUser && !isValidating;
+
+  if (!authUser && !isAuthReady && validatingStatus === 'LOGIN') {
     return null;
   }
 
