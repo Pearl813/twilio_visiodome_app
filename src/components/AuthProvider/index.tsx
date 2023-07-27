@@ -49,31 +49,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [validUser, setValidUser] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
 
-  try {
-    localStorage.setItem('authUser', JSON.stringify(authUser));
-    setIsValidating(true);
-    if (authUser) {
-      validateToken(authUser.token)
-        .then((result: number) => {
-          if (result === RESULT_CODE_SUCCESS) {
-            setValidUser(true);
-            setIsValidating(false);
-          } else {
+  useEffect(() => {
+    try {
+      localStorage.setItem('authUser', JSON.stringify(authUser));
+      setIsValidating(true);
+      if (authUser) {
+        validateToken(authUser.token)
+          .then((result: number) => {
+            if (result === RESULT_CODE_SUCCESS) {
+              setValidUser(true);
+              setIsValidating(false);
+            } else {
+              setValidUser(false);
+              setIsValidating(false);
+            }
+          })
+          .catch(() => {
             setValidUser(false);
             setIsValidating(false);
-          }
-        })
-        .catch(() => {
-          setValidUser(false);
-          setIsValidating(false);
-        });
-    } else {
-      setValidUser(false);
-      setIsValidating(false);
+          });
+      } else {
+        setValidUser(false);
+        setIsValidating(false);
+      }
+    } catch (e) {
+      console.log('localStorage/authUser/error', e);
     }
-  } catch (e) {
-    console.log('localStorage/authUser/error', e);
-  }
+  }, [authUser]);
 
   return (
     <AuthContext.Provider
