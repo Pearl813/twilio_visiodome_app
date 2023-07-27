@@ -35,6 +35,8 @@ async function validateToken(token: string) {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
+  console.log('toekn------', token);
+  console.log('header------', headers);
 
   const res = await axios.get(`/user/token/validate`, { headers });
   console.log('this is res from the backend', res.data);
