@@ -5,18 +5,14 @@ import { useAuth } from '../AuthProvider';
 export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   const { authUser, validUser, isValidating } = useAuth();
 
-  const isAuthReady = validUser && !isValidating;
+  const isAuthReady = validUser || isValidating;
 
-  if (!isValidating && !isAuthReady) {
-    console.log('not ready', authUser, validUser, isValidating, isAuthReady);
-    return null;
-  }
   console.log('---------', authUser, validUser, isValidating, isAuthReady);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        authUser ? (
+        authUser && isAuthReady ? (
           children
         ) : (
           <Redirect
