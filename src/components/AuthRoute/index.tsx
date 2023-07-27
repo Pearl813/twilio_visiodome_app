@@ -9,9 +9,9 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
 
   console.log(authUser, validUser, isValidating, isAuthReady);
 
-  if (!authUser && !isAuthReady) {
-    return null;
-  }
+  // if (!authUser && !isAuthReady) {
+  //   return null;
+  // }
 
   return (
     <Route
