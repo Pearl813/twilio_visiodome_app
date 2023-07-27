@@ -43,24 +43,24 @@ export const ReactApp = () => (
     <UnsupportedBrowserWarning>
       <Router>
         <AppStateProvider>
-          <Switch>
-            <AuthProvider>
+          <AuthProvider>
+            <Switch>
               <AuthRoute exact path="/rooms">
                 <RoomCreateScreen />
               </AuthRoute>
-            </AuthProvider>
-            <PrivateRoute exact path="/room/:URLRoomName">
-              <VideoApp />
-            </PrivateRoute>
-            <PrivateRoute exact path="/room/:URLRoomName/:roleName">
-              <VideoApp />
-            </PrivateRoute>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-            <Redirect path="/" to="/rooms" />
-            <Redirect to="/" />
-          </Switch>
+              <PrivateRoute exact path="/room/:URLRoomName">
+                <VideoApp />
+              </PrivateRoute>
+              <PrivateRoute exact path="/room/:URLRoomName/:roleName">
+                <VideoApp />
+              </PrivateRoute>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Redirect path="/" to="/rooms" />
+              <Redirect to="/" />
+            </Switch>
+          </AuthProvider>
         </AppStateProvider>
       </Router>
     </UnsupportedBrowserWarning>
