@@ -70,6 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
       } else {
         setValidUser(false);
+        setIsValidating(false);
       }
     } catch (e) {
       console.log('localStorage/authUser/error', e);
