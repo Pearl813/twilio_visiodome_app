@@ -8,14 +8,16 @@ export const AuthRoute = ({ children, ...rest }: RouteProps) => {
   const isAuthReady = validUser || isValidating;
 
   if (!authUser && !isAuthReady) {
+    console.log('eoijosiejfosiefjosiefj', authUser, validUser, isValidating, isAuthReady);
     return null;
   }
+  console.log('-------------', authUser, validUser, isValidating, isAuthReady);
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        authUser && isAuthReady ? (
+        authUser ? (
           children
         ) : (
           <Redirect
