@@ -78,7 +78,7 @@ export default function LoginPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { authUser, setAuthUser } = useAuth();
+  const { setAuthUser } = useAuth();
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -87,15 +87,6 @@ export default function LoginPage() {
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
-
-  useEffect(() => {
-    if (authUser) {
-      setIsLoading(true);
-      history.replace('/rooms');
-    } else {
-      history.replace('/login');
-    }
-  }, []);
 
   const login = () => {
     setIsSnackbarDismissed(false);

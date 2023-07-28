@@ -9,7 +9,6 @@ export interface AuthContextType {
   setValidUser: React.Dispatch<React.SetStateAction<boolean>>;
   isValidating: boolean;
   setIsValidating: React.Dispatch<React.SetStateAction<boolean>>;
-  validatingStatus: string;
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -19,7 +18,6 @@ const AuthContext = React.createContext<AuthContextType>({
   setValidUser: () => null,
   isValidating: false,
   setIsValidating: () => null,
-  validatingStatus: 'NOLOGIN',
 });
 
 interface AuthProviderProps {
@@ -50,7 +48,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authUser, setAuthUser] = useState(getInitialData('authUser'));
   const [validUser, setValidUser] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
-  const [validatingStatus, setValidatingStatus] = useState('NOLOGIN');
 
   useEffect(() => {
     try {
@@ -62,22 +59,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (result === RESULT_CODE_SUCCESS) {
               setValidUser(true);
               setIsValidating(false);
-              setValidatingStatus('SUCCESS');
             } else {
               setValidUser(false);
               setIsValidating(false);
-              setValidatingStatus('NOEXIST');
             }
           })
           .catch(() => {
             setValidUser(false);
             setIsValidating(false);
-            setValidatingStatus('INVALID');
           });
       } else {
         setValidUser(false);
         setIsValidating(false);
-        setValidatingStatus('NOLOGIN');
       }
     } catch (e) {
       console.log('localStorage/authUser/error', e);
@@ -93,7 +86,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setValidUser,
         isValidating,
         setIsValidating,
-        validatingStatus,
       }}
     >
       {children}
