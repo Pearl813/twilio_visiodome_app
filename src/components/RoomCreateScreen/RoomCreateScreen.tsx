@@ -58,11 +58,11 @@ export default function RoomCreateScreen() {
       const headers = {
         Authorization: `Bearer ${authUser.token}`,
       };
-      axios.get(`${process.env.REACT_APP_TOKEN_SERVER_URL}/user/generateRoomName`, { headers }).then(response => {
+      axios.get(`/user/generateRoomName`, { headers }).then(response => {
         if (response.status === 200) {
           if (response.data.code === RESULT_CODE_SUCCESS) {
             axios
-              .post(`${process.env.REACT_APP_TOKEN_SERVER_URL}/room/start`, { roomName }, { headers })
+              .post(`/room/start`, { roomName }, { headers })
               .then(res => {
                 if (res.status === 200) {
                   setIsOpen(true);
