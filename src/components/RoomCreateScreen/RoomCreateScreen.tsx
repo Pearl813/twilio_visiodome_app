@@ -31,8 +31,7 @@ export default function RoomCreateScreen() {
   const [step, setStep] = useState(Steps.roomNameStep);
 
   const [name, setName] = useState<string>(authUser?.username || '');
-  const [roomName, setRoomName] = useState<string>(authUser?.roomName || '');
-  const isCreated = name && roomName ? true : false;
+  const isCreated = name ? true : false;
   const [isOpen, setIsOpen] = useState(false);
   const [messageContent, setMessageContent] = useState('');
   const [messageHeader, setMessageHeader] = useState('');
@@ -48,11 +47,7 @@ export default function RoomCreateScreen() {
 
   const handleRoomName = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
-    // @ts-ignore
-    if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
-      window.history.replaceState(null, '', window.encodeURI(`/rooms/${roomName}${window.location.search || ''}`));
-    }
+
     setIsLoading(true);
     if (authUser.token) {
       const headers = {
@@ -61,8 +56,18 @@ export default function RoomCreateScreen() {
       axios.get(`/user/generateRoomName`, { headers }).then(response => {
         if (response.status === 200) {
           if (response.data.code === RESULT_CODE_SUCCESS) {
+            // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
+            // @ts-ignore
+            if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
+              window.history.replaceState(
+                null,
+                '',
+                window.encodeURI(`/rooms/${response.data.roomName}${window.location.search || ''}`)
+              );
+            }
+
             axios
-              .post(`/room/start`, { roomName }, { headers })
+              .post(`/room/start`, { roomName: response.data.roomName }, { headers })
               .then(res => {
                 if (res.status === 200) {
                   setIsOpen(true);
@@ -155,19 +160,11 @@ export default function RoomCreateScreen() {
             }}
           />
           {step === Steps.roomNameStep && (
-            <RoomNameScreen
-              name={name}
-              roomName={roomName}
-              isCreated={isCreated}
-              setName={setName}
-              setRoomName={setRoomName}
-              handleSubmit={handleRoomName}
-            />
+            <RoomNameScreen name={name} isCreated={isCreated} setName={setName} handleSubmit={handleRoomName} />
           )}
           {step === Steps.linkGenerateStep && (
             <GenerateRoomLinkScreen
               name={name}
-              roomName={roomName}
               setStep={setStep}
               roomLinks={roomLinks}
               handleSubmit={handleGenerateLink}

@@ -102,7 +102,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             </div>
             <Grid container justifyContent="flex-end">
               <div className={classes.continueButtons}>
-                <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
+                <Button variant="contained" type="submit" color="primary" disabled={!name}>
                   Join
                 </Button>
               </div>

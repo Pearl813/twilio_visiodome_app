@@ -38,30 +38,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface RoomNameScreenProps {
   name: string;
-  roomName: string;
   isCreated: boolean;
   setName: (name: string) => void;
-  setRoomName: (roomName: string) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({
-  name,
-  roomName,
-  isCreated,
-  setName,
-  setRoomName,
-  handleSubmit,
-}: RoomNameScreenProps) {
+export default function RoomNameScreen({ name, isCreated, setName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { setAuthUser } = useAuth();
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-  };
-
-  const handleRoomNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setRoomName(event.target.value);
   };
 
   return (
@@ -86,21 +73,6 @@ export default function RoomNameScreen({
               onChange={handleNameChange}
             />
           </div>
-          {/* <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-room-name">
-              Room Name
-            </InputLabel>
-            <TextField
-              autoCapitalize="false"
-              id="input-room-name"
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={roomName}
-              disabled={isCreated === true ? true : false}
-              onChange={handleRoomNameChange}
-            />
-          </div> */}
         </div>
         <Grid container justifyContent="flex-end">
           <div className={classes.continueButtons}>

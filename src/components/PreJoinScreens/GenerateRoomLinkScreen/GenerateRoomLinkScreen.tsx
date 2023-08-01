@@ -175,7 +175,7 @@ export default function GenerateRoomLinkScreen({
             <Button variant="outlined" color="primary" onClick={endRoom}>
               End Room
             </Button>
-            <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
+            <Button variant="contained" type="submit" color="primary" disabled={!name}>
               Continue
             </Button>
           </div>
