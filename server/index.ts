@@ -1,7 +1,7 @@
 import './bootstrap-globals';
 import { createExpressHandler } from './createExpressHandler';
 import { startRoom, endRoom, validateRoom, getRoomLinks } from './handlers/room';
-import { validatePresenter, validateToken, login } from './handlers/user';
+import { validatePresenter, validateToken, login, generateRoomName } from './handlers/user';
 import express, { RequestHandler } from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
