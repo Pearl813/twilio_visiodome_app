@@ -165,7 +165,6 @@ export default function RoomCreateScreen() {
           {step === Steps.linkGenerateStep && (
             <GenerateRoomLinkScreen
               name={name}
-              setStep={setStep}
               roomLinks={roomLinks}
               handleSubmit={handleGenerateLink}
               endRoom={endRoom}

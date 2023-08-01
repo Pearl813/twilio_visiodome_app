@@ -15,7 +15,7 @@ const generateStreamURLs = (serverURL: string, roomName: string, token: string) 
 };
 
 export const startRoom: RequestHandler = (req, res) => {
-  // const roomName = req.body.roomName;
+  const roomName = req.body.roomName;
   const accessToken = req.headers.authorization;
   const token = accessToken?.split(' ')!;
   const headers = {
@@ -25,7 +25,6 @@ export const startRoom: RequestHandler = (req, res) => {
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(response => {
       if (response?.data?.roomName !== null) {
-        const roomName = response?.data?.roomName;
         client.video.v1.rooms
           .list({
             uniqueName: response?.data?.roomName,

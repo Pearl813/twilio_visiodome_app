@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface GenerateRoomLinkScreenProps {
   name: string;
-  setStep: (step: Steps) => void;
   roomLinks: {
     presenter: string;
     customer: string;
@@ -61,7 +60,6 @@ interface GenerateRoomLinkScreenProps {
 
 export default function GenerateRoomLinkScreen({
   name,
-  setStep,
   roomLinks,
   handleSubmit,
   endRoom,
