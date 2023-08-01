@@ -83,7 +83,7 @@ export const generateRoomName: RequestHandler = (req, res) => {
     Authorization: `${accessToken}`,
   };
   axios
-    .post(`${process.env.REACT_APP_STRAPI_URL}/api/user/generateRoomName`, { headers })
+    .get(`${process.env.REACT_APP_STRAPI_URL}/api/user/generateRoomName`, { headers })
     .then(response => {
       if (response.data.success) {
         res.status(200).send({
