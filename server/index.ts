@@ -34,6 +34,7 @@ app.get('/room/links/:roomName', authMiddleware, getRoomLinks);
 app.all('/user/presenter/validate', authMiddleware, validatePresenter);
 app.all('/user/token/validate', authMiddleware, validateToken);
 app.all('/user/login', authMiddleware, login);
+app.all('/user/generateRoomName', authMiddleware, generateRoomName);
 
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.

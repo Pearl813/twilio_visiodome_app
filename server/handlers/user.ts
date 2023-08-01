@@ -16,7 +16,7 @@ export const validatePresenter: RequestHandler = (req, res) => {
       } else {
         res
           .status(200)
-          .send({ code: RESULT_CODE_SUCCESS, message: RESULT_MESSAGE_SUCCESS, roomName: response.data[0].streamURL });
+          .send({ code: RESULT_CODE_SUCCESS, message: RESULT_MESSAGE_SUCCESS, roomName: response.data[0].roomName });
       }
     })
     .catch((error: any) => {
@@ -33,12 +33,13 @@ export const validateToken: RequestHandler = (req, res) => {
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(response => {
+      console.log(response.data);
       if (response.data.username) {
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
           message: RESULT_MESSAGE_SUCCESS,
           username: response.data.username,
-          roomName: response.data.streamURL,
+          roomName: response.data.roomName,
         });
       } else {
         res.status(200).send({ code: -1, message: 'No exist' });
@@ -57,17 +58,41 @@ export const login: RequestHandler = (req, res) => {
     })
     .then(response => {
       if (response.data.user.PackageType === 'Mobile') {
+        console.log(response.data.user);
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
           message: RESULT_MESSAGE_SUCCESS,
           payload: {
             token: response.data.jwt,
             username: response.data.user.username,
-            roomName: response.data.user.streamURL,
           },
         });
       } else {
         res.status(200).send({ code: -1, message: 'permission error' });
+      }
+    })
+    .catch((error: any) => {
+      res.status(500).send(error);
+    });
+};
+
+export const generateRoomName: RequestHandler = (req, res) => {
+  const accessToken = req.headers.authorization;
+
+  const headers = {
+    Authorization: `${accessToken}`,
+  };
+  axios
+    .post(`${process.env.REACT_APP_STRAPI_URL}/api/user/generateRoomName`, { headers })
+    .then(response => {
+      if (response.data.success) {
+        res.status(200).send({
+          code: RESULT_CODE_SUCCESS,
+          message: RESULT_MESSAGE_SUCCESS,
+          roomName: response.data.roomName,
+        });
+      } else {
+        res.status(200).send({ code: -1, message: 'No exist' });
       }
     })
     .catch((error: any) => {

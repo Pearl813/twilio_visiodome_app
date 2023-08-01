@@ -69,7 +69,7 @@ export default function RoomNameScreen({
       <Typography variant="h5" className={classes.gutterBottom}>
         {`Create a Room`}
       </Typography>
-      <Typography variant="body1">{`Room name is "${roomName}".  Click "Start Room" to create room.`}</Typography>
+      <Typography variant="body1">{`Click "Start Room" to create room.`}</Typography>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           <div className={classes.textFieldContainer}>
@@ -86,7 +86,7 @@ export default function RoomNameScreen({
               onChange={handleNameChange}
             />
           </div>
-          <div className={classes.textFieldContainer}>
+          {/* <div className={classes.textFieldContainer}>
             <InputLabel shrink htmlFor="input-room-name">
               Room Name
             </InputLabel>
@@ -100,7 +100,7 @@ export default function RoomNameScreen({
               disabled={isCreated === true ? true : false}
               onChange={handleRoomNameChange}
             />
-          </div>
+          </div> */}
         </div>
         <Grid container justifyContent="flex-end">
           <div className={classes.continueButtons}>
@@ -113,7 +113,7 @@ export default function RoomNameScreen({
             >
               Sign Out
             </Button>
-            <Button variant="contained" type="submit" color="primary" disabled={!name || !roomName}>
+            <Button variant="contained" type="submit" color="primary" disabled={!name}>
               Start Room
             </Button>
           </div>

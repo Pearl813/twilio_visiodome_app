@@ -12,7 +12,7 @@ const generateStreamURLs = (serverURL: string, roomName: string, token: string) 
     customer: `${serverURL}/room/${roomName}`,
     visiodome: `${serverURL}/room/${roomName}/${VISIODOMEAPP_LINK_NAME}`,
   };
-}
+};
 
 export const startRoom: RequestHandler = (req, res) => {
   // const roomName = req.body.roomName;
@@ -24,11 +24,11 @@ export const startRoom: RequestHandler = (req, res) => {
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(response => {
-      if (response?.data?.streamURL !== null) {
-        const roomName = response?.data?.streamURL;
+      if (response?.data?.roomName !== null) {
+        const roomName = response?.data?.roomName;
         client.video.v1.rooms
           .list({
-            uniqueName: response?.data?.streamURL,
+            uniqueName: response?.data?.roomName,
             status: 'in-progress',
           })
           .then((room: any) => {
@@ -48,7 +48,7 @@ export const startRoom: RequestHandler = (req, res) => {
                 .catch((e: any) => {
                   console.log(e);
                 });
-            } else if (room[0].uniqueName === response?.data?.streamURL) {
+            } else if (room[0].uniqueName === response?.data?.roomName) {
               res.status(200).send({
                 code: 1,
                 message: 'This room is already created!',
@@ -77,7 +77,7 @@ export const endRoom: RequestHandler = (req, res) => {
   axios
     .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
     .then(response => {
-      let uniqueName = response.data.streamURL;
+      let uniqueName = response.data.roomName;
       if (uniqueName === null) {
         res.status(200).send({ code: -1, message: 'No exist.' });
       } else {
@@ -114,7 +114,7 @@ export const getRoomLinks: RequestHandler = (req, res) => {
     Authorization: `Bearer ${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,
   };
   axios
-    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[streamURL][$eq]=${roomName}`, { headers })
+    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[roomName][$eq]=${roomName}`, { headers })
     .then(response => {
       if (response.data.length === 0) {
         res.status(200).send({ code: -1, message: 'No exist' });
@@ -149,7 +149,7 @@ export const validateRoom: RequestHandler = (req, res) => {
     Authorization: `Bearer ${process.env.REACT_APP_STRAPI_ACCESS_TOKEN}`,
   };
   axios
-    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[streamURL][$eq]=${roomName}`, { headers })
+    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/?filters[roomName][$eq]=${roomName}`, { headers })
     .then(response => {
       if (response.data.length === 0) {
         res.status(200).send({ code: -1, message: 'No exist' });
