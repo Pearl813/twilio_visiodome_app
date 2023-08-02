@@ -56,6 +56,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   };
 
   useEffect(() => {
+    console.log('in the roomaName Screen component: ', roomName);
     if (roomName) {
       setIsLoading(true);
       axios

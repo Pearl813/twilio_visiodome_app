@@ -65,7 +65,6 @@ export default function RoomCreateScreen() {
                 window.encodeURI(`/rooms/${response.data.roomName}${window.location.search || ''}`)
               );
             }
-            console.log(response.data);
             axios
               .post(`/room/start`, { roomName: response.data.roomName }, { headers })
               .then(res => {

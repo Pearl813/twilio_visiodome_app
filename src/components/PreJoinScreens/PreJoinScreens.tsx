@@ -63,6 +63,8 @@ export default function PreJoinScreens() {
     if (URLRoomName) {
       setRoomName(URLRoomName);
     }
+    console.log('roomeName:', URLRoomName);
+    console.log('role name:', roleName);
     if (roleName === PRESENTER_LINK_NAME) {
       setIsLoading(true);
       let urlString: string = window.location.href;
