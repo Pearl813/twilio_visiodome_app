@@ -21,7 +21,7 @@ function ErrorDialog({ dismissError, error }: PropsWithChildren<ErrorDialogProps
 
   if (code === 53118) {
     error = null;
-    history.replace('/rooms');
+    console.log('sefoijj');
   }
   return (
     <Dialog open={error !== null} onClose={() => dismissError()} fullWidth={true} maxWidth="xs">
