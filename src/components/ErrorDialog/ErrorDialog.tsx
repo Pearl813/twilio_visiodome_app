@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,9 +17,12 @@ interface ErrorDialogProps {
 function ErrorDialog({ dismissError, error }: PropsWithChildren<ErrorDialogProps>) {
   const { message, code } = error || {};
   const enhancedMessage = enhanceMessage(message, code);
+  const history = useHistory();
 
-  if (code === 53118) error = null;
-
+  if (code === 53118) {
+    error = null;
+    history.replace('/rooms');
+  }
   return (
     <Dialog open={error !== null} onClose={() => dismissError()} fullWidth={true} maxWidth="xs">
       <DialogTitle>ERROR</DialogTitle>
