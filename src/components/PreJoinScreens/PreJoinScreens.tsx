@@ -78,24 +78,34 @@ export default function PreJoinScreens() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .get(`/user/token/validate`, { headers })
+          .post(`/room/validate`, { roomName: URLRoomName })
           .then(res => {
             if (res.data.code === RESULT_CODE_SUCCESS) {
-              localStorage.setItem('token', token);
-              setIsLoading(false);
-              setName(res.data.username);
-              setRoomName(res.data.roomName);
-              setIsPresenter(true);
-              setStep(Steps.deviceSelectionStep);
+              axios
+                .get(`/user/token/validate`, { headers })
+                .then(res => {
+                  if (res.data.code === RESULT_CODE_SUCCESS) {
+                    localStorage.setItem('token', token);
+                    setIsLoading(false);
+                    setName(res.data.username);
+                    setRoomName(res.data.roomName);
+                    setIsPresenter(true);
+                    setStep(Steps.deviceSelectionStep);
+                  } else {
+                    setIsLoading(false);
+                    setIsInvalidRoom(false);
+                  }
+                })
+                .catch((e: any) => {
+                  setIsLoading(false);
+                  setIsInvalidRoom(false);
+                });
             } else {
               setIsLoading(false);
-              setIsInvalidRoom(false);
+              setIsInvalidRoom(true);
             }
           })
-          .catch((e: any) => {
-            setIsLoading(false);
-            setIsInvalidRoom(false);
-          });
+          .catch(e => console.log(e));
       } else {
         setIsLoading(false);
         setIsInvalidRoom(true);
