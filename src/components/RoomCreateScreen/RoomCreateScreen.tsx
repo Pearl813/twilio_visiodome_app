@@ -53,8 +53,9 @@ export default function RoomCreateScreen() {
       const headers = {
         Authorization: `Bearer ${authUser.token}`,
       };
+      console.log(headers);
       axios
-        .post(`/room/start`, { headers })
+        .post(`/room/start`, {}, { headers })
         .then(res => {
           if (res.status === 200) {
             // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
