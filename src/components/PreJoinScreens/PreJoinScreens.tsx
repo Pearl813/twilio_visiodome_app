@@ -93,16 +93,16 @@ export default function PreJoinScreens() {
                     setStep(Steps.deviceSelectionStep);
                   } else {
                     setIsLoading(false);
-                    setIsInvalidRoom(false);
+                    history.replace('/rooms');
                   }
                 })
                 .catch((e: any) => {
                   setIsLoading(false);
-                  setIsInvalidRoom(false);
+                  history.replace('/rooms');
                 });
             } else {
               setIsLoading(false);
-              setIsInvalidRoom(true);
+              history.replace('/rooms');
             }
           })
           .catch(e => console.log(e));

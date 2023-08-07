@@ -53,50 +53,41 @@ export default function RoomCreateScreen() {
       const headers = {
         Authorization: `Bearer ${authUser.token}`,
       };
-      axios.get(`/user/generateRoomName`, { headers }).then(response => {
-        if (response.status === 200) {
-          if (response.data.code === RESULT_CODE_SUCCESS) {
+      axios
+        .post(`/room/start`, { headers })
+        .then(res => {
+          if (res.status === 200) {
             // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
             // @ts-ignore
             if (!window.location.origin.includes('twil.io') && !window.STORYBOOK_ENV) {
               window.history.replaceState(
                 null,
                 '',
-                window.encodeURI(`/rooms/${response.data.roomName}${window.location.search || ''}`)
+                window.encodeURI(`/rooms/${res.data.roomName}${window.location.search || ''}`)
               );
             }
-            axios
-              .post(`/room/start`, { roomName: response.data.roomName }, { headers })
-              .then(res => {
-                if (res.status === 200) {
-                  setIsOpen(true);
-                  setMessageHeader('Success!');
-                  setMessageContent(
-                    res.data.code === RESULT_CODE_SUCCESS ? 'Room is created successfully!' : 'Room is Already Created!'
-                  );
-                  setMessageType('info');
-                  setRoomLinks({
-                    ...roomLinks,
-                    presenter: res.data.streamURLs.presenter,
-                    customer: res.data.streamURLs.customer,
-                    visiodome: res.data.streamURLs.visiodome,
-                  });
-                  setIsLoading(false);
-                  setStep(Steps.linkGenerateStep);
-                }
-              })
-              .catch(e => {
-                console.log(e);
-              });
+            setIsOpen(true);
+            setMessageHeader('Success!');
+            setMessageContent(
+              res.data.code === RESULT_CODE_SUCCESS ? 'Room is created successfully!' : 'Room is Already Created!'
+            );
+            setMessageType('info');
+            setRoomLinks({
+              ...roomLinks,
+              presenter: res.data.streamURLs.presenter,
+              customer: res.data.streamURLs.customer,
+              visiodome: res.data.streamURLs.visiodome,
+            });
+            setIsLoading(false);
+            setStep(Steps.linkGenerateStep);
           } else {
             setIsLoading(false);
             history.push('/rooms');
           }
-        } else {
-          setIsLoading(false);
-          history.push('/rooms');
-        }
-      });
+        })
+        .catch(e => {
+          console.log(e);
+        });
     } else {
       setIsLoading(false);
       history.push('/rooms');

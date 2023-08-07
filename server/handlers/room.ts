@@ -14,56 +14,57 @@ const generateStreamURLs = (serverURL: string, roomName: string, token: string) 
   };
 };
 
-export const startRoom: RequestHandler = (req, res) => {
-  const roomName = req.body.roomName;
+export const startRoom: RequestHandler = async (req, res) => {
   const accessToken = req.headers.authorization;
   const token = accessToken?.split(' ')!;
   const headers = {
     Authorization: `${accessToken}`,
   };
-  axios
-    .get(`${process.env.REACT_APP_STRAPI_URL}/api/users/me`, { headers })
-    .then(response => {
-      if (response?.data?.roomName !== null) {
-        client.video.v1.rooms
-          .list({
-            uniqueName: response?.data?.roomName,
-            status: 'in-progress',
-          })
-          .then((room: any) => {
-            if (room.length === 0) {
-              client.video.v1.rooms
-                .create({ uniqueName: roomName, emptyRoomTimeout: 2 })
-                .then((room: any) => {
-                  if (room.sid) {
-                    res.status(200).send({
-                      code: RESULT_CODE_SUCCESS,
-                      message: RESULT_MESSAGE_SUCCESS,
-                      roomName: roomName,
-                      streamURLs: generateStreamURLs(process.env.REACT_APP_FRONTEND_URL!, roomName, token[1]),
-                    });
-                  }
-                })
-                .catch((e: any) => {
-                  console.log(e);
-                });
-            } else if (room[0].uniqueName === response?.data?.roomName) {
-              res.status(200).send({
-                code: 1,
-                message: 'This room is already created!',
-                roomName: roomName,
-                streamURLs: generateStreamURLs(process.env.REACT_APP_FRONTEND_URL!, roomName, token[1]),
+
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_STRAPI_URL}/api/user/generateRoomName`, { headers });
+    if (response.data.success) {
+      const roomName = response?.data?.roomName;
+      client.video.v1.rooms
+        .list({
+          uniqueName: roomName,
+          status: 'in-progress',
+        })
+        .then((room: any) => {
+          if (room.length === 0) {
+            client.video.v1.rooms
+              .create({ uniqueName: roomName, emptyRoomTimeout: 2 })
+              .then((room: any) => {
+                if (room.sid) {
+                  res.status(200).send({
+                    code: RESULT_CODE_SUCCESS,
+                    message: RESULT_MESSAGE_SUCCESS,
+                    roomName: roomName,
+                    streamURLs: generateStreamURLs(process.env.REACT_APP_FRONTEND_URL!, roomName, token[1]),
+                  });
+                }
+              })
+              .catch((e: any) => {
+                console.log(e);
               });
-            }
-          })
-          .catch((error: any) => {
-            res.status(500).send(error);
-          });
-      }
-    })
-    .catch((error: any) => {
-      res.status(500).send(error);
-    });
+          } else if (room[0].uniqueName === roomName) {
+            res.status(200).send({
+              code: 1,
+              message: 'This room is already created!',
+              roomName: roomName,
+              streamURLs: generateStreamURLs(process.env.REACT_APP_FRONTEND_URL!, roomName, token[1]),
+            });
+          }
+        })
+        .catch((error: any) => {
+          res.status(500).send(error);
+        });
+    } else {
+      res.status(200).send({ code: -1, message: 'No exist' });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
 };
 
 export const endRoom: RequestHandler = (req, res) => {
