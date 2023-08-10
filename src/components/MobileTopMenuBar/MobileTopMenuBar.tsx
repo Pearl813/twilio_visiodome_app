@@ -43,7 +43,6 @@ export default function MobileTopMenuBar() {
   const { room } = useVideoContext();
   const [isPresenter, setIsPresenter] = useState(false);
   const [isVisiodome, setIsVisiodome] = useState(false);
-  const isEndRoomButtonEnable = isPresenter || isVisiodome;
 
   useEffect(() => {
     if (room?.localParticipant.identity === VISIODOMEAPP_LINK_NAME) setIsVisiodome(true);
@@ -69,7 +68,7 @@ export default function MobileTopMenuBar() {
       <Typography variant="subtitle1">{room!.name}</Typography>
       <div>
         <EndCallButton className={classes.endCallButton} redirectURL={isVisiodome ? '/' : null} />
-        {isEndRoomButtonEnable ? <EndRoomButton className={classes.endRoomButton} /> : ''}
+        {isPresenter ? <EndRoomButton className={classes.endRoomButton} /> : ''}
         <Menu buttonClassName={classes.settingsButton} />
       </div>
     </Grid>

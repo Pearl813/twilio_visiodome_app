@@ -57,7 +57,11 @@ export const login: RequestHandler = (req, res) => {
       password: req.body.password,
     })
     .then(response => {
-      if (response.data.user.PackageType === 'Mobile') {
+      if (
+        response.data.user.PackageType === 'Developer' ||
+        response.data.user.PackageType === 'Pro1C2M' ||
+        response.data.user.PackageType === 'Demo'
+      ) {
         console.log(response.data.user);
         res.status(200).send({
           code: RESULT_CODE_SUCCESS,
